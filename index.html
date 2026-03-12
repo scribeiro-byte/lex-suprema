@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>LEX SUPREMA</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--s1:#111118;--s2:#18181f;--s3:#1e1e28;
+  --border:#2a2a3a;--gold:#c9a84c;--gold2:#e8c76a;
+  --glow:rgba(201,168,76,0.12);--green:#22c55e;--red:#ef4444;
+  --orange:#f97316;--text:#e8e8f0;--text2:#9898b0;--text3:#55556a;
+  --r:12px;--rl:18px;
+}
+html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);font-size:15px}
+
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 25%,rgba(201,168,76,0.07),transparent 60%),var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:999}
+.sp-logo{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#1c1c26,#252518);
+  border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:36px;
+  box-shadow:0 0 40px rgba(201,168,76,0.25);animation:glow 2.5s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 30px rgba(201,168,76,0.2)}50%{box-shadow:0 0 60px rgba(201,168,76,0.45)}}
+.sp-title{font-size:30px;font-weight:800;letter-spacing:3px;color:var(--gold)}
+.sp-sub{font-size:13px;color:var(--text2);text-align:center;max-width:300px;line-height:1.7;letter-spacing:.3px}
+.sp-status{display:flex;align-items:center;gap:8px;padding:6px 16px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--border);font-size:12px;color:var(--text2)}
+.sp-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);transition:all .4s}
+.sp-dot.on{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.5)}
+.sp-dot.err{background:var(--orange)}
+#sp-txt{transition:color .4s}
+.sp-btn{margin-top:8px;padding:13px 46px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#0a0a0f;font-size:15px;font-weight:700;letter-spacing:.8px;border:none;border-radius:50px;
+  cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.35);transition:all .2s}
+.sp-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,.5)}
+
+/* ── APP ── */
+#app{height:100vh;flex-direction:column;display:none}
+
+/* TOPBAR */
+#topbar{flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--border);
+  height:52px;display:flex;align-items:center;padding:0 16px;gap:12px;position:relative;z-index:10}
+.top-brand{font-size:18px;font-weight:800;color:var(--gold);letter-spacing:2px;flex:1}
+.top-brand small{display:block;font-size:10px;color:var(--text3);font-weight:400;letter-spacing:1px;margin-top:-1px}
+#ia-pill{display:flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--border);font-size:12px;cursor:pointer;
+  transition:all .2s;user-select:none}
+#ia-pill:hover{border-color:var(--gold);background:var(--glow)}
+#ia-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:background .3s}
+#ia-dot.on{background:var(--green);box-shadow:0 0 7px rgba(34,197,94,.5)}
+#ia-lbl{color:var(--text2);font-size:12px;transition:color .3s}
+#ia-lbl.on{color:var(--green)}
+
+/* ERRO BANNER */
+#err-banner{display:none;background:rgba(239,68,68,.1);border-bottom:1px solid rgba(239,68,68,.25);
+  padding:7px 16px;font-size:12px;color:var(--red);text-align:center;flex-shrink:0}
+
+/* CORPO */
+#body{flex:1;display:flex;overflow:hidden}
+
+/* SIDEBAR */
+#sidebar{width:240px;background:var(--s1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:14px 10px;gap:10px;flex-shrink:0;overflow-y:auto}
+@media(max-width:680px){#sidebar{display:none}}
+.sb-profile{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px;display:flex;flex-direction:column;align-items:center;gap:7px}
+.sb-av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#252518,#1c1c26);
+  border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px;
+  font-weight:700;color:var(--gold)}
+.sb-nome{font-size:13px;font-weight:600}
+.sb-role{font-size:11px;color:var(--text3)}
+.sb-sec{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:1px;padding:4px 4px 0}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r);
+  font-size:13px;color:var(--text2);cursor:pointer;transition:all .15s}
+.sb-item:hover{background:var(--s2);color:var(--text)}
+.sb-item.ativo{background:var(--glow);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
+.sb-divider{height:1px;background:var(--border);margin:4px 0}
+.hist-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
+.hist-item{padding:8px 10px;border-radius:8px;cursor:pointer;font-size:12px;color:var(--text2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .12s}
+.hist-item:hover{background:var(--s2);color:var(--text)}
+
+/* CHAT AREA */
+#chat{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#msgs{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+#msgs::-webkit-scrollbar{width:3px}
+#msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* WELCOME */
+#wlc{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;gap:18px;animation:fin .4s ease;min-height:200px}
+@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wlc-ic{font-size:44px}
+.wlc-t{font-size:19px;font-weight:700;color:var(--gold);text-align:center}
+.wlc-s{font-size:13px;color:var(--text2);text-align:center;max-width:380px;line-height:1.7}
+.sug-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:460px}
+.sug-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);
+  padding:11px 13px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:4px}
+.sug-card:hover{border-color:var(--gold);background:var(--glow);transform:translateY(-1px)}
+.sug-ic{font-size:17px}
+.sug-t{font-size:12px;font-weight:600;color:var(--text)}
+.sug-q{font-size:11px;color:var(--text2);line-height:1.4}
+
+/* MENSAGENS */
+.msg-u{align-self:flex-end;max-width:80%;background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.07));
+  border:1px solid rgba(201,168,76,.22);border-radius:18px 18px 4px 18px;
+  padding:11px 15px;font-size:14px;line-height:1.6;animation:mi .2s ease}
+@keyframes mi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.msg-l{align-self:flex-start;max-width:88%;background:var(--s2);border:1px solid var(--border);
+  border-radius:4px 18px 18px 18px;padding:13px 15px;font-size:14px;line-height:1.7;
+  animation:mi .2s ease;position:relative}
+.msg-l.ia-msg{border-color:rgba(34,197,94,.2)}
+.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:9px;font-size:12px;color:var(--text3)}
+.lex-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#252518,#1c1c26);
+  border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px}
+.badge{margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:.4px}
+.badge-ia{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.badge-loc{background:rgba(85,85,106,.25);color:var(--text3);border:1px solid var(--border)}
+.msg-body p{margin-bottom:7px}
+.msg-body p:last-child{margin-bottom:0}
+.msg-body strong{color:var(--gold2);font-weight:600}
+.msg-body h3,.msg-body h4{color:var(--gold);margin:10px 0 5px;font-size:14px;font-weight:700}
+.msg-body ul,.msg-body ol{padding-left:18px;margin-bottom:7px}
+.msg-body li{margin-bottom:3px;line-height:1.55}
+.msg-body code{background:var(--s3);border:1px solid var(--border);padding:1px 5px;
+  border-radius:4px;font-size:12px;color:var(--gold2)}
+.msg-body blockquote{border-left:3px solid var(--gold);padding:7px 11px;
+  background:var(--glow);border-radius:0 8px 8px 0;margin:7px 0;color:var(--text2);font-style:italic}
+.cursor{display:inline-block;width:2px;height:14px;background:var(--gold);
+  animation:cur .8s infinite;vertical-align:middle;margin-left:1px}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+
+/* TYPING */
+.typing-w{align-self:flex-start;background:var(--s2);border:1px solid var(--border);
+  border-radius:4px 18px 18px 18px;padding:13px 18px;display:flex;align-items:center;gap:5px}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:tb 1.2s infinite}
+.tdot:nth-child(2){animation-delay:.2s}.tdot:nth-child(3){animation-delay:.4s}
+@keyframes tb{0%,80%,100%{transform:none;opacity:.4}40%{transform:translateY(-6px);opacity:1}}
+
+/* SUGESTÕES CTX */
+.ctx-wrap{align-self:flex-start;display:flex;flex-wrap:wrap;gap:7px;max-width:88%;animation:fin .3s ease}
+.ctx-btn{padding:6px 13px;background:var(--s2);border:1px solid var(--border);border-radius:20px;
+  font-size:12px;color:var(--text2);cursor:pointer;transition:all .13s;white-space:nowrap}
+.ctx-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--glow)}
+
+/* INPUT */
+#input-area{flex-shrink:0;background:var(--s1);border-top:1px solid var(--border);padding:12px 14px}
+.inp-wrap{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--rl);
+  display:flex;align-items:flex-end;gap:9px;padding:9px 13px;transition:border-color .2s}
+.inp-wrap:focus-within{border-color:rgba(201,168,76,.4)}
+#inp{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:14px;
+  line-height:1.5;resize:none;max-height:120px;min-height:22px;font-family:inherit}
+#inp::placeholder{color:var(--text3)}
+#btn-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:none;cursor:pointer;font-size:15px;flex-shrink:0;transition:all .15s;
+  box-shadow:0 2px 10px rgba(201,168,76,.28);display:flex;align-items:center;justify-content:center}
+#btn-send:hover:not(:disabled){transform:scale(1.06);box-shadow:0 4px 16px rgba(201,168,76,.4)}
+#btn-send:disabled{opacity:.38;cursor:not-allowed;transform:none}
+.inp-foot{display:flex;align-items:center;justify-content:space-between;margin-top:7px;padding:0 2px}
+.inp-hint{font-size:11px;color:var(--text3)}
+.mode-pills{display:flex;gap:7px}
+.mpill{padding:3px 11px;border-radius:12px;font-size:11px;background:var(--s2);
+  border:1px solid var(--border);color:var(--text3);cursor:pointer;transition:all .13s}
+.mpill.ativo{background:var(--glow);color:var(--gold);border-color:rgba(201,168,76,.3)}
+
+/* MODAL IA CONFIG */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;
+  align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);padding:16px}
+#modal.open{display:flex}
+.modal-box{background:var(--s1);border:1px solid var(--border);border-radius:var(--rl);
+  padding:26px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,.6);
+  animation:mIn .25s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+.m-close{float:right;background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:3px 10px;font-size:17px;cursor:pointer;color:var(--text2);transition:color .15s}
+.m-close:hover{color:var(--text)}
+.m-title{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:5px}
+.m-sub{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6}
+.m-step{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:11px}
+.m-step:last-child{margin-bottom:0}
+.m-num{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#0a0a0f;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;
+  margin-right:7px}
+.m-stitle{font-size:13px;font-weight:600}
+.m-ssub{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.55}
+.m-link{color:var(--gold);text-decoration:none;font-weight:600}
+.m-link:hover{text-decoration:underline}
+.key-wrap{display:flex;gap:8px;margin-top:9px}
+#key-inp{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:9px 13px;color:var(--text);font-size:13px;outline:none;font-family:monospace;
+  transition:border-color .2s}
+#key-inp:focus{border-color:var(--gold)}
+#key-inp::placeholder{color:var(--text3);font-family:inherit}
+#btn-key{padding:9px 18px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#0a0a0f;font-size:13px;font-weight:700;border:none;border-radius:var(--r);
+  cursor:pointer;transition:all .15s;white-space:nowrap}
+#btn-key:hover:not(:disabled){transform:translateY(-1px)}
+#btn-key:disabled{opacity:.5;cursor:not-allowed}
+#m-status{text-align:center;padding:9px;border-radius:var(--r);font-size:13px;
+  font-weight:600;margin-top:7px;display:none}
+#m-status.ok{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+#m-status.err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+#m-status.load{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+</style>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c9a84c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LEX SUPREMA">
+  <meta name="application-name" content="LEX SUPREMA">
+  <meta name="description" content="Consultoria jurídica com IA — brechas legais e direitos do cidadão brasileiro">
+  <link rel="apple-touch-icon" href="icons/icon-152.svg">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.svg">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.svg">
+  <link rel="icon" type="image/svg+xml" href="icons/icon-192.svg">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-logo">⚖️</div>
+  <div class="sp-title">LEX SUPREMA</div>
+  <div class="sp-sub">Consultoria Jurídica com Inteligência Artificial — brechas legais e benefícios para o cidadão brasileiro</div>
+  <div class="sp-status">
+    <div class="sp-dot" id="sp-dot"></div>
+    <span id="sp-txt">Iniciando sistema...</span>
+  </div>
+  <button class="sp-btn" onclick="entrarApp()">Consultar Agora</button>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div id="topbar">
+    <div class="top-brand">LEX <small>SUPREMA IA</small></div>
+    <div id="ia-pill" onclick="abrirModal()">
+      <div id="ia-dot"></div>
+      <span id="ia-lbl">Modo Base</span>
+    </div>
+  </div>
+  <div id="err-banner"></div>
+
+  <div id="body">
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <div class="sb-profile">
+        <div class="sb-av" id="sb-av">⚖</div>
+        <div class="sb-nome" id="sb-nome">Cidadão</div>
+        <div class="sb-role">Consulta Jurídica Ativa</div>
+      </div>
+      <div class="sb-sec">MENU</div>
+      <div class="sb-item ativo"><span>💬</span> Nova Consulta</div>
+      <div class="sb-item" onclick="limparChat()"><span>🗑️</span> Limpar Chat</div>
+      <div class="sb-item" onclick="abrirModal()"><span>⚡</span> Config. IA</div>
+      <div class="sb-divider"></div>
+      <div class="sb-sec">HISTÓRICO</div>
+      <div class="hist-list" id="hist-list"></div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="chat">
+      <div id="msgs"><div id="wlc"></div></div>
+      <div id="input-area">
+        <div class="inp-wrap">
+          <textarea id="inp" rows="1"
+            placeholder="Ex: fui demitido, o que tenho direito? / dívida de 2018, está prescrita? / INSS negou meu benefício..."
+            oninput="autoH(this)" onkeydown="keyE(event)"></textarea>
+          <button id="btn-send" onclick="enviar()">➤</button>
+        </div>
+        <div class="inp-foot">
+          <span class="inp-hint" id="hint">⚡ Configure a IA para respostas avançadas</span>
+          <div class="mode-pills">
+            <div class="mpill ativo" id="p-rap" onclick="setMode('r')">Rápida</div>
+            <div class="mpill" id="p-det" onclick="setMode('d')">Detalhada</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIG IA -->
+<div id="modal" onclick="if(event.target===this)fecharModal()">
+  <div class="modal-box">
+    <button class="m-close" onclick="fecharModal()">✕</button>
+    <div class="m-title">⚡ Ativar Motor Neural LEX</div>
+    <div class="m-sub">Ative o processamento neural avançado para análises jurídicas completas, personalizadas e com alta precisão.</div>
+
+    <div class="m-step">
+      <span class="m-num">1</span>
+      <span class="m-stitle">Obtenha sua chave de acesso gratuita</span>
+      <div class="m-ssub">
+        Acesse <a class="m-link" href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>
+        → faça login → clique em <strong>"Create API key"</strong> → copie a chave gerada.
+        <br><br>✅ 100% gratuito · 1.500 consultas/dia · sem cartão de crédito
+      </div>
+    </div>
+
+    <div class="m-step">
+      <span class="m-num">2</span>
+      <span class="m-stitle">Cole a chave abaixo e ative</span>
+      <div class="key-wrap">
+        <input id="key-inp" type="password" placeholder="Chave de acesso..." autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')salvarKey()">
+        <button id="btn-key" onclick="salvarKey()">Ativar</button>
+      </div>
+      <div id="m-status"></div>
+    </div>
+
+    <div class="m-step">
+      <span class="m-num">🔒</span>
+      <span class="m-stitle">Segurança total</span>
+      <div class="m-ssub">Sua chave fica armazenada <strong>apenas no seu navegador</strong>. Nunca é compartilhada ou enviada a terceiros.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  LEX SUPREMA — Motor Neural Jurídico v5
+// ══════════════════════════════════════════════
+
+var MN_KEY   = localStorage.getItem('lex_mn_key') || '';
+var MN_ATIVO = false;
+var DETALHE  = false;
+var ENVIANDO = false;
+var HIST_CHAT = [];
+var HIST_PERG = [];
+
+try { HIST_PERG = JSON.parse(localStorage.getItem('lex_hist') || '[]'); } catch(e){ HIST_PERG = []; }
+
+// ── SISTEMA PROMPT (oculto) ──
+var _SYS = "Você é LEX SUPREMA — o maior jurista virtual do Brasil, especializado em encontrar brechas legais, benefícios e direitos do cidadão brasileiro.\n\nIDENTIDADE:\n- Nome: LEX SUPREMA\n- Missão: defender o povo brasileiro com máximo conhecimento jurídico\n- Tom: profissional mas acessível, empático e direto\n\nESPECIALIDADES:\n1. Direito Trabalhista (CLT, TST, Reforma Lei 13.467/2017)\n2. Direito do Consumidor (CDC Lei 8.078/90)\n3. Direito Previdenciário (INSS, BPC/LOAS, Aposentadorias)\n4. Direito Civil (CC 2002, família, herança, contratos)\n5. Direito Processual (CPC 2015, execução, prescrição intercorrente)\n6. Direito Penal (CP, CPP, habeas corpus)\n7. Direito Administrativo (servidores, concursos)\n8. Superendividamento (Lei 14.181/2021)\n9. Direito à Saúde (ANS, planos, SUS)\n10. Direito Imobiliário (locação, usucapião)\n11. Defesa do Devedor (prescrição, impenhorabilidade)\n12. Direito Ambiental e Agrário\n\nBRECHAS OBRIGATÓRIAS:\n- Rescisão Indireta (Art. 483 CLT): patrão descumpre → empregado sai com FGTS+multa+seguro\n- Dívida prescrita: CDC 5 anos / CC 3 anos / trabalhista 2-5 anos — não pode cobrar nem negativar\n- Cobrança indevida dobrada (Art. 42 CDC): consumidor recebe em dobro\n- Negativação sem aviso (Súmula 385 STJ): indenização por dano moral\n- Plano nega tratamento (ANS RN 566/22): liminar em 24-48h\n- Superendividamento (Lei 14.181/2021): renegociação forçada, mínimo existencial garantido\n- Gestante: estabilidade até 5 meses pós-parto mesmo em contrato temporário (Súmula 244 TST)\n- Acidente trabalho: estabilidade 12 meses após alta (Súmula 378 TST)\n- INSS negado: recurso gratuito no JEF sem advogado\n- Pejotização ilícita (Art. 3 CLT): vínculo + todos os direitos retroativos\n- Usucapião Extrajudicial (CPC Art. 1.071): cartório, mais rápido e barato\n- Seguro-desemprego negado: recurso em 10 dias no Ministério do Trabalho\n- Prescrição intercorrente (Art. 921 CPC + Súmula 150 STF): execução parada 5 anos = extinta\n- Penhora de salário: proibida até 50 SM (Art. 833 CPC)\n- Bem de família: impenhorável (Lei 8.009/90)\n\nBENEFÍCIOS GRATUITOS — SEMPRE MENCIONAR QUANDO CABÍVEL:\n- BPC/LOAS: R$1.412/mês para idoso +65 ou deficiente de baixa renda (Lei 8.742/93)\n- Farmácia Popular: medicamentos gratuitos ou com 90% desconto\n- Defensoria Pública: advogado gratuito (renda até 3 SM)\n- JEF: causas contra INSS gratuito sem advogado\n- JEC: causas até 40 SM sem advogado sem custas\n- CEJUSC: mediação gratuita\n- Tarifa Social de Energia: desconto para baixa renda\n- Auxílio Gás: famílias de baixa renda\n- Bolsa Família / CadÚnico: múltiplos benefícios\n- PROCON: resolução gratuita de conflitos com empresas\n\nREGRAS DE RESPOSTA:\n1. Cite SEMPRE a lei, artigo, súmula ou resolução\n2. Use markdown formatado com seções claras\n3. Use emojis: 📋 ⚖️ 💡 ⚠️ ✅ 💰 ⏰ 🔑 🆓\n4. Indique prazos importantes (prescrição, decadência, recursos)\n5. Mencione opções gratuitas (Defensoria, JEF, JEC) quando disponíveis\n6. Seja específico: valores, percentuais, prazos exatos\n7. Finalize com PRÓXIMOS PASSOS práticos numerados\n8. Limite: 800 tokens\n9. NUNCA invente leis — se não souber, diga claramente\n10. Se urgente (despejo, demissão imediata, saúde grave): priorize ação imediata\n\nFORMATO:\n## [Assunto]\n**📋 Situação:** resumo\n**⚖️ Seus Direitos:**\n- direito (Lei X, Art. Y)\n**💡 Brechas e Benefícios:**\n- brecha\n**⏰ Prazos:**\n- prazo\n**✅ Próximos Passos:**\n1. ação\n**🆓 Gratuito:** opções sem custo";
+
+// ── BASE LOCAL ──
+var KB = {
+  trabalho:{
+    kw:['demiti','demissão','rescisão','fgts','aviso','clt','emprego','pjot','carteira','salário','hora extra','assédio','acidente trabalho','estabilidade','férias','décimo','horas extras','trabalhando','trabalhista','patrão','13 salário','jornada','subordina','contrato trabalho','intervalo','banco de horas'],
+    r:'## ⚖️ Direitos Trabalhistas\n\n**📋 Base Legal:** CLT (Consolidação das Leis do Trabalho)\n\n**⚖️ Direitos Fundamentais:**\n- **FGTS**: 8% do salário/mês → saque + multa 40% em demissão sem justa causa\n- **Aviso Prévio**: 30 dias + 3 dias por ano trabalhado (máx. 90 dias) — **Art. 487 CLT**\n- **13º Salário** proporcional — **Lei 4.090/62**\n- **Férias**: 30 dias + ⅓ constitucional — **Art. 129 CLT**\n- **Hora Extra**: 50% acima (100% domingos/feriados) — **Art. 59 CLT**\n- **Seguro-Desemprego**: 3 a 5 parcelas conforme tempo trabalhado\n\n**🔑 Brechas Poderosas:**\n- **Rescisão Indireta (Art. 483 CLT)**: patrão atrasa salário, assedia ou descumpre contrato → você sai como demitido → FGTS + multa 40% + seguro-desemprego\n- **Pejotização ilícita (Art. 3 CLT)**: trabalha como PJ mas tem horário/subordinação → pode pedir vínculo empregatício retroativo + todos os direitos\n- **Acidente de trabalho**: estabilidade 12 meses após alta — **Súmula 378 TST**\n- **Gestante**: estabilidade até 5 meses pós-parto mesmo em contrato temporário — **Súmula 244 TST**\n- **Banco de horas ilegal**: horas extras pagas em dobro se acordo inválido\n\n**⏰ Prazos CRÍTICOS:**\n- Reclamação trabalhista: **2 anos** após demissão\n- Cobrar direitos durante o contrato: **5 anos** retroativos\n- FGTS não depositado: **5 anos**\n\n**✅ Próximos Passos:**\n1. Guarde contracheques, mensagens e comprovantes\n2. Procure o **sindicato** ou **Defensoria Pública** (gratuitos)\n3. Abra reclamação na **Vara do Trabalho** ou pelo app Carteira de Trabalho Digital\n\n**🆓 Gratuito:** Defensoria Pública, Sindicato, JRT (Juizado de Reclamações Trabalhistas)'
+  },
+  consumidor:{
+    kw:['consumidor','compra','produto','loja','empresa','cobrança','reembolso','devolução','defeito','garantia','procon','serasa','spc','negativad','nome sujo','dívida','cartão','banco','juros','cdc','propaganda','entrega','cancelar','cancelamento','assinatura','plano telefone','internet','energia','água','luz'],
+    r:'## ⚖️ Direito do Consumidor\n\n**📋 Base Legal:** CDC — Lei 8.078/1990\n\n**⚖️ Direitos Principais:**\n- **Arrependimento online**: 7 dias para devolver sem justificativa + reembolso total — **Art. 49 CDC**\n- **Garantia legal**: produtos duráveis = 90 dias; não duráveis = 30 dias — **Art. 26 CDC**\n- **Cobrança indevida**: direito a receber o **DOBRO** do valor cobrado a mais — **Art. 42 CDC**\n- **Publicidade enganosa**: empresa obrigada a cumprir o que anunciou — **Art. 30 CDC**\n- **Vício do produto**: 30 dias para corrigir, senão: troca + devolução + abatimento\n\n**🔑 Brechas Importantes:**\n- Cobranças erradas → exija devolução **em dobro** (Art. 42 §único CDC)\n- **Negativação sem aviso prévio** → indenização por dano moral (Súmula 385 STJ) — mínimo R$3.000 a R$15.000\n- Dívidas de cartão/banco acima de **5 anos** → **prescritas** — não podem cobrar nem negativar (Art. 206 CC)\n- **Juros abusivos** acima da média de mercado → revisão judicial (STJ REsp 1.061.530)\n- Empresa não entrega produto → multa diária (astreintes) + indenização\n\n**⏰ Prazos:**\n- Reclamar produto defeituoso: 30 ou 90 dias (Art. 26 CDC)\n- Prescrição ação indenizatória: **5 anos** (Art. 27 CDC)\n- Prescrição dívidas bancárias: **5 anos** (Art. 206 CC)\n\n**✅ Próximos Passos:**\n1. Registre no **PROCON** (gratuito) — 151 ou site do seu estado\n2. Use **consumidor.gov.br** — resolução online em dias\n3. Para valores até 40 SM: **JEC** sem advogado, sem custo\n\n**🆓 Gratuito:** PROCON, consumidor.gov.br, JEC até 20 SM'
+  },
+  previdencia:{
+    kw:['inss','aposentadoria','aposentar','benefício','bpc','loas','pensão','invalidez','afastamento','auxílio','revisão inss','cnis','contribuição','tempo serviço','carência','previdência','incapacidade','perícia','médico perito','seguro defeso','salário maternidade'],
+    r:'## ⚖️ Direitos Previdenciários\n\n**📋 Base Legal:** Lei 8.213/91, EC 103/2019 (Reforma)\n\n**⚖️ Principais Benefícios INSS:**\n- **Aposentadoria por idade**: homens 65 anos / mulheres 62 anos (mín. 15 anos de contribuição)\n- **Aposentadoria especial**: atividades insalubres → 15, 20 ou 25 anos\n- **Auxílio por Incapacidade**: afastamento por doença/acidente → carência 12 meses\n- **Pensão por Morte**: dependentes do segurado falecido\n- **Salário Maternidade**: 120 dias (prorrogável a 180 dias por empresa cidadã)\n\n**🔑 Brechas e Direitos:**\n- **BPC/LOAS** (Lei 8.742/93): R$1.412/mês para idoso +65 ou deficiente com renda familiar ≤ ¼ SM per capita → **independe de contribuição!**\n- **INSS negado injustamente**: recurso gratuito no **JEF** (Juizado Especial Federal) — sem advogado, sem custas\n- **Revisão da Vida Toda** (RE 1.276.977 STF): contribuições antes de 1994 podem aumentar seu benefício\n- **Trabalho rural informal**: pode comprovar com documentos alternativos\n- **Aposentadoria especial**: agrotóxico, barulho, calor, químicos → aposentadoria antecipada\n- **Reconhecimento de atividade especial**: via laudos e PPP (Perfil Profissiográfico Previdenciário)\n\n**⏰ Prazos:**\n- Recurso de negativa: **30 dias** após receber carta\n- Cobrar benefício atrasado: prescrição **5 anos**\n- Revisão de benefício: **10 anos** após concessão (Art. 103 Lei 8.213/91)\n\n**✅ Próximos Passos:**\n1. Consulte extrato no **Meu INSS** (app ou meu.inss.gov.br)\n2. Se negado: protocole **Pedido de Reconsideração** em 30 dias\n3. Se mantida a negativa: acione o **JEF** — gratuito\n4. Procure a **Defensoria Pública** para orientação gratuita\n\n**🆓 Gratuito:** JEF, Defensoria Pública, CRAS'
+  },
+  divida:{
+    kw:['dívida','execução','penhora','prescrição','prescrit','cobranças','banco','credor','devedor','negativar','serasa','spc','superendividamento','parcelar','renegociar','processo de 20','execução de 20','ação de 20','protesto','cartório','cobrança','inadimplente','nome negativado','boleto','financiamento','empréstimo'],
+    r:'## ⚖️ Defesa do Devedor — Brechas na Lei\n\n**💡 A Lei Protege Você Mais do Que Imagina!**\n\n**🔑 Prescrição de Dívidas (dívida velha = dívida morta):**\n- Dívidas bancárias/cartão: **5 anos** (Art. 206, §5°, I, CC)\n- Dívidas de consumo (água, luz, telefone): **5 anos** (CDC)\n- Dívidas trabalhistas: **2 anos** após demissão / **5 anos** durante contrato\n- Dívidas tributárias (impostos): **5 anos** (CTN Art. 174)\n- ⚠️ Após prescrição: **não podem cobrar, não podem negativar** → você pode exigir exclusão do cadastro\n\n**🔑 Prescrição Intercorrente em Processos Judiciais:**\n- Execução judicial parada por **5 anos** sem atos do credor → **processo EXTINTO** por prescrição intercorrente\n- **Art. 921, §5° CPC + Súmula 150 STF**\n- ✅ Se tem processo de 2017/2018/2019 parado: **verifique urgente — pode estar prescrito!**\n\n**🔑 Bens Impenhoráveis (Art. 833 CPC):**\n- Imóvel residencial (bem de família) → **NUNCA pode ser penhorado** (Lei 8.009/90)\n- Salário e renda do trabalho → **impenhorável** (até 50 SM/mês)\n- Poupança até 40 SM → **impenhorável**\n- Móveis básicos (cama, fogão, geladeira) → **impenhoráveis**\n- FGTS e benefícios sociais → **impenhoráveis**\n\n**🔑 Superendividamento (Lei 14.181/2021):**\n- Dívidas consomem mais de 30% da renda → **renegociação forçada judicial**\n- Processo suspende todas as cobranças\n- Garante **mínimo existencial** (moradia, alimentação, medicamentos)\n\n**⏰ Prazos Urgentes:**\n- Embargos à execução: **15 dias** após citação\n- Impugnar penhora: **15 dias** após intimação\n- Recurso de sentença de execução: **15 dias**\n\n**✅ Próximos Passos:**\n1. Verifique data da dívida — se +5 anos sem cobrança judicial → **prescrita**\n2. Se processo parado há 5 anos → peça extinção por prescrição intercorrente\n3. Consulte **Defensoria Pública** gratuitamente\n4. Se múltiplas dívidas: acione a **Lei do Superendividamento**\n\n**🆓 Gratuito:** Defensoria Pública, CEJUSC, PROCON para negociação extrajudicial'
+  },
+  saude:{
+    kw:['plano','plano de saúde','ans','cirurgia','tratamento','médico','hospital','internação','negar','negativa','sus','medicamento','remédio','cobertura','convênio','emergência','urgência','farmácia popular','câncer','quimio','prótese','exame','consulta especialista','leito','uti'],
+    r:'## ⚖️ Direito à Saúde\n\n**📋 Base Legal:** CF Art. 196, Lei ANS, Rol de Procedimentos ANS RN 566/2022\n\n**⚖️ O Plano DEVE Cobrir:**\n- **Urgência e emergência**: atendimento imediato — **primeiros 30 dias mesmo em carência**\n- **Rol de procedimentos ANS**: cobertura obrigatória — qualquer recusa é ilegal\n- **Internação sem limite de dias** quando há indicação médica\n- **Cirurgias necessárias** incluídas no rol\n\n**🔑 Se o Plano Negar:**\n- Ligue **ANS: 0800 722 2033** — resolução urgência em 24h, eletivo em 21 dias\n- Registre em **apps.ans.gov.br**\n- **Medida liminar**: juiz pode obrigar cobertura em **24-48 horas** (ação cautelar de urgência)\n- **Dano moral por negativa indevida**: R$5.000 a R$30.000 (jurisprudência STJ)\n- Cirurgia negada + piora do paciente: responsabilidade civil agravada\n\n**🔑 Medicamentos Gratuitos:**\n- **Farmácia Popular**: +100 medicamentos gratuitos (hipertensão, diabetes, asma, anticoncepcional, colesterol...)\n- **CEAF** (Componente Especializado): medicamentos de alto custo pelo SUS\n- **Ação judicial contra Estado/Município**: Art. 196 CF — liminares concedidas em 24-48h\n- **Insulina e medicamentos para diabetes**: gratuitos pelo SUS\n\n**⏰ Prazos Críticos:**\n- Urgência no plano: resposta em **24 horas** (obrigatório)\n- Eletivo: resposta em **21 dias úteis**\n- Prescrição ação contra plano: **1 ano** ⚠️ ATENÇÃO — prazo curto!\n\n**✅ Próximos Passos:**\n1. Exija a **negativa por escrito** do plano (prova para processo)\n2. Registre na **ANS** (0800 722 2033 ou apps.ans.gov.br)\n3. Procure **Defensoria** ou advogado para liminar judicial\n4. Se sem plano: consulte o **SUS** e, se necessário, ação judicial\n\n**🆓 Gratuito:** Farmácia Popular, SUS, Defensoria Pública, JEC'
+  },
+  familia:{
+    kw:['divórcio','separação','guarda','alimentos','pensão alimentícia','casamento','herança','inventário','testamento','união estável','adoção','filho','filha','cônjuge','patrimônio','espólio','partilha','meação','tutela','curatela','multiparentalidade'],
+    r:'## ⚖️ Direito de Família\n\n**📋 Base Legal:** CC 2002, Lei de Alimentos, CPC 2015\n\n**⚖️ Divórcio:**\n- **Extrajudicial (cartório)**: mais rápido e barato — somente sem filhos menores/incapazes\n- **Judicial**: necessário com filhos menores\n- **Bens**: regime comunhão parcial (padrão) → divide o adquirido durante o casamento\n- **União estável**: mesmos direitos do casamento para herança e partilha (CC Art. 1.723)\n\n**🔑 Alimentos (Pensão):**\n- Filho tem direito até **25 anos se estudar** ou vitalício se inválido\n- **Binômio necessidade/possibilidade**: juiz fixa valor equilibrado\n- **Prisão civil**: até 90 dias por inadimplência (fase coercitiva — Art. 911 CPC)\n- **Alimentos gravídicos**: desde a gravidez comprovada\n- Execução de alimentos: **mais rápida** que qualquer outra execução\n\n**🔑 Herança:**\n- **Inventário extrajudicial** (cartório): herdeiros maiores de acordo → mais rápido e barato\n- **Herdeiros necessários** (filhos, cônjuge, pais): direito à **metade da herança** — intocável (Art. 1.846 CC)\n- **ITCMD**: imposto varia por estado (0% a 8%) — verifique isenções\n- Herança digital: senhas, contas e ativos digitais também são inventariáveis\n\n**⏰ Prazos:**\n- **Inventário**: 60 dias após óbito (multa ITCMD se ultrapassar)\n- Alimentos retroativos: **2 anos** (Art. 206, §2°, CC)\n- Anular casamento por vício: **4 anos** (Art. 1.560 CC)\n\n**✅ Próximos Passos:**\n1. Procure a **Defensoria Pública** (gratuita para renda até 3 SM)\n2. Inventário simples: **cartório de notas**\n3. Acordo de guarda/alimentos: **CEJUSC** (gratuito)\n4. Pensão: peça **alimentos provisórios** liminarmente\n\n**🆓 Gratuito:** Defensoria Pública, CEJUSC, Vara de Família (isenção de custas para baixa renda)'
+  },
+  criminal:{
+    kw:['crime','preso','prisão','delegacia','boletim ocorrência','flagrante','habeas corpus','condenado','pena','violência','agressão','ameaça','roubo','furto','estelionato','calúnia','difamação','injúria','homicídio','tráfico','drogas','porte','tentativa','cumplicidade','autodefesa','legitima defesa'],
+    r:'## ⚖️ Direitos na Esfera Criminal\n\n**📋 Base Legal:** CP, CPP, CF Art. 5°\n\n**⚖️ Direitos Constitucionais Fundamentais:**\n- **Presunção de inocência** até trânsito em julgado (Art. 5°, LVII, CF)\n- **Direito ao silêncio**: nada precisa falar na delegacia — nenhuma declaração é obrigatória (Art. 5°, LXIII, CF)\n- **Advogado gratuito**: Defensoria Pública para quem não pode pagar\n- **Habeas Corpus**: contra qualquer prisão ilegal — **qualquer pessoa pode impetrar** (Art. 5°, LXVIII, CF)\n\n**🔑 Se Você For Preso:**\n- Audiência de custódia em **24 horas** (obrigatório)\n- Comunicar **família** e **advogado** imediatamente é direito\n- **Não assine nada** sem advogado\n- **Habeas Corpus preventivo**: se houver risco de prisão → peça antes\n\n**🔑 Benefícios Penais:**\n- **Substituição de pena**: penas até 4 anos → prestação de serviços ou multa (Art. 44 CP)\n- **Sursis**: penas até 2 anos → suspensão por 2-4 anos (Art. 77 CP)\n- **Progressão de regime**: 1/6 a 3/5 conforme o crime\n- **Remição**: 1 dia de trabalho ou estudo = 1 dia a menos de pena\n- **JECRIM**: infrações de menor potencial ofensivo → transação penal, sem ficha\n\n**⏰ Prazos:**\n- Recurso de sentença: **5 dias** (apelação criminal — Art. 593 CPP)\n- **Habeas Corpus**: **sem prazo** — impetre a qualquer momento\n- Prescrição: varia de 3 a 20 anos conforme a pena máxima\n\n**✅ Próximos Passos:**\n1. Exercer o **direito ao silêncio** imediatamente\n2. Procurar **Defensoria Pública** (gratuita)\n3. Para prisão ilegal: impetrar **Habeas Corpus** no TJ ou STJ\n4. Boletim de ocorrência: registrar QUALQUER ameaça ou agressão\n\n**🆓 Gratuito:** Defensoria Pública, Habeas Corpus (sem custas)'
+  },
+  imovel:{
+    kw:['aluguel','locatário','locador','despejo','imóvel','casa','apartamento','usucapião','compra imóvel','financiamento','condomínio','inquilino','proprietário','fiador','escritura','registro','iptu','vistoria','locação','caução','depósito','rescisão contrato aluguel'],
+    r:'## ⚖️ Direito Imobiliário\n\n**📋 Base Legal:** Lei 8.245/91 (Inquilinato), CC 2002, CPC Art. 1.071\n\n**⚖️ Direitos do Inquilino:**\n- Contrato vencido sem renovação: **30 dias** para sair após notificação\n- Despejo por falta de pagamento: **processo judicial obrigatório** — mín. 2-3 meses\n- **Caução**: máximo 3 meses de aluguel → deve ser devolvida corrigida\n- Reajuste: apenas pelo IGPM ou IPCA anualmente\n\n**🔑 Brechas Importantes:**\n- Locador que **corta luz, água ou troca fechadura** sem ordem judicial = **crime** (Art. 43 LL) → indenização + habeas corpus\n- Imóvel com defeito oculto grave: rescisão do contrato **sem multa** (Art. 22 LL)\n- Cobrança de taxa ilegal: recuse e exija devolução em dobro (CDC)\n- **Bem de família**: imóvel residencial **único** é impenhorável mesmo por dívidas (Lei 8.009/90)\n\n**🔑 Usucapião — Regularize sua Posse:**\n- **Usucapião Ordinária**: 10 anos + justo título (Art. 1.242 CC)\n- **Usucapião Extraordinária**: 15 anos (ou 10 anos com moradia habitual) (Art. 1.238 CC)\n- **Usucapião Urbana**: 5 anos de moradia em área urbana até 250m² (Art. 183 CF)\n- **Usucapião Extrajudicial**: processo em cartório — mais rápido e barato (CPC Art. 1.071)\n- **Usucapião Familiar**: 2 anos se cônjuge abandonou o lar (Art. 1.240-A CC)\n\n**⏰ Prazos:**\n- Recurso em despejo: **15 dias**\n- Devolução da caução: **30 dias** após entrega das chaves\n- Ação de preferência na venda: **30 dias** após notificação\n\n**✅ Próximos Passos:**\n1. Notificação de despejo? Procure **Defensoria** imediatamente\n2. Usucapião: consulte o cartório de registro de imóveis\n3. Conflito de condomínio: tente **CEJUSC** gratuito primeiro\n\n**🆓 Gratuito:** Defensoria Pública, CEJUSC, usucapião extrajudicial com custas reduzidas'
+  }
+};
+
+var SUGS = [
+  {i:'💼',t:'Demissão Injusta',q:'Fui demitido sem justa causa, quais são meus direitos?'},
+  {i:'💳',t:'Dívida Prescrita',q:'Tenho uma dívida de 2018 no Serasa, ainda é válida?'},
+  {i:'⚕️',t:'Plano Negou',q:'Meu plano de saúde negou cirurgia, o que posso fazer?'},
+  {i:'🏠',t:'Bem de Família',q:'Meu imóvel pode ser penhorado por dívida de banco?'},
+  {i:'👶',t:'Pensão em Atraso',q:'O pai não paga pensão alimentícia há meses, posso prender?'},
+  {i:'⚖️',t:'Rescisão Indireta',q:'Meu patrão atrasou 3 meses de salário, posso pedir rescisão indireta?'},
+  {i:'📋',t:'INSS Negado',q:'O INSS negou meu auxílio doença, quais são as opções?'},
+  {i:'🏦',t:'Execução Judicial',q:'Tenho processo de execução de 2017 parado, pode estar prescrito?'},
+  {i:'👴',t:'BPC/LOAS',q:'Meu pai tem 68 anos e renda baixa, tem direito ao BPC/LOAS?'},
+  {i:'🔑',t:'Pejotização',q:'Trabalho como PJ mas com horário fixo, tenho vínculo empregatício?'},
+  {i:'🏗️',t:'Usucapião',q:'Moro num terreno há 8 anos sem contestação, posso requerer usucapião?'},
+  {i:'📱',t:'Cobrança Indevida',q:'A empresa me cobrou indevidamente, tenho direito a receber em dobro?'},
+  {i:'🚗',t:'Acidente de Trabalho',q:'Sofri acidente no trabalho, quais são meus direitos e estabilidade?'},
+  {i:'💰',t:'Superendividamento',q:'Tenho múltiplas dívidas que consomem toda minha renda, o que fazer?'}
+];
+
+// ══════════════════════════════════════════════
+// INICIALIZAÇÃO
+// ══════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', function() {
+  if (MN_KEY) {
+    testarKey(MN_KEY).then(function(ok) {
+      MN_ATIVO = ok;
+      if (!ok) {
+        localStorage.removeItem('lex_mn_key');
+        MN_KEY = '';
+      }
+      atualizarStatusIA();
+      atualizarSplash();
+    });
+  } else {
+    atualizarSplash();
+  }
+  renderHist();
+});
+
+function atualizarSplash() {
+  var dot = document.getElementById('sp-dot');
+  var txt = document.getElementById('sp-txt');
+  if (!dot || !txt) return;
+  if (MN_ATIVO) {
+    dot.className = 'sp-dot on';
+    txt.textContent = '✅ Motor Neural Ativo — Pronto para consultas';
+    txt.style.color = '#22c55e';
+  } else if (MN_KEY) {
+    dot.className = 'sp-dot err';
+    txt.textContent = '⚠️ Chave inválida — atualize nas configurações';
+    txt.style.color = '#f97316';
+  } else {
+    dot.className = 'sp-dot';
+    txt.textContent = '🔑 Configure a IA para respostas avançadas';
+  }
+}
+
+function atualizarStatusIA() {
+  var dot = document.getElementById('ia-dot');
+  var lbl = document.getElementById('ia-lbl');
+  var hint = document.getElementById('hint');
+  if (MN_ATIVO) {
+    if (dot) { dot.className = 'on'; }
+    if (lbl) { lbl.textContent = 'IA Ativa'; lbl.className = 'on'; }
+    if (hint) hint.textContent = '⚡ Motor Neural LEX ativo — análises jurídicas avançadas';
+  } else {
+    if (dot) { dot.className = ''; }
+    if (lbl) { lbl.textContent = 'Modo Base'; lbl.className = ''; }
+    if (hint) hint.textContent = '⚡ Configure a IA para respostas avançadas';
+  }
+}
+
+function entrarApp() {
+  var splash = document.getElementById('splash');
+  var app = document.getElementById('app');
+  if (splash) splash.style.display = 'none';
+  if (app) { app.style.display = 'flex'; }
+  renderBV();
+  var inp = document.getElementById('inp');
+  if (inp) setTimeout(function(){ inp.focus(); }, 100);
+}
+
+// ══════════════════════════════════════════════
+// BOAS VINDAS
+// ══════════════════════════════════════════════
+function renderBV() {
+  var wlc = document.getElementById('wlc');
+  if (!wlc) return;
+  var arr = sortSugs();
+  var cards = arr.map(function(s) {
+    var q = s.q.replace(/'/g, "\\'");
+    return '<div class="sug-card" onclick="enviarTxt(\'' + q + '\')">' +
+      '<div class="sug-ic">' + s.i + '</div>' +
+      '<div class="sug-t">' + s.t + '</div>' +
+      '<div class="sug-q">' + s.q + '</div>' +
+      '</div>';
+  }).join('');
+
+  var status = MN_ATIVO
+    ? '<strong style="color:var(--green)">✅ Motor Neural LEX Ativo</strong> — análises jurídicas avançadas e personalizadas'
+    : '🔑 <span style="color:var(--gold);cursor:pointer" onclick="abrirModal()">Ative o Motor Neural →</span> para respostas ainda mais precisas';
+
+  wlc.innerHTML = '<div class="wlc-ic">⚖️</div>' +
+    '<div class="wlc-t">LEX SUPREMA — Seu Jurista Virtual</div>' +
+    '<div class="wlc-s">' + status + '<br>Especializado em <strong>brechas legais, benefícios e direitos do cidadão brasileiro</strong>.</div>' +
+    '<div class="sug-grid">' + cards + '</div>';
+}
+
+function sortSugs() {
+  var copia = SUGS.slice();
+  for (var i = copia.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = copia[i]; copia[i] = copia[j]; copia[j] = tmp;
+  }
+  return copia.slice(0, 6);
+}
+
+// ══════════════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════════════
+function autoH(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function keyE(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    enviar();
+  }
+}
+
+function enviar() {
+  var inp = document.getElementById('inp');
+  if (!inp) return;
+  var txt = inp.value.trim();
+  if (!txt || ENVIANDO) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+  enviarTxt(txt);
+}
+
+function enviarTxt(txt) {
+  if (!txt || ENVIANDO) return;
+
+  // Remover tela de boas-vindas
+  var wlc = document.getElementById('wlc');
+  if (wlc && wlc.parentNode) wlc.remove();
+
+  // Remover sugestões contextuais
+  var cs = document.getElementById('ctx-sug');
+  if (cs) cs.remove();
+
+  adicionarMsgU(txt);
+  ENVIANDO = true;
+  var btn = document.getElementById('btn-send');
+  if (btn) btn.disabled = true;
+
+  HIST_CHAT.push({ role: 'user', content: txt });
+  salvarPerg(txt);
+
+  var tid = mostrarTyping();
+
+  if (MN_ATIVO && MN_KEY) {
+    chamarMN(txt).then(function(resp) {
+      removerTyping(tid);
+      adicionarMsgL(resp, true);
+      HIST_CHAT.push({ role: 'assistant', content: resp });
+      setTimeout(function(){ mostrarCtxSugs(txt); }, 500);
+      ENVIANDO = false;
+      if (btn) btn.disabled = false;
+    }).catch(function(err) {
+      removerTyping(tid);
+      mostrarErro('Erro na IA: ' + err.message + ' — usando base jurídica');
+      var resp = respostaBase(txt);
+      adicionarMsgL(resp, false);
+      HIST_CHAT.push({ role: 'assistant', content: resp });
+      setTimeout(function(){ mostrarCtxSugs(txt); }, 500);
+      ENVIANDO = false;
+      if (btn) btn.disabled = false;
+    });
+  } else {
+    var delay = DETALHE ? 1400 : 600 + Math.floor(Math.random() * 400);
+    setTimeout(function() {
+      removerTyping(tid);
+      var resp = respostaBase(txt);
+      adicionarMsgL(resp, false);
+      HIST_CHAT.push({ role: 'assistant', content: resp });
+      setTimeout(function(){ mostrarCtxSugs(txt); }, 500);
+      ENVIANDO = false;
+      if (btn) btn.disabled = false;
+    }, delay);
+  }
+}
+
+// ══════════════════════════════════════════════
+// MOTOR NEURAL (chamada de rede)
+// ══════════════════════════════════════════════
+function chamarMN(texto) {
+  return new Promise(function(resolve, reject) {
+    var contents = [];
+    var hist = HIST_CHAT.slice(-10);
+    for (var i = 0; i < hist.length; i++) {
+      var m = hist[i];
+      contents.push({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      });
+    }
+    // Garantir que a mensagem atual está no final
+    var last = contents[contents.length - 1];
+    if (!last || last.role !== 'user' || last.parts[0].text !== texto) {
+      contents.push({ role: 'user', parts: [{ text: texto }] });
+    }
+
+    var payload = {
+      system_instruction: { parts: [{ text: _SYS }] },
+      contents: contents,
+      generationConfig: {
+        temperature: DETALHE ? 0.4 : 0.3,
+        maxOutputTokens: DETALHE ? 1000 : 750,
+        topP: 0.9
+      },
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' }
+      ]
+    };
+
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + MN_KEY;
+
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(res) {
+      if (!res.ok) {
+        return res.json().catch(function(){ return {}; }).then(function(e) {
+          var msg = (e && e.error && e.error.message) ? e.error.message : 'HTTP ' + res.status;
+          if (res.status === 400 || res.status === 401 || res.status === 403) {
+            MN_ATIVO = false;
+            MN_KEY = '';
+            localStorage.removeItem('lex_mn_key');
+            atualizarStatusIA();
+          }
+          reject(new Error(msg));
+        });
+      }
+      return res.json();
+    }).then(function(data) {
+      if (!data) return;
+      var text = data &&
+                 data.candidates &&
+                 data.candidates[0] &&
+                 data.candidates[0].content &&
+                 data.candidates[0].content.parts &&
+                 data.candidates[0].content.parts[0] &&
+                 data.candidates[0].content.parts[0].text;
+      if (!text) { reject(new Error('Resposta vazia')); return; }
+      resolve(text.trim());
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
+function testarKey(key) {
+  return new Promise(function(resolve) {
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: 'OK' }] }]
+      })
+    }).then(function(res) {
+      resolve(res.ok);
+    }).catch(function() {
+      resolve(false);
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+// BASE JURÍDICA LOCAL
+// ══════════════════════════════════════════════
+function respostaBase(txt) {
+  var t = txt.toLowerCase();
+  var melhor = null;
+  var melhorScore = 0;
+
+  var areas = Object.keys(KB);
+  for (var i = 0; i < areas.length; i++) {
+    var area = KB[areas[i]];
+    var score = 0;
+    for (var j = 0; j < area.kw.length; j++) {
+      if (t.indexOf(area.kw[j]) >= 0) {
+        score += area.kw[j].length > 5 ? 3 : 1;
+      }
+    }
+    if (score > melhorScore) {
+      melhorScore = score;
+      melhor = area.r;
+    }
+  }
+
+  if (melhor && melhorScore >= 2) return melhor;
+  return respostaGeral(txt);
+}
+
+function respostaGeral(txt) {
+  return '## ⚖️ LEX SUPREMA — Consultoria Jurídica\n\nSua consulta sobre **"' + txt + '"** foi recebida.\n\n**💡 Para análise precisa e personalizada**, ative o Motor Neural LEX nas configurações (ícone no topo).\n\n**🆓 Recursos Gratuitos Imediatos:**\n- **Defensoria Pública**: advogado gratuito — ligue 129 ou acesse defensoria.jus.br\n- **JEC** (Juizado Especial Cível): causas até 40 SM, sem advogado, sem custas\n- **JEF** (Juizado Especial Federal): causas contra INSS — gratuito\n- **PROCON**: conflitos de consumo — 0800 707 3003\n- **CEJUSC**: mediação gratuita em disputas\n\n**📋 Posso ajudar com:**\nTrabalhista · Consumidor · INSS/Previdência · Dívidas/Execução · Saúde · Família · Criminal · Imóveis\n\nDescreva mais detalhes sobre sua situação para uma resposta mais específica!';
+}
+
+// ══════════════════════════════════════════════
+// UI — MENSAGENS
+// ══════════════════════════════════════════════
+function adicionarMsgU(txt) {
+  var msgs = document.getElementById('msgs');
+  if (!msgs) return;
+  var div = document.createElement('div');
+  div.className = 'msg-u';
+  div.textContent = txt;
+  msgs.appendChild(div);
+  scrollB();
+}
+
+function adicionarMsgL(md, viaIA) {
+  var msgs = document.getElementById('msgs');
+  if (!msgs) return;
+  var div = document.createElement('div');
+  div.className = viaIA ? 'msg-l ia-msg' : 'msg-l';
+
+  var badge = viaIA
+    ? '<span class="badge badge-ia">✦ Motor Neural</span>'
+    : '<span class="badge badge-loc">📚 Base Jurídica</span>';
+
+  var mid = 'mb' + Date.now();
+  div.innerHTML =
+    '<div class="msg-header">' +
+    '<div class="lex-av">⚖</div>' +
+    '<strong style="color:var(--gold);font-size:12px">LEX SUPREMA</strong>' +
+    badge +
+    '</div>' +
+    '<div class="msg-body" id="' + mid + '"></div>';
+
+  msgs.appendChild(div);
+  scrollB();
+  typewrite(mid, md);
+}
+
+function typewrite(eid, md) {
+  var el = document.getElementById(eid);
+  if (!el) return;
+  var html = mdToHtml(md);
+  var words = html.split(' ');
+  var i = 0;
+  var chunk = DETALHE ? 3 : 4;
+
+  function render() {
+    if (i >= words.length) {
+      el.innerHTML = html;
+      scrollB();
+      return;
+    }
+    var end = Math.min(i + chunk, words.length);
+    var acc = words.slice(0, end).join(' ');
+    el.innerHTML = acc + (i < words.length ? '<span class="cursor"></span>' : '');
+    i = end;
+    scrollB();
+    setTimeout(render, 22);
+  }
+  render();
+}
+
+function mdToHtml(md) {
+  if (!md) return '';
+  var h = md
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/^## (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^### (.+)$/gm,'<h4>$1</h4>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>')
+    .replace(/<\/ul>\s*<ul>/g,'')
+    .replace(/\n{2,}/g,'</p><p>')
+    .replace(/\n/g,'<br>');
+  if (h.charAt(0) !== '<') h = '<p>' + h + '</p>';
+  return h;
+}
+
+function mostrarTyping() {
+  var msgs = document.getElementById('msgs');
+  if (!msgs) return 'tid';
+  var div = document.createElement('div');
+  div.className = 'typing-w';
+  div.id = 'typing-ind';
+  div.innerHTML = '<div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>';
+  msgs.appendChild(div);
+  scrollB();
+  return 'typing-ind';
+}
+
+function removerTyping(id) {
+  var el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function scrollB() {
+  var msgs = document.getElementById('msgs');
+  if (msgs) msgs.scrollTop = msgs.scrollHeight;
+}
+
+function mostrarErro(msg) {
+  var b = document.getElementById('err-banner');
+  if (!b) return;
+  b.textContent = '⚠️ ' + msg;
+  b.style.display = 'block';
+  setTimeout(function(){ b.style.display = 'none'; }, 6000);
+}
+
+// ══════════════════════════════════════════════
+// SUGESTÕES CONTEXTUAIS
+// ══════════════════════════════════════════════
+function mostrarCtxSugs(perg) {
+  var msgs = document.getElementById('msgs');
+  if (!msgs) return;
+  var p = perg.toLowerCase();
+  var sugs = [];
+
+  if (p.indexOf('demiti') >= 0 || p.indexOf('rescisão') >= 0) {
+    sugs = ['Quanto vou receber de FGTS?','Tenho direito ao seguro-desemprego?','O que é rescisão indireta?'];
+  } else if (p.indexOf('dívida') >= 0 || p.indexOf('execução') >= 0 || p.indexOf('prescrit') >= 0) {
+    sugs = ['Quando a dívida prescreve?','O salário pode ser penhorado?','Como funciona o superendividamento?'];
+  } else if (p.indexOf('plano') >= 0 || p.indexOf('saúde') >= 0) {
+    sugs = ['O que o plano é obrigado a cobrir?','Posso pedir liminar contra o plano?','Farmácia Popular cobre meu remédio?'];
+  } else if (p.indexOf('inss') >= 0 || p.indexOf('aposentadoria') >= 0) {
+    sugs = ['Como recorrer da negativa do INSS?','Tenho direito ao BPC/LOAS?','O que é o JEF?'];
+  } else if (p.indexOf('aluguel') >= 0 || p.indexOf('despejo') >= 0) {
+    sugs = ['Despejo pode ser feito sem decisão judicial?','Como funciona a usucapião?','O locador pode cortar serviços?'];
+  } else {
+    sugs = ['Quais serviços jurídicos são gratuitos?','Como funciona a Defensoria Pública?','O que é o JEC?'];
+  }
+
+  var wrap = document.createElement('div');
+  wrap.className = 'ctx-wrap';
+  wrap.id = 'ctx-sug';
+  wrap.innerHTML = sugs.map(function(s) {
+    var sq = s.replace(/'/g, "\\'");
+    return '<button class="ctx-btn" onclick="enviarTxt(\'' + sq + '\');this.parentElement.remove()">' + s + '</button>';
+  }).join('');
+  msgs.appendChild(wrap);
+  scrollB();
+}
+
+// ══════════════════════════════════════════════
+// MODAL CONFIG IA
+// ══════════════════════════════════════════════
+function abrirModal() {
+  var m = document.getElementById('modal');
+  if (m) m.classList.add('open');
+  var ki = document.getElementById('key-inp');
+  if (ki && MN_KEY) ki.value = MN_KEY;
+}
+
+function fecharModal() {
+  var m = document.getElementById('modal');
+  if (m) m.classList.remove('open');
+}
+
+function salvarKey() {
+  var ki = document.getElementById('key-inp');
+  var key = ki ? ki.value.trim() : '';
+  if (!key) {
+    setMStatus('err', '❌ Insira a chave de acesso');
+    return;
+  }
+
+  var btn = document.getElementById('btn-key');
+  if (btn) { btn.disabled = true; btn.textContent = 'Verificando...'; }
+  setMStatus('load', '🔄 Verificando conexão com o motor neural...');
+
+  testarKey(key).then(function(ok) {
+    if (ok) {
+      MN_KEY = key;
+      MN_ATIVO = true;
+      localStorage.setItem('lex_mn_key', key);
+      atualizarStatusIA();
+      setMStatus('ok', '✅ Motor Neural LEX ativado com sucesso!');
+      setTimeout(function() {
+        fecharModal();
+        renderBV(); // atualizar tela de boas-vindas
+      }, 1500);
+    } else {
+      setMStatus('err', '❌ Chave inválida ou sem acesso. Verifique e tente novamente.');
+    }
+    if (btn) { btn.disabled = false; btn.textContent = 'Ativar'; }
+  });
+}
+
+function setMStatus(tipo, msg) {
+  var el = document.getElementById('m-status');
+  if (!el) return;
+  el.className = tipo;
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════
+// HISTÓRICO
+// ══════════════════════════════════════════════
+function salvarPerg(p) {
+  HIST_PERG.unshift({ q: p.slice(0, 55), ts: Date.now() });
+  if (HIST_PERG.length > 20) HIST_PERG = HIST_PERG.slice(0, 20);
+  try { localStorage.setItem('lex_hist', JSON.stringify(HIST_PERG)); } catch(e){}
+  renderHist();
+}
+
+function renderHist() {
+  var list = document.getElementById('hist-list');
+  if (!list) return;
+  if (!HIST_PERG.length) {
+    list.innerHTML = '<div style="font-size:11px;color:var(--text3);padding:8px 10px">Nenhuma consulta ainda</div>';
+    return;
+  }
+  var items = HIST_PERG.slice(0, 10).map(function(h) {
+    var q = h.q.replace(/'/g, "\\'");
+    return '<div class="hist-item" onclick="enviarTxt(\'' + q + '\')">💬 ' + h.q + '</div>';
+  });
+  list.innerHTML = items.join('');
+}
+
+function limparChat() {
+  HIST_CHAT = [];
+  var msgs = document.getElementById('msgs');
+  if (msgs) {
+    msgs.innerHTML = '<div id="wlc"></div>';
+    renderBV();
+  }
+}
+
+// ══════════════════════════════════════════════
+// MODO
+// ══════════════════════════════════════════════
+function setMode(m) {
+  DETALHE = (m === 'd');
+  var pr = document.getElementById('p-rap');
+  var pd = document.getElementById('p-det');
+  if (pr) pr.className = DETALHE ? 'mpill' : 'mpill ativo';
+  if (pd) pd.className = DETALHE ? 'mpill ativo' : 'mpill';
+}
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(reg) { console.log('LEX SW registrado:', reg.scope); })
+      .catch(function(err) { console.log('SW falhou:', err); });
+  });
+}
+// Banner "Instalar App" para Android
+var deferredPrompt;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Mostrar banner de instalação
+  setTimeout(function() {
+    var banner = document.createElement('div');
+    banner.id = 'install-banner';
+    banner.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
+      'background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0a0a0f;' +
+      'padding:12px 20px;border-radius:50px;font-size:13px;font-weight:700;' +
+      'cursor:pointer;z-index:9999;box-shadow:0 4px 20px rgba(201,168,76,0.5);' +
+      'display:flex;align-items:center;gap:8px;white-space:nowrap';
+    banner.innerHTML = '📲 Instalar LEX SUPREMA no celular <span style="font-size:16px">×</span>';
+    banner.onclick = function(ev) {
+      if (ev.target.tagName === 'SPAN') { banner.remove(); return; }
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(r) {
+        deferredPrompt = null;
+        banner.remove();
+      });
+    };
+    document.body.appendChild(banner);
+  }, 3000);
+});
+</script>
+</body>
+</html>
