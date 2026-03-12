@@ -1,7 +1,7 @@
 {
   "name": "Lex Mitio",
   "short_name": "Lex Mitio",
-  "description": "Assistente jur\u00eddico virtual gratuito para cidad\u00e3os brasileiros",
+  "description": "Assistente jur\u00eddico virtual gratuito",
   "start_url": "/lex-suprema/",
   "display": "standalone",
   "background_color": "#0a0a0f",
