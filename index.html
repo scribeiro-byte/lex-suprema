@@ -205,19 +205,14 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 #m-status.load{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
 </style>
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#c9a84c">
+  <!-- PWA Meta Tags -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="LEX SUPREMA">
-  <meta name="application-name" content="LEX SUPREMA">
-  <meta name="description" content="Consultoria jurídica com IA — brechas legais e direitos do cidadão brasileiro">
-  <link rel="apple-touch-icon" href="icons/icon-152.svg">
-  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.svg">
-  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.svg">
-  <link rel="icon" type="image/svg+xml" href="icons/icon-192.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0a0a0f">
 </head>
 <body>
 
@@ -930,40 +925,14 @@ function setMode(m) {
 }
 </script>
 
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js')
-      .then(function(reg) { console.log('LEX SW registrado:', reg.scope); })
-      .catch(function(err) { console.log('SW falhou:', err); });
-  });
-}
-// Banner "Instalar App" para Android
-var deferredPrompt;
-window.addEventListener('beforeinstallprompt', function(e) {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Mostrar banner de instalação
-  setTimeout(function() {
-    var banner = document.createElement('div');
-    banner.id = 'install-banner';
-    banner.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
-      'background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0a0a0f;' +
-      'padding:12px 20px;border-radius:50px;font-size:13px;font-weight:700;' +
-      'cursor:pointer;z-index:9999;box-shadow:0 4px 20px rgba(201,168,76,0.5);' +
-      'display:flex;align-items:center;gap:8px;white-space:nowrap';
-    banner.innerHTML = '📲 Instalar LEX SUPREMA no celular <span style="font-size:16px">×</span>';
-    banner.onclick = function(ev) {
-      if (ev.target.tagName === 'SPAN') { banner.remove(); return; }
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function(r) {
-        deferredPrompt = null;
-        banner.remove();
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('SW registrado:', reg.scope))
+          .catch(err => console.log('SW erro:', err));
       });
-    };
-    document.body.appendChild(banner);
-  }, 3000);
-});
-</script>
+    }
+  </script>
 </body>
 </html>
