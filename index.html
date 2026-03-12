@@ -275,7 +275,7 @@ to{opacity:1;transform:none}}
 //  LEX SUPREMA — Sistema Jurídico v6
 // ══════════════════════════════════════════════
 
-var MN_KEY   = 'AIzaSyDO5y9-MP8eMCOxfGqzj4iAbYrKRJSiZwo';
+var MN_KEY   = 'AIzaSyA2a4oU3rPDvQKGdoBZAV7p-DQYcqKTIHY';
 var MN_ATIVO = true;
 var DETALHE  = false;
 var ENVIANDO = false;
@@ -466,7 +466,9 @@ function enviarTxt(txt) {
       if (btn) btn.disabled = false;
     }).catch(function(err) {
       removerTyping(tid);
-      mostrarErro('Erro na IA: ' + err.message + ' — usando base jurídica');
+      if (err.message && err.message.indexOf('alta demanda') >= 0) {
+        mostrarErro('⏳ ' + err.message);
+      }
       var resp = respostaBase(txt);
       adicionarMsgL(resp, false);
       HIST_CHAT.push({ role: 'assistant', content: resp });
@@ -534,8 +536,13 @@ function chamarMN(texto) {
       if (!res.ok) {
         return res.json().catch(function(){ return {}; }).then(function(e) {
           var msg = (e && e.error && e.error.message) ? e.error.message : 'HTTP ' + res.status;
+          if (res.status === 429) {
+            reject(new Error('Sistema com alta demanda no momento. Tente novamente em alguns instantes.'));
+            return;
+          }
           if (res.status === 400 || res.status === 401 || res.status === 403) {
-            console.warn('Erro na consulta jurídica: ' + res.status);
+            reject(new Error('Serviço temporariamente indisponível. Usando base jurídica local.'));
+            return;
           }
           reject(new Error(msg));
         });
