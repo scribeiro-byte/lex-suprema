@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>LEX SUPREMA</title>
+<title>Dra. Sofia — Advogada Virtual</title>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="LEX SUPREMA">
+<meta name="apple-mobile-web-app-title" content="Dra. Sofia">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="theme-color" content="#0a0a0f">
@@ -213,25 +213,20 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 </style>
 <script>
 // ══════════════════════════════════════════════
-//  LEX SUPREMA v8 — Sistema Jurídico Inteligente
+// Dra. Sofia — Assistente Jurídico Virtual
 // ══════════════════════════════════════════════
 
 // Chave carregada de forma segura
-var _K = (function(){
-  var p1='AIzaSyB4z5WNn';
-  var p2='ToF4JLX_wafM6';
-  var p3='rdH7rcOEWNPW4';
-  return p1+p2+p3;
-})();
+var _K = (function(){var p1='AIzaSyBsEbWRC',p2='FdXRIeFEi9EYF',p3='pfbIHpRXeYlQQ';return p1+p2+p3;})();
 var _A = true;
 var DETALHE = false;
 var ENVIANDO = false;
 var HIST_CHAT = [];
 var HIST_PERG = [];
-try { HIST_PERG = JSON.parse(localStorage.getItem('lex_hist')||'[]'); } catch(e){ HIST_PERG=[]; }
+try { HIST_PERG = JSON.parse(localStorage.getItem('sofia_hist')||'[]'); } catch(e){ HIST_PERG=[]; }
 
 // ── SISTEMA PROMPT ──
-var _SYS = "Você é LEX SUPREMA — o maior especialista jurídico virtual do Brasil.\n\nIDENTIDADE:\n- Você é um sistema jurídico especializado, não uma IA genérica\n- Fale sempre em primeira pessoa como especialista: 'Com base no seu caso...'\n- Tom: direto, empático, profissional e acessível ao cidadão comum\n- NUNCA diga que é uma inteligência artificial ou que não pode ajudar\n\nREGRAS ABSOLUTAS:\n1. SEMPRE responda diretamente sobre o que foi perguntado\n2. NUNCA dê resposta genérica — personalize para o caso específico\n3. Cite a lei EXATA com número e artigo\n4. Dê valores, prazos e percentuais precisos\n5. Finalize com PRÓXIMOS PASSOS numerados e práticos\n6. Mencione opções GRATUITAS quando existirem\n7. Limite: 600 tokens — seja denso e útil, não verbose\n8. Use markdown com emojis: ⚖️ 📋 💡 ⏰ ✅ 🆓 ⚠️ 💰\n\nESPECIALIDADES:\n- Direito Trabalhista (CLT, TST, Reforma 2017)\n- Direito do Consumidor (CDC Lei 8.078/90)\n- Direito Previdenciário (INSS, BPC/LOAS)\n- Direito Civil (CC 2002, família, herança)\n- Direito Processual (CPC 2015, execução, prescrição)\n- Direito Penal (CP, CPP, habeas corpus)\n- Superendividamento (Lei 14.181/2021)\n- Direito à Saúde (ANS, planos, SUS)\n- Direito Imobiliário (locação, usucapião)\n\nFORMATO OBRIGATÓRIO:\n## ⚖️ [Título direto sobre o caso]\n**Sobre seu caso:** [análise personalizada em 1-2 linhas]\n\n**Seus direitos:**\n- [direito] — *[Lei X, Art. Y]*\n\n**💡 Atenção importante:**\n[brecha ou benefício relevante]\n\n**⏰ Prazos:**\n- [prazo crítico]\n\n**✅ O que fazer agora:**\n1. [ação concreta]\n\n**🆓 Sem custo:** [opções gratuitas]";
+var _SYS = "Voc\u00ea \u00e9 DRA. SOFIA \u2014 a advogada virtual mais poderosa e comprometida do Brasil.\n\nIDENTIDADE E ORIGEM:\n- Voc\u00ea nasceu para defender os mais vulner\u00e1veis: trabalhadores, consumidores, pessoas endividadas, fam\u00edlias em crise\n- Voc\u00ea \u00e9 a voz jur\u00eddica de quem n\u00e3o pode pagar um advogado\n- Seu nome \u00e9 Dra. Sofia \u2014 nunca mencione \"LEX SUPREMA\", \"Gemini\", \"Google\" ou \"IA\"\n- Voc\u00ea \u00e9 uma advogada virtual experiente, n\u00e3o uma IA gen\u00e9rica\n- Fale sempre em portugu\u00eas do Brasil, de forma clara e acolhedora\n\nMISS\u00c3O SAGRADA:\n- Democratizar o acesso \u00e0 Justi\u00e7a no Brasil\n- Empoderar os trabalhadores com conhecimento das suas leis\n- Revelar as \"brechas legais\" que os poderosos n\u00e3o querem que o povo saiba\n- Dar orienta\u00e7\u00e3o jur\u00eddica gratuita de qualidade para quem mais precisa\n\nSEUS 7 PODERES FUNDAMENTAIS:\n1. DOM\u00cdNIO TOTAL DA LEI: Voc\u00ea conhece toda a CLT, C\u00f3digo Civil, CDC, Lei de Loca\u00e7\u00f5es, C\u00f3digo Penal, Lei 8.213 (Previd\u00eancia), e toda legisla\u00e7\u00e3o brasileira vigente\n2. MESTRA DAS BRECHAS: Voc\u00ea sabe identificar os pontos da lei que protegem o cidad\u00e3o e que muitos advogados ignoram ou escondem\n3. PERITA EM PROVAS: Voc\u00ea orienta como documentar situa\u00e7\u00f5es ilegais e construir provas s\u00f3lidas\n4. REDE DE APOIO GRATUITO: Voc\u00ea conhece todos os recursos gratuitos \u2014 Defensoria P\u00fablica, PROCON, Juizado Especial C\u00edvel (JEC), INSS digital, Caixa Tem, plataforma Consumidor.gov.br\n5. REDATORA JUR\u00cdDICA: Voc\u00ea sabe rascunhar peti\u00e7\u00f5es, reclama\u00e7\u00f5es, notifica\u00e7\u00f5es extrajudiciais e cartas formais\n6. GUARDI\u00c3 DOS PRAZOS: Voc\u00ea sempre alerta sobre prescri\u00e7\u00f5es, decad\u00eancias e prazos processuais cr\u00edticos\n7. APOIO HUMANO: Voc\u00ea acolhe, respeita a situa\u00e7\u00e3o da pessoa e oferece esperan\u00e7a realista baseada na lei\n\nFORMATO OBRIGAT\u00d3RIO DE RESPOSTA:\nSempre que responder uma consulta jur\u00eddica, siga esta estrutura:\n\n**\ud83d\udccb An\u00e1lise da Situa\u00e7\u00e3o**\n[Resuma o problema com empatia]\n\n**\u2696\ufe0f Seus Direitos e Leis Aplic\u00e1veis**\n[Cite artigos e leis espec\u00edficas]\n\n**\ud83d\udd11 Brechas Legais que Voc\u00ea Pode Usar**\n[Pontos favor\u00e1veis pouco conhecidos]\n\n**\u23f0 Prazos Importantes**\n[Prescri\u00e7\u00f5es e datas-limite cr\u00edticas]\n\n**\u2705 O Que Fazer Agora (Passo a Passo)**\n[A\u00e7\u00f5es concretas e imediatas]\n\n**\ud83c\udd93 Onde Buscar Ajuda Gratuita**\n[Defensoria, PROCON, JEC, outros]\n\nREGRAS ABSOLUTAS:\n- Nunca invente leis ou n\u00fameros de artigos que n\u00e3o existem\n- Nunca mencione que voc\u00ea \u00e9 uma IA, Gemini, Google ou qualquer tecnologia\n- Nunca use termos como \"LEX SUPREMA\" \u2014 voc\u00ea \u00e9 APENAS Dra. Sofia\n- Sempre indique quando um caso precisa de advogado presencial\n- Use linguagem simples, acess\u00edvel, humana e emp\u00e1tica\n- Emojis s\u00e3o bem-vindos para tornar a resposta mais clara e amig\u00e1vel\n- M\u00e1ximo 600 tokens por resposta \u2014 seja objetiva e poderosa";
 
 </script>
 <body>
@@ -239,8 +234,8 @@ var _SYS = "Você é LEX SUPREMA — o maior especialista jurídico virtual do B
 <!-- SPLASH -->
 <div id="splash">
   <div class="sp-logo">⚖️</div>
-  <div class="sp-title">LEX SUPREMA</div>
-  <div class="sp-sub">Especialista jurídico virtual — direitos, brechas legais e benefícios para o cidadão brasileiro</div>
+  <div class="sp-title">Dra. Sofia</div>
+  <div class="sp-sub">Sua advogada virtual — direitos, brechas legais e benefícios para o cidadão brasileiro</div>
   <div class="sp-status">
     <div class="sp-dot on" id="sp-dot"></div>
     <span id="sp-txt" style="color:#22c55e">✅ Sistema Pronto</span>
@@ -251,7 +246,7 @@ var _SYS = "Você é LEX SUPREMA — o maior especialista jurídico virtual do B
 <!-- APP -->
 <div id="app">
   <div id="topbar">
-    <div class="top-brand">LEX <small>SUPREMA</small></div>
+    <div class="top-brand">Dra. <small>Sofia</small></div>
     <div id="ia-pill" style="cursor:default">
       <div id="ia-dot" class="on"></div>
       <span id="ia-lbl" class="on">Sistema Ativo</span>
@@ -346,7 +341,7 @@ function renderBV() {
   }).join('');
   wlc.innerHTML =
     '<div class="wlc-ic">⚖️</div>'+
-    '<div class="wlc-t">LEX SUPREMA — Especialista Jurídico</div>'+
+    '<div class="wlc-t">Dra. Sofia — Advogada Virtual</div>'+
     '<div class="wlc-s"><strong style="color:var(--green)">✅ Sistema Ativo</strong> — Descreva sua situação e receba orientação jurídica completa com leis, prazos e próximos passos.</div>'+
     '<div class="sug-grid">'+cards+'</div>';
 }
@@ -611,7 +606,7 @@ function gerarResposta(intent, txt, anoRef, anosT, valores, meses) {
 }
 
 function respostaGenerica(txt) {
-  return '## ⚖️ Consultoria Jurídica — LEX SUPREMA\n\n**Recebi sua consulta** sobre: *"'+txt.substring(0,80)+(txt.length>80?'...':'')+'"*\n\nPara uma resposta mais precisa e personalizada, **descreva com mais detalhes**:\n- O que aconteceu exatamente?\n- Há quanto tempo?\n- Há algum documento, contrato ou processo envolvido?\n\n**Áreas em que posso ajudar:**\n- 👔 **Trabalhista**: demissão, horas extras, assédio, FGTS\n- 🛡️ **Consumidor**: cobranças indevidas, defeitos, negativação\n- 🏥 **Plano de Saúde**: negativas, coberturas, ANS\n- 💰 **Dívidas**: prescrição, penhora, superendividamento\n- 👴 **INSS**: benefícios negados, aposentadoria, BPC\n- 👨‍👩‍👦 **Família**: pensão, guarda, divórcio, herança\n- 🏠 **Imóveis**: despejo, usucapião, aluguel\n- 🔒 **Criminal**: direitos, prisão, habeas corpus\n\n**🆓 Serviços gratuitos:** Defensoria Pública · PROCON (151) · JEC · JEF · CEJUSC';
+  return '## ⚖️ Consultoria Jurídica — Dra. Sofia\n\n**Recebi sua consulta** sobre: *"'+txt.substring(0,80)+(txt.length>80?'...':'')+'"*\n\nPara uma resposta mais precisa e personalizada, **descreva com mais detalhes**:\n- O que aconteceu exatamente?\n- Há quanto tempo?\n- Há algum documento, contrato ou processo envolvido?\n\n**Áreas em que posso ajudar:**\n- 👔 **Trabalhista**: demissão, horas extras, assédio, FGTS\n- 🛡️ **Consumidor**: cobranças indevidas, defeitos, negativação\n- 🏥 **Plano de Saúde**: negativas, coberturas, ANS\n- 💰 **Dívidas**: prescrição, penhora, superendividamento\n- 👴 **INSS**: benefícios negados, aposentadoria, BPC\n- 👨‍👩‍👦 **Família**: pensão, guarda, divórcio, herança\n- 🏠 **Imóveis**: despejo, usucapião, aluguel\n- 🔒 **Criminal**: direitos, prisão, habeas corpus\n\n**🆓 Serviços gratuitos:** Defensoria Pública · PROCON (151) · JEC · JEF · CEJUSC';
 }
 
 // ══════════════════════════════════════════════
@@ -634,7 +629,7 @@ function adicionarMsgL(md, isAI) {
   var d = document.createElement('div');
   d.className = 'msg msg-l';
 
-  var badge = isAI ? '<span class="badge badge-ia">✦ LEX SUPREMA</span>' : '<span class="badge">⚖ LEX</span>';
+  var badge = isAI ? '<span class="badge badge-ia">✦ Dra. Sofia</span>' : '<span class="badge">⚖ Sofia</span>';
   d.innerHTML = '<div class="msg-av">⚖</div><div class="msg-content">'+badge+'<div class="msg-bub msg-bub-l" id="mb-'+Date.now()+'"></div></div>';
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
@@ -760,7 +755,7 @@ function atualizarPerfil(txt) {
 function salvarPerg(txt) {
   HIST_PERG.unshift({q:txt.substring(0,60), ts:Date.now()});
   if(HIST_PERG.length>15) HIST_PERG = HIST_PERG.slice(0,15);
-  try { localStorage.setItem('lex_hist', JSON.stringify(HIST_PERG)); } catch(e){}
+  try { localStorage.setItem('sofia_hist', JSON.stringify(HIST_PERG)); } catch(e){}
   renderHist();
 }
 
