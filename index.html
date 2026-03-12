@@ -166,38 +166,30 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 .mpill.ativo{background:var(--glow);color:var(--gold);border-color:rgba(201,168,76,.3)}
 
 /* MODAL IA CONFIG */
-#modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;
-  align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);padding:16px}
-#modal.open{display:flex}
-.modal-box{background:var(--s1);border:1px solid var(--border);border-radius:var(--rl);
-  padding:26px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,.6);
-  animation:mIn .25s ease}
-@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
-.m-close{float:right;background:var(--s2);border:1px solid var(--border);border-radius:8px;
-  padding:3px 10px;font-size:17px;cursor:pointer;color:var(--text2);transition:color .15s}
+
+
+
+to{opacity:1;transform:none}}
+
 .m-close:hover{color:var(--text)}
-.m-title{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:5px}
+
 .m-sub{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6}
 .m-step{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:11px}
 .m-step:last-child{margin-bottom:0}
 .m-num{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));
   color:#0a0a0f;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;
   margin-right:7px}
-.m-stitle{font-size:13px;font-weight:600}
-.m-ssub{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.55}
-.m-link{color:var(--gold);text-decoration:none;font-weight:600}
-.m-link:hover{text-decoration:underline}
-.key-wrap{display:flex;gap:8px;margin-top:9px}
-#key-inp{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);
-  padding:9px 13px;color:var(--text);font-size:13px;outline:none;font-family:monospace;
-  transition:border-color .2s}
-#key-inp:focus{border-color:var(--gold)}
-#key-inp::placeholder{color:var(--text3);font-family:inherit}
-#btn-key{padding:9px 18px;background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#0a0a0f;font-size:13px;font-weight:700;border:none;border-radius:var(--r);
-  cursor:pointer;transition:all .15s;white-space:nowrap}
-#btn-key:hover:not(:disabled){transform:translateY(-1px)}
-#btn-key:disabled{opacity:.5;cursor:not-allowed}
+
+
+
+
+
+
+
+
+
+
+
 #m-status{text-align:center;padding:9px;border-radius:var(--r);font-size:13px;
   font-weight:600;margin-top:7px;display:none}
 #m-status.ok{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3)}
@@ -205,7 +197,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 #m-status.load{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
 </style>
 
-  <!-- PWA Meta Tags -->
+  <!-- PWA -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -232,7 +224,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 <div id="app">
   <div id="topbar">
     <div class="top-brand">LEX <small>SUPREMA IA</small></div>
-    <div id="ia-pill" onclick="abrirModal()">
+    <div id="ia-pill" style="cursor:default">
       <div id="ia-dot"></div>
       <span id="ia-lbl">Modo Base</span>
     </div>
@@ -250,7 +242,6 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
       <div class="sb-sec">MENU</div>
       <div class="sb-item ativo"><span>💬</span> Nova Consulta</div>
       <div class="sb-item" onclick="limparChat()"><span>🗑️</span> Limpar Chat</div>
-      <div class="sb-item" onclick="abrirModal()"><span>⚡</span> Config. IA</div>
       <div class="sb-divider"></div>
       <div class="sb-sec">HISTÓRICO</div>
       <div class="hist-list" id="hist-list"></div>
@@ -279,47 +270,13 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 </div>
 
 <!-- MODAL CONFIG IA -->
-<div id="modal" onclick="if(event.target===this)fecharModal()">
-  <div class="modal-box">
-    <button class="m-close" onclick="fecharModal()">✕</button>
-    <div class="m-title">⚡ Ativar Motor Neural LEX</div>
-    <div class="m-sub">Ative o processamento neural avançado para análises jurídicas completas, personalizadas e com alta precisão.</div>
-
-    <div class="m-step">
-      <span class="m-num">1</span>
-      <span class="m-stitle">Obtenha sua chave de acesso gratuita</span>
-      <div class="m-ssub">
-        Acesse <a class="m-link" href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>
-        → faça login → clique em <strong>"Create API key"</strong> → copie a chave gerada.
-        <br><br>✅ 100% gratuito · 1.500 consultas/dia · sem cartão de crédito
-      </div>
-    </div>
-
-    <div class="m-step">
-      <span class="m-num">2</span>
-      <span class="m-stitle">Cole a chave abaixo e ative</span>
-      <div class="key-wrap">
-        <input id="key-inp" type="password" placeholder="Chave de acesso..." autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')salvarKey()">
-        <button id="btn-key" onclick="salvarKey()">Ativar</button>
-      </div>
-      <div id="m-status"></div>
-    </div>
-
-    <div class="m-step">
-      <span class="m-num">🔒</span>
-      <span class="m-stitle">Segurança total</span>
-      <div class="m-ssub">Sua chave fica armazenada <strong>apenas no seu navegador</strong>. Nunca é compartilhada ou enviada a terceiros.</div>
-    </div>
-  </div>
-</div>
-
 <script>
 // ══════════════════════════════════════════════
-//  LEX SUPREMA — Motor Neural Jurídico v5
+//  LEX SUPREMA — Sistema Jurídico v6
 // ══════════════════════════════════════════════
 
-var MN_KEY   = localStorage.getItem('lex_mn_key') || '';
-var MN_ATIVO = false;
+var MN_KEY   = 'AIzaSyDO5y9-MP8eMCOxfGqzj4iAbYrKRJSiZwo';
+var MN_ATIVO = true;
 var DETALHE  = false;
 var ENVIANDO = false;
 var HIST_CHAT = [];
@@ -387,19 +344,8 @@ var SUGS = [
 // INICIALIZAÇÃO
 // ══════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function() {
-  if (MN_KEY) {
-    testarKey(MN_KEY).then(function(ok) {
-      MN_ATIVO = ok;
-      if (!ok) {
-        localStorage.removeItem('lex_mn_key');
-        MN_KEY = '';
-      }
-      atualizarStatusIA();
-      atualizarSplash();
-    });
-  } else {
-    atualizarSplash();
-  }
+  atualizarStatusIA();
+  atualizarSplash();
   renderHist();
 });
 
@@ -407,33 +353,18 @@ function atualizarSplash() {
   var dot = document.getElementById('sp-dot');
   var txt = document.getElementById('sp-txt');
   if (!dot || !txt) return;
-  if (MN_ATIVO) {
-    dot.className = 'sp-dot on';
-    txt.textContent = '✅ Motor Neural Ativo — Pronto para consultas';
-    txt.style.color = '#22c55e';
-  } else if (MN_KEY) {
-    dot.className = 'sp-dot err';
-    txt.textContent = '⚠️ Chave inválida — atualize nas configurações';
-    txt.style.color = '#f97316';
-  } else {
-    dot.className = 'sp-dot';
-    txt.textContent = '🔑 Configure a IA para respostas avançadas';
-  }
+  dot.className = 'sp-dot on';
+  txt.textContent = '✅ Sistema Pronto — Consultas Jurídicas Disponíveis';
+  txt.style.color = '#22c55e';
 }
 
 function atualizarStatusIA() {
   var dot = document.getElementById('ia-dot');
   var lbl = document.getElementById('ia-lbl');
   var hint = document.getElementById('hint');
-  if (MN_ATIVO) {
-    if (dot) { dot.className = 'on'; }
-    if (lbl) { lbl.textContent = 'IA Ativa'; lbl.className = 'on'; }
-    if (hint) hint.textContent = '⚡ Motor Neural LEX ativo — análises jurídicas avançadas';
-  } else {
-    if (dot) { dot.className = ''; }
-    if (lbl) { lbl.textContent = 'Modo Base'; lbl.className = ''; }
-    if (hint) hint.textContent = '⚡ Configure a IA para respostas avançadas';
-  }
+  if (dot) { dot.className = 'on'; }
+  if (lbl) { lbl.textContent = 'Sistema Ativo'; lbl.className = 'on'; }
+  if (hint) hint.textContent = '⚡ Análises jurídicas avançadas disponíveis';
 }
 
 function entrarApp() {
@@ -462,9 +393,7 @@ function renderBV() {
       '</div>';
   }).join('');
 
-  var status = MN_ATIVO
-    ? '<strong style="color:var(--green)">✅ Motor Neural LEX Ativo</strong> — análises jurídicas avançadas e personalizadas'
-    : '🔑 <span style="color:var(--gold);cursor:pointer" onclick="abrirModal()">Ative o Motor Neural →</span> para respostas ainda mais precisas';
+  var status = '<strong style="color:var(--green)">✅ Sistema Jurídico Ativo</strong> — análises avançadas e personalizadas';
 
   wlc.innerHTML = '<div class="wlc-ic">⚖️</div>' +
     '<div class="wlc-t">LEX SUPREMA — Seu Jurista Virtual</div>' +
@@ -606,10 +535,7 @@ function chamarMN(texto) {
         return res.json().catch(function(){ return {}; }).then(function(e) {
           var msg = (e && e.error && e.error.message) ? e.error.message : 'HTTP ' + res.status;
           if (res.status === 400 || res.status === 401 || res.status === 403) {
-            MN_ATIVO = false;
-            MN_KEY = '';
-            localStorage.removeItem('lex_mn_key');
-            atualizarStatusIA();
+            console.warn('Erro na consulta jurídica: ' + res.status);
           }
           reject(new Error(msg));
         });
@@ -632,21 +558,7 @@ function chamarMN(texto) {
   });
 }
 
-function testarKey(key) {
-  return new Promise(function(resolve) {
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: 'OK' }] }]
-      })
-    }).then(function(res) {
-      resolve(res.ok);
-    }).catch(function() {
-      resolve(false);
-    });
-  });
+
 }
 
 // ══════════════════════════════════════════════
@@ -677,7 +589,7 @@ function respostaBase(txt) {
 }
 
 function respostaGeral(txt) {
-  return '## ⚖️ LEX SUPREMA — Consultoria Jurídica\n\nSua consulta sobre **"' + txt + '"** foi recebida.\n\n**💡 Para análise precisa e personalizada**, ative o Motor Neural LEX nas configurações (ícone no topo).\n\n**🆓 Recursos Gratuitos Imediatos:**\n- **Defensoria Pública**: advogado gratuito — ligue 129 ou acesse defensoria.jus.br\n- **JEC** (Juizado Especial Cível): causas até 40 SM, sem advogado, sem custas\n- **JEF** (Juizado Especial Federal): causas contra INSS — gratuito\n- **PROCON**: conflitos de consumo — 0800 707 3003\n- **CEJUSC**: mediação gratuita em disputas\n\n**📋 Posso ajudar com:**\nTrabalhista · Consumidor · INSS/Previdência · Dívidas/Execução · Saúde · Família · Criminal · Imóveis\n\nDescreva mais detalhes sobre sua situação para uma resposta mais específica!';
+  return '## ⚖️ LEX SUPREMA — Consultoria Jurídica\n\nSua consulta sobre **"' + txt + '"** foi recebida.\n\n**💡 Para análise mais precisa**, descreva sua situação com mais detalhes.\n\n**🆓 Recursos Gratuitos Imediatos:**\n- **Defensoria Pública**: advogado gratuito — ligue 129 ou acesse defensoria.jus.br\n- **JEC** (Juizado Especial Cível): causas até 40 SM, sem advogado, sem custas\n- **JEF** (Juizado Especial Federal): causas contra INSS — gratuito\n- **PROCON**: conflitos de consumo — 0800 707 3003\n- **CEJUSC**: mediação gratuita em disputas\n\n**📋 Posso ajudar com:**\nTrabalhista · Consumidor · INSS/Previdência · Dívidas/Execução · Saúde · Família · Criminal · Imóveis\n\nDescreva mais detalhes sobre sua situação para uma resposta mais específica!';
 }
 
 // ══════════════════════════════════════════════
@@ -700,7 +612,7 @@ function adicionarMsgL(md, viaIA) {
   div.className = viaIA ? 'msg-l ia-msg' : 'msg-l';
 
   var badge = viaIA
-    ? '<span class="badge badge-ia">✦ Motor Neural</span>'
+    ? '<span class="badge badge-ia">✦ LEX SUPREMA</span>'
     : '<span class="badge badge-loc">📚 Base Jurídica</span>';
 
   var mid = 'mb' + Date.now();
@@ -830,46 +742,9 @@ function mostrarCtxSugs(perg) {
 // ══════════════════════════════════════════════
 // MODAL CONFIG IA
 // ══════════════════════════════════════════════
-function abrirModal() {
-  var m = document.getElementById('modal');
-  if (m) m.classList.add('open');
-  var ki = document.getElementById('key-inp');
-  if (ki && MN_KEY) ki.value = MN_KEY;
-}
 
-function fecharModal() {
-  var m = document.getElementById('modal');
-  if (m) m.classList.remove('open');
-}
 
-function salvarKey() {
-  var ki = document.getElementById('key-inp');
-  var key = ki ? ki.value.trim() : '';
-  if (!key) {
-    setMStatus('err', '❌ Insira a chave de acesso');
-    return;
-  }
 
-  var btn = document.getElementById('btn-key');
-  if (btn) { btn.disabled = true; btn.textContent = 'Verificando...'; }
-  setMStatus('load', '🔄 Verificando conexão com o motor neural...');
-
-  testarKey(key).then(function(ok) {
-    if (ok) {
-      MN_KEY = key;
-      MN_ATIVO = true;
-      localStorage.setItem('lex_mn_key', key);
-      atualizarStatusIA();
-      setMStatus('ok', '✅ Motor Neural LEX ativado com sucesso!');
-      setTimeout(function() {
-        fecharModal();
-        renderBV(); // atualizar tela de boas-vindas
-      }, 1500);
-    } else {
-      setMStatus('err', '❌ Chave inválida ou sem acesso. Verifique e tente novamente.');
-    }
-    if (btn) { btn.disabled = false; btn.textContent = 'Ativar'; }
-  });
 }
 
 function setMStatus(tipo, msg) {
@@ -927,10 +802,10 @@ function setMode(m) {
 
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+      window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('SW registrado:', reg.scope))
-          .catch(err => console.log('SW erro:', err));
+          .then(function(r){ console.log('SW ok'); })
+          .catch(function(e){ console.log('SW err', e); });
       });
     }
   </script>
