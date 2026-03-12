@@ -1,7 +1,7 @@
 {
-  "name": "Dra. Sofia \u2014 Advogada Virtual",
-  "short_name": "Dra. Sofia",
-  "description": "Sua advogada virtual gratuita \u2014 direitos e orienta\u00e7\u00e3o jur\u00eddica",
+  "name": "Lex Mitio",
+  "short_name": "Lex Mitio",
+  "description": "Assistente jur\u00eddico virtual gratuito para cidad\u00e3os brasileiros",
   "start_url": "/lex-suprema/",
   "display": "standalone",
   "background_color": "#0a0a0f",
