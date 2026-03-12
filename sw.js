@@ -1,11 +1,9 @@
-const CACHE = 'lex-suprema-v2';
+const CACHE = 'lex-suprema-v3';
 const CORE  = ['/', '/index.html', '/manifest.json',
                '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(CORE))
-  );
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
   self.skipWaiting();
 });
 
@@ -19,11 +17,7 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Não cachear chamadas de API
-  if (e.request.url.includes('generativelanguage.googleapis.com') ||
-      e.request.url.includes('googleapis.com')) {
-    return fetch(e.request);
-  }
+  if (e.request.url.includes('googleapis.com')) return;
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
