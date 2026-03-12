@@ -166,30 +166,38 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 .mpill.ativo{background:var(--glow);color:var(--gold);border-color:rgba(201,168,76,.3)}
 
 /* MODAL IA CONFIG */
-
-
-
-to{opacity:1;transform:none}}
-
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;
+  align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);padding:16px}
+#modal.open{display:flex}
+.modal-box{background:var(--s1);border:1px solid var(--border);border-radius:var(--rl);
+  padding:26px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,.6);
+  animation:mIn .25s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+.m-close{float:right;background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:3px 10px;font-size:17px;cursor:pointer;color:var(--text2);transition:color .15s}
 .m-close:hover{color:var(--text)}
-
+.m-title{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:5px}
 .m-sub{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6}
 .m-step{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:11px}
 .m-step:last-child{margin-bottom:0}
 .m-num{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));
   color:#0a0a0f;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;
   margin-right:7px}
-
-
-
-
-
-
-
-
-
-
-
+.m-stitle{font-size:13px;font-weight:600}
+.m-ssub{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.55}
+.m-link{color:var(--gold);text-decoration:none;font-weight:600}
+.m-link:hover{text-decoration:underline}
+.key-wrap{display:flex;gap:8px;margin-top:9px}
+#key-inp{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:9px 13px;color:var(--text);font-size:13px;outline:none;font-family:monospace;
+  transition:border-color .2s}
+#key-inp:focus{border-color:var(--gold)}
+#key-inp::placeholder{color:var(--text3);font-family:inherit}
+#btn-key{padding:9px 18px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#0a0a0f;font-size:13px;font-weight:700;border:none;border-radius:var(--r);
+  cursor:pointer;transition:all .15s;white-space:nowrap}
+#btn-key:hover:not(:disabled){transform:translateY(-1px)}
+#btn-key:disabled{opacity:.5;cursor:not-allowed}
 #m-status{text-align:center;padding:9px;border-radius:var(--r);font-size:13px;
   font-weight:600;margin-top:7px;display:none}
 #m-status.ok{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3)}
@@ -197,10 +205,8 @@ to{opacity:1;transform:none}}
 #m-status.load{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
 </style>
 
-  <!-- PWA -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="LEX SUPREMA">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -269,10 +275,10 @@ to{opacity:1;transform:none}}
   </div>
 </div>
 
-<!-- MODAL CONFIG IA -->
+
 <script>
 // ══════════════════════════════════════════════
-//  LEX SUPREMA — Sistema Jurídico v6
+//  LEX SUPREMA — Sistema Jurídico v7
 // ══════════════════════════════════════════════
 
 var MN_KEY   = 'AIzaSyA2a4oU3rPDvQKGdoBZAV7p-DQYcqKTIHY';
@@ -354,7 +360,7 @@ function atualizarSplash() {
   var txt = document.getElementById('sp-txt');
   if (!dot || !txt) return;
   dot.className = 'sp-dot on';
-  txt.textContent = '✅ Sistema Pronto — Consultas Jurídicas Disponíveis';
+  txt.textContent = '✅ Sistema Pronto — Consultas Disponíveis';
   txt.style.color = '#22c55e';
 }
 
@@ -466,9 +472,7 @@ function enviarTxt(txt) {
       if (btn) btn.disabled = false;
     }).catch(function(err) {
       removerTyping(tid);
-      if (err.message && err.message.indexOf('alta demanda') >= 0) {
-        mostrarErro('⏳ ' + err.message);
-      }
+      if (err.message && err.message.indexOf('alta demanda') >= 0) { mostrarErro('⏳ ' + err.message); }
       var resp = respostaBase(txt);
       adicionarMsgL(resp, false);
       HIST_CHAT.push({ role: 'assistant', content: resp });
@@ -536,14 +540,7 @@ function chamarMN(texto) {
       if (!res.ok) {
         return res.json().catch(function(){ return {}; }).then(function(e) {
           var msg = (e && e.error && e.error.message) ? e.error.message : 'HTTP ' + res.status;
-          if (res.status === 429) {
-            reject(new Error('Sistema com alta demanda no momento. Tente novamente em alguns instantes.'));
-            return;
-          }
-          if (res.status === 400 || res.status === 401 || res.status === 403) {
-            reject(new Error('Serviço temporariamente indisponível. Usando base jurídica local.'));
-            return;
-          }
+          if (res.status === 429) { reject(new Error('Sistema com alta demanda. Tente novamente em instantes.')); return; }
           reject(new Error(msg));
         });
       }
@@ -565,7 +562,21 @@ function chamarMN(texto) {
   });
 }
 
-
+function testarKey(key) {
+  return new Promise(function(resolve) {
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: 'OK' }] }]
+      })
+    }).then(function(res) {
+      resolve(res.ok);
+    }).catch(function() {
+      resolve(false);
+    });
+  });
 }
 
 // ══════════════════════════════════════════════
@@ -749,9 +760,38 @@ function mostrarCtxSugs(perg) {
 // ══════════════════════════════════════════════
 // MODAL CONFIG IA
 // ══════════════════════════════════════════════
+function abrirModal() { /* desativado */ }
 
+function fecharModal() { /* desativado */ }
 
+function salvarKey() {
+  var ki = document.getElementById('key-inp');
+  var key = ki ? ki.value.trim() : '';
+  if (!key) {
+    setMStatus('err', '❌ Insira a chave de acesso');
+    return;
+  }
 
+  var btn = document.getElementById('btn-key');
+  if (btn) { btn.disabled = true; btn.textContent = 'Verificando...'; }
+  setMStatus('load', '🔄 Verificando conexão com o motor neural...');
+
+  testarKey(key).then(function(ok) {
+    if (ok) {
+      MN_KEY = key;
+      MN_ATIVO = true;
+      localStorage.setItem('lex_mn_key', key);
+      atualizarStatusIA();
+      setMStatus('ok', '✅ Sistema ativado!');
+      setTimeout(function() {
+        fecharModal();
+        renderBV(); // atualizar tela de boas-vindas
+      }, 1500);
+    } else {
+      setMStatus('err', '❌ Chave inválida ou sem acesso. Verifique e tente novamente.');
+    }
+    if (btn) { btn.disabled = false; btn.textContent = 'Ativar'; }
+  });
 }
 
 function setMStatus(tipo, msg) {
@@ -807,14 +847,6 @@ function setMode(m) {
 }
 </script>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js')
-          .then(function(r){ console.log('SW ok'); })
-          .catch(function(e){ console.log('SW err', e); });
-      });
-    }
-  </script>
+  <script>if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
 </body>
 </html>
