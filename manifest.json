@@ -1,7 +1,7 @@
 {
-  "name": "LEX SUPREMA — Jurista IA",
+  "name": "LEX SUPREMA — Jurista Virtual",
   "short_name": "LEX SUPREMA",
-  "description": "Assistente jurídico inteligente para o cidadão brasileiro",
+  "description": "Assistente jurídico especializado para o cidadão brasileiro",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -74,7 +74,6 @@
     {
       "name": "Nova Consulta Jurídica",
       "short_name": "Consultar",
-      "description": "Abrir nova consulta",
       "url": "/?action=new",
       "icons": [
         {
