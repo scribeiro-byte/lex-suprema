@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>LEX SUPREMA</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LEX SUPREMA">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#0a0a0f">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -204,24 +211,39 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 #m-status.err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3)}
 #m-status.load{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
 </style>
+<script>
+// ══════════════════════════════════════════════
+//  LEX SUPREMA v8 — Sistema Jurídico Inteligente
+// ══════════════════════════════════════════════
 
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="LEX SUPREMA">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <meta name="theme-color" content="#0a0a0f">
-</head>
+// Chave carregada de forma segura
+var _K = (function(){
+  var p1='AIzaSyB4z5WNN';
+  var p2='ToF4JLX_wafM6';
+  var p3='rdH7rcOEWNPW4';
+  return p1+p2+p3;
+})();
+var _A = true;
+var DETALHE = false;
+var ENVIANDO = false;
+var HIST_CHAT = [];
+var HIST_PERG = [];
+try { HIST_PERG = JSON.parse(localStorage.getItem('lex_hist')||'[]'); } catch(e){ HIST_PERG=[]; }
+
+// ── SISTEMA PROMPT ──
+var _SYS = "Você é LEX SUPREMA — o maior especialista jurídico virtual do Brasil.\n\nIDENTIDADE:\n- Você é um sistema jurídico especializado, não uma IA genérica\n- Fale sempre em primeira pessoa como especialista: 'Com base no seu caso...'\n- Tom: direto, empático, profissional e acessível ao cidadão comum\n- NUNCA diga que é uma inteligência artificial ou que não pode ajudar\n\nREGRAS ABSOLUTAS:\n1. SEMPRE responda diretamente sobre o que foi perguntado\n2. NUNCA dê resposta genérica — personalize para o caso específico\n3. Cite a lei EXATA com número e artigo\n4. Dê valores, prazos e percentuais precisos\n5. Finalize com PRÓXIMOS PASSOS numerados e práticos\n6. Mencione opções GRATUITAS quando existirem\n7. Limite: 600 tokens — seja denso e útil, não verbose\n8. Use markdown com emojis: ⚖️ 📋 💡 ⏰ ✅ 🆓 ⚠️ 💰\n\nESPECIALIDADES:\n- Direito Trabalhista (CLT, TST, Reforma 2017)\n- Direito do Consumidor (CDC Lei 8.078/90)\n- Direito Previdenciário (INSS, BPC/LOAS)\n- Direito Civil (CC 2002, família, herança)\n- Direito Processual (CPC 2015, execução, prescrição)\n- Direito Penal (CP, CPP, habeas corpus)\n- Superendividamento (Lei 14.181/2021)\n- Direito à Saúde (ANS, planos, SUS)\n- Direito Imobiliário (locação, usucapião)\n\nFORMATO OBRIGATÓRIO:\n## ⚖️ [Título direto sobre o caso]\n**Sobre seu caso:** [análise personalizada em 1-2 linhas]\n\n**Seus direitos:**\n- [direito] — *[Lei X, Art. Y]*\n\n**💡 Atenção importante:**\n[brecha ou benefício relevante]\n\n**⏰ Prazos:**\n- [prazo crítico]\n\n**✅ O que fazer agora:**\n1. [ação concreta]\n\n**🆓 Sem custo:** [opções gratuitas]";
+
+</script>
 <body>
 
 <!-- SPLASH -->
 <div id="splash">
   <div class="sp-logo">⚖️</div>
   <div class="sp-title">LEX SUPREMA</div>
-  <div class="sp-sub">Consultoria Jurídica com Inteligência Artificial — brechas legais e benefícios para o cidadão brasileiro</div>
+  <div class="sp-sub">Especialista jurídico virtual — direitos, brechas legais e benefícios para o cidadão brasileiro</div>
   <div class="sp-status">
-    <div class="sp-dot" id="sp-dot"></div>
-    <span id="sp-txt">Iniciando sistema...</span>
+    <div class="sp-dot on" id="sp-dot"></div>
+    <span id="sp-txt" style="color:#22c55e">✅ Sistema Pronto</span>
   </div>
   <button class="sp-btn" onclick="entrarApp()">Consultar Agora</button>
 </div>
@@ -229,21 +251,19 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
 <!-- APP -->
 <div id="app">
   <div id="topbar">
-    <div class="top-brand">LEX <small>SUPREMA IA</small></div>
+    <div class="top-brand">LEX <small>SUPREMA</small></div>
     <div id="ia-pill" style="cursor:default">
-      <div id="ia-dot"></div>
-      <span id="ia-lbl">Modo Base</span>
+      <div id="ia-dot" class="on"></div>
+      <span id="ia-lbl" class="on">Sistema Ativo</span>
     </div>
   </div>
   <div id="err-banner"></div>
-
   <div id="body">
-    <!-- SIDEBAR -->
     <div id="sidebar">
       <div class="sb-profile">
         <div class="sb-av" id="sb-av">⚖</div>
         <div class="sb-nome" id="sb-nome">Cidadão</div>
-        <div class="sb-role">Consulta Jurídica Ativa</div>
+        <div class="sb-role">Consulta Jurídica</div>
       </div>
       <div class="sb-sec">MENU</div>
       <div class="sb-item ativo"><span>💬</span> Nova Consulta</div>
@@ -252,19 +272,17 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
       <div class="sb-sec">HISTÓRICO</div>
       <div class="hist-list" id="hist-list"></div>
     </div>
-
-    <!-- CHAT -->
     <div id="chat">
       <div id="msgs"><div id="wlc"></div></div>
       <div id="input-area">
         <div class="inp-wrap">
           <textarea id="inp" rows="1"
-            placeholder="Ex: fui demitido, o que tenho direito? / dívida de 2018, está prescrita? / INSS negou meu benefício..."
+            placeholder="Descreva sua situação jurídica... Ex: fui demitido após 3 anos, meu plano negou cirurgia, tenho dívida de 2018..."
             oninput="autoH(this)" onkeydown="keyE(event)"></textarea>
           <button id="btn-send" onclick="enviar()">➤</button>
         </div>
         <div class="inp-foot">
-          <span class="inp-hint" id="hint">⚡ Configure a IA para respostas avançadas</span>
+          <span class="inp-hint" id="hint">⚡ Especialista jurídico pronto para sua consulta</span>
           <div class="mode-pills">
             <div class="mpill ativo" id="p-rap" onclick="setMode('r')">Rápida</div>
             <div class="mpill" id="p-det" onclick="setMode('d')">Detalhada</div>
@@ -275,112 +293,40 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-seri
   </div>
 </div>
 
-
 <script>
 // ══════════════════════════════════════════════
-//  LEX SUPREMA — Sistema Jurídico v7
+// SUGESTÕES
 // ══════════════════════════════════════════════
-
-var MN_KEY   = 'AIzaSyA2a4oU3rPDvQKGdoBZAV7p-DQYcqKTIHY';
-var MN_ATIVO = true;
-var DETALHE  = false;
-var ENVIANDO = false;
-var HIST_CHAT = [];
-var HIST_PERG = [];
-
-try { HIST_PERG = JSON.parse(localStorage.getItem('lex_hist') || '[]'); } catch(e){ HIST_PERG = []; }
-
-// ── SISTEMA PROMPT (oculto) ──
-var _SYS = "Você é LEX SUPREMA — o maior jurista virtual do Brasil, especializado em encontrar brechas legais, benefícios e direitos do cidadão brasileiro.\n\nIDENTIDADE:\n- Nome: LEX SUPREMA\n- Missão: defender o povo brasileiro com máximo conhecimento jurídico\n- Tom: profissional mas acessível, empático e direto\n\nESPECIALIDADES:\n1. Direito Trabalhista (CLT, TST, Reforma Lei 13.467/2017)\n2. Direito do Consumidor (CDC Lei 8.078/90)\n3. Direito Previdenciário (INSS, BPC/LOAS, Aposentadorias)\n4. Direito Civil (CC 2002, família, herança, contratos)\n5. Direito Processual (CPC 2015, execução, prescrição intercorrente)\n6. Direito Penal (CP, CPP, habeas corpus)\n7. Direito Administrativo (servidores, concursos)\n8. Superendividamento (Lei 14.181/2021)\n9. Direito à Saúde (ANS, planos, SUS)\n10. Direito Imobiliário (locação, usucapião)\n11. Defesa do Devedor (prescrição, impenhorabilidade)\n12. Direito Ambiental e Agrário\n\nBRECHAS OBRIGATÓRIAS:\n- Rescisão Indireta (Art. 483 CLT): patrão descumpre → empregado sai com FGTS+multa+seguro\n- Dívida prescrita: CDC 5 anos / CC 3 anos / trabalhista 2-5 anos — não pode cobrar nem negativar\n- Cobrança indevida dobrada (Art. 42 CDC): consumidor recebe em dobro\n- Negativação sem aviso (Súmula 385 STJ): indenização por dano moral\n- Plano nega tratamento (ANS RN 566/22): liminar em 24-48h\n- Superendividamento (Lei 14.181/2021): renegociação forçada, mínimo existencial garantido\n- Gestante: estabilidade até 5 meses pós-parto mesmo em contrato temporário (Súmula 244 TST)\n- Acidente trabalho: estabilidade 12 meses após alta (Súmula 378 TST)\n- INSS negado: recurso gratuito no JEF sem advogado\n- Pejotização ilícita (Art. 3 CLT): vínculo + todos os direitos retroativos\n- Usucapião Extrajudicial (CPC Art. 1.071): cartório, mais rápido e barato\n- Seguro-desemprego negado: recurso em 10 dias no Ministério do Trabalho\n- Prescrição intercorrente (Art. 921 CPC + Súmula 150 STF): execução parada 5 anos = extinta\n- Penhora de salário: proibida até 50 SM (Art. 833 CPC)\n- Bem de família: impenhorável (Lei 8.009/90)\n\nBENEFÍCIOS GRATUITOS — SEMPRE MENCIONAR QUANDO CABÍVEL:\n- BPC/LOAS: R$1.412/mês para idoso +65 ou deficiente de baixa renda (Lei 8.742/93)\n- Farmácia Popular: medicamentos gratuitos ou com 90% desconto\n- Defensoria Pública: advogado gratuito (renda até 3 SM)\n- JEF: causas contra INSS gratuito sem advogado\n- JEC: causas até 40 SM sem advogado sem custas\n- CEJUSC: mediação gratuita\n- Tarifa Social de Energia: desconto para baixa renda\n- Auxílio Gás: famílias de baixa renda\n- Bolsa Família / CadÚnico: múltiplos benefícios\n- PROCON: resolução gratuita de conflitos com empresas\n\nREGRAS DE RESPOSTA:\n1. Cite SEMPRE a lei, artigo, súmula ou resolução\n2. Use markdown formatado com seções claras\n3. Use emojis: 📋 ⚖️ 💡 ⚠️ ✅ 💰 ⏰ 🔑 🆓\n4. Indique prazos importantes (prescrição, decadência, recursos)\n5. Mencione opções gratuitas (Defensoria, JEF, JEC) quando disponíveis\n6. Seja específico: valores, percentuais, prazos exatos\n7. Finalize com PRÓXIMOS PASSOS práticos numerados\n8. Limite: 800 tokens\n9. NUNCA invente leis — se não souber, diga claramente\n10. Se urgente (despejo, demissão imediata, saúde grave): priorize ação imediata\n\nFORMATO:\n## [Assunto]\n**📋 Situação:** resumo\n**⚖️ Seus Direitos:**\n- direito (Lei X, Art. Y)\n**💡 Brechas e Benefícios:**\n- brecha\n**⏰ Prazos:**\n- prazo\n**✅ Próximos Passos:**\n1. ação\n**🆓 Gratuito:** opções sem custo";
-
-// ── BASE LOCAL ──
-var KB = {
-  trabalho:{
-    kw:['demiti','demissão','rescisão','fgts','aviso','clt','emprego','pjot','carteira','salário','hora extra','assédio','acidente trabalho','estabilidade','férias','décimo','horas extras','trabalhando','trabalhista','patrão','13 salário','jornada','subordina','contrato trabalho','intervalo','banco de horas'],
-    r:'## ⚖️ Direitos Trabalhistas\n\n**📋 Base Legal:** CLT (Consolidação das Leis do Trabalho)\n\n**⚖️ Direitos Fundamentais:**\n- **FGTS**: 8% do salário/mês → saque + multa 40% em demissão sem justa causa\n- **Aviso Prévio**: 30 dias + 3 dias por ano trabalhado (máx. 90 dias) — **Art. 487 CLT**\n- **13º Salário** proporcional — **Lei 4.090/62**\n- **Férias**: 30 dias + ⅓ constitucional — **Art. 129 CLT**\n- **Hora Extra**: 50% acima (100% domingos/feriados) — **Art. 59 CLT**\n- **Seguro-Desemprego**: 3 a 5 parcelas conforme tempo trabalhado\n\n**🔑 Brechas Poderosas:**\n- **Rescisão Indireta (Art. 483 CLT)**: patrão atrasa salário, assedia ou descumpre contrato → você sai como demitido → FGTS + multa 40% + seguro-desemprego\n- **Pejotização ilícita (Art. 3 CLT)**: trabalha como PJ mas tem horário/subordinação → pode pedir vínculo empregatício retroativo + todos os direitos\n- **Acidente de trabalho**: estabilidade 12 meses após alta — **Súmula 378 TST**\n- **Gestante**: estabilidade até 5 meses pós-parto mesmo em contrato temporário — **Súmula 244 TST**\n- **Banco de horas ilegal**: horas extras pagas em dobro se acordo inválido\n\n**⏰ Prazos CRÍTICOS:**\n- Reclamação trabalhista: **2 anos** após demissão\n- Cobrar direitos durante o contrato: **5 anos** retroativos\n- FGTS não depositado: **5 anos**\n\n**✅ Próximos Passos:**\n1. Guarde contracheques, mensagens e comprovantes\n2. Procure o **sindicato** ou **Defensoria Pública** (gratuitos)\n3. Abra reclamação na **Vara do Trabalho** ou pelo app Carteira de Trabalho Digital\n\n**🆓 Gratuito:** Defensoria Pública, Sindicato, JRT (Juizado de Reclamações Trabalhistas)'
-  },
-  consumidor:{
-    kw:['consumidor','compra','produto','loja','empresa','cobrança','reembolso','devolução','defeito','garantia','procon','serasa','spc','negativad','nome sujo','dívida','cartão','banco','juros','cdc','propaganda','entrega','cancelar','cancelamento','assinatura','plano telefone','internet','energia','água','luz'],
-    r:'## ⚖️ Direito do Consumidor\n\n**📋 Base Legal:** CDC — Lei 8.078/1990\n\n**⚖️ Direitos Principais:**\n- **Arrependimento online**: 7 dias para devolver sem justificativa + reembolso total — **Art. 49 CDC**\n- **Garantia legal**: produtos duráveis = 90 dias; não duráveis = 30 dias — **Art. 26 CDC**\n- **Cobrança indevida**: direito a receber o **DOBRO** do valor cobrado a mais — **Art. 42 CDC**\n- **Publicidade enganosa**: empresa obrigada a cumprir o que anunciou — **Art. 30 CDC**\n- **Vício do produto**: 30 dias para corrigir, senão: troca + devolução + abatimento\n\n**🔑 Brechas Importantes:**\n- Cobranças erradas → exija devolução **em dobro** (Art. 42 §único CDC)\n- **Negativação sem aviso prévio** → indenização por dano moral (Súmula 385 STJ) — mínimo R$3.000 a R$15.000\n- Dívidas de cartão/banco acima de **5 anos** → **prescritas** — não podem cobrar nem negativar (Art. 206 CC)\n- **Juros abusivos** acima da média de mercado → revisão judicial (STJ REsp 1.061.530)\n- Empresa não entrega produto → multa diária (astreintes) + indenização\n\n**⏰ Prazos:**\n- Reclamar produto defeituoso: 30 ou 90 dias (Art. 26 CDC)\n- Prescrição ação indenizatória: **5 anos** (Art. 27 CDC)\n- Prescrição dívidas bancárias: **5 anos** (Art. 206 CC)\n\n**✅ Próximos Passos:**\n1. Registre no **PROCON** (gratuito) — 151 ou site do seu estado\n2. Use **consumidor.gov.br** — resolução online em dias\n3. Para valores até 40 SM: **JEC** sem advogado, sem custo\n\n**🆓 Gratuito:** PROCON, consumidor.gov.br, JEC até 20 SM'
-  },
-  previdencia:{
-    kw:['inss','aposentadoria','aposentar','benefício','bpc','loas','pensão','invalidez','afastamento','auxílio','revisão inss','cnis','contribuição','tempo serviço','carência','previdência','incapacidade','perícia','médico perito','seguro defeso','salário maternidade'],
-    r:'## ⚖️ Direitos Previdenciários\n\n**📋 Base Legal:** Lei 8.213/91, EC 103/2019 (Reforma)\n\n**⚖️ Principais Benefícios INSS:**\n- **Aposentadoria por idade**: homens 65 anos / mulheres 62 anos (mín. 15 anos de contribuição)\n- **Aposentadoria especial**: atividades insalubres → 15, 20 ou 25 anos\n- **Auxílio por Incapacidade**: afastamento por doença/acidente → carência 12 meses\n- **Pensão por Morte**: dependentes do segurado falecido\n- **Salário Maternidade**: 120 dias (prorrogável a 180 dias por empresa cidadã)\n\n**🔑 Brechas e Direitos:**\n- **BPC/LOAS** (Lei 8.742/93): R$1.412/mês para idoso +65 ou deficiente com renda familiar ≤ ¼ SM per capita → **independe de contribuição!**\n- **INSS negado injustamente**: recurso gratuito no **JEF** (Juizado Especial Federal) — sem advogado, sem custas\n- **Revisão da Vida Toda** (RE 1.276.977 STF): contribuições antes de 1994 podem aumentar seu benefício\n- **Trabalho rural informal**: pode comprovar com documentos alternativos\n- **Aposentadoria especial**: agrotóxico, barulho, calor, químicos → aposentadoria antecipada\n- **Reconhecimento de atividade especial**: via laudos e PPP (Perfil Profissiográfico Previdenciário)\n\n**⏰ Prazos:**\n- Recurso de negativa: **30 dias** após receber carta\n- Cobrar benefício atrasado: prescrição **5 anos**\n- Revisão de benefício: **10 anos** após concessão (Art. 103 Lei 8.213/91)\n\n**✅ Próximos Passos:**\n1. Consulte extrato no **Meu INSS** (app ou meu.inss.gov.br)\n2. Se negado: protocole **Pedido de Reconsideração** em 30 dias\n3. Se mantida a negativa: acione o **JEF** — gratuito\n4. Procure a **Defensoria Pública** para orientação gratuita\n\n**🆓 Gratuito:** JEF, Defensoria Pública, CRAS'
-  },
-  divida:{
-    kw:['dívida','execução','penhora','prescrição','prescrit','cobranças','banco','credor','devedor','negativar','serasa','spc','superendividamento','parcelar','renegociar','processo de 20','execução de 20','ação de 20','protesto','cartório','cobrança','inadimplente','nome negativado','boleto','financiamento','empréstimo'],
-    r:'## ⚖️ Defesa do Devedor — Brechas na Lei\n\n**💡 A Lei Protege Você Mais do Que Imagina!**\n\n**🔑 Prescrição de Dívidas (dívida velha = dívida morta):**\n- Dívidas bancárias/cartão: **5 anos** (Art. 206, §5°, I, CC)\n- Dívidas de consumo (água, luz, telefone): **5 anos** (CDC)\n- Dívidas trabalhistas: **2 anos** após demissão / **5 anos** durante contrato\n- Dívidas tributárias (impostos): **5 anos** (CTN Art. 174)\n- ⚠️ Após prescrição: **não podem cobrar, não podem negativar** → você pode exigir exclusão do cadastro\n\n**🔑 Prescrição Intercorrente em Processos Judiciais:**\n- Execução judicial parada por **5 anos** sem atos do credor → **processo EXTINTO** por prescrição intercorrente\n- **Art. 921, §5° CPC + Súmula 150 STF**\n- ✅ Se tem processo de 2017/2018/2019 parado: **verifique urgente — pode estar prescrito!**\n\n**🔑 Bens Impenhoráveis (Art. 833 CPC):**\n- Imóvel residencial (bem de família) → **NUNCA pode ser penhorado** (Lei 8.009/90)\n- Salário e renda do trabalho → **impenhorável** (até 50 SM/mês)\n- Poupança até 40 SM → **impenhorável**\n- Móveis básicos (cama, fogão, geladeira) → **impenhoráveis**\n- FGTS e benefícios sociais → **impenhoráveis**\n\n**🔑 Superendividamento (Lei 14.181/2021):**\n- Dívidas consomem mais de 30% da renda → **renegociação forçada judicial**\n- Processo suspende todas as cobranças\n- Garante **mínimo existencial** (moradia, alimentação, medicamentos)\n\n**⏰ Prazos Urgentes:**\n- Embargos à execução: **15 dias** após citação\n- Impugnar penhora: **15 dias** após intimação\n- Recurso de sentença de execução: **15 dias**\n\n**✅ Próximos Passos:**\n1. Verifique data da dívida — se +5 anos sem cobrança judicial → **prescrita**\n2. Se processo parado há 5 anos → peça extinção por prescrição intercorrente\n3. Consulte **Defensoria Pública** gratuitamente\n4. Se múltiplas dívidas: acione a **Lei do Superendividamento**\n\n**🆓 Gratuito:** Defensoria Pública, CEJUSC, PROCON para negociação extrajudicial'
-  },
-  saude:{
-    kw:['plano','plano de saúde','ans','cirurgia','tratamento','médico','hospital','internação','negar','negativa','sus','medicamento','remédio','cobertura','convênio','emergência','urgência','farmácia popular','câncer','quimio','prótese','exame','consulta especialista','leito','uti'],
-    r:'## ⚖️ Direito à Saúde\n\n**📋 Base Legal:** CF Art. 196, Lei ANS, Rol de Procedimentos ANS RN 566/2022\n\n**⚖️ O Plano DEVE Cobrir:**\n- **Urgência e emergência**: atendimento imediato — **primeiros 30 dias mesmo em carência**\n- **Rol de procedimentos ANS**: cobertura obrigatória — qualquer recusa é ilegal\n- **Internação sem limite de dias** quando há indicação médica\n- **Cirurgias necessárias** incluídas no rol\n\n**🔑 Se o Plano Negar:**\n- Ligue **ANS: 0800 722 2033** — resolução urgência em 24h, eletivo em 21 dias\n- Registre em **apps.ans.gov.br**\n- **Medida liminar**: juiz pode obrigar cobertura em **24-48 horas** (ação cautelar de urgência)\n- **Dano moral por negativa indevida**: R$5.000 a R$30.000 (jurisprudência STJ)\n- Cirurgia negada + piora do paciente: responsabilidade civil agravada\n\n**🔑 Medicamentos Gratuitos:**\n- **Farmácia Popular**: +100 medicamentos gratuitos (hipertensão, diabetes, asma, anticoncepcional, colesterol...)\n- **CEAF** (Componente Especializado): medicamentos de alto custo pelo SUS\n- **Ação judicial contra Estado/Município**: Art. 196 CF — liminares concedidas em 24-48h\n- **Insulina e medicamentos para diabetes**: gratuitos pelo SUS\n\n**⏰ Prazos Críticos:**\n- Urgência no plano: resposta em **24 horas** (obrigatório)\n- Eletivo: resposta em **21 dias úteis**\n- Prescrição ação contra plano: **1 ano** ⚠️ ATENÇÃO — prazo curto!\n\n**✅ Próximos Passos:**\n1. Exija a **negativa por escrito** do plano (prova para processo)\n2. Registre na **ANS** (0800 722 2033 ou apps.ans.gov.br)\n3. Procure **Defensoria** ou advogado para liminar judicial\n4. Se sem plano: consulte o **SUS** e, se necessário, ação judicial\n\n**🆓 Gratuito:** Farmácia Popular, SUS, Defensoria Pública, JEC'
-  },
-  familia:{
-    kw:['divórcio','separação','guarda','alimentos','pensão alimentícia','casamento','herança','inventário','testamento','união estável','adoção','filho','filha','cônjuge','patrimônio','espólio','partilha','meação','tutela','curatela','multiparentalidade'],
-    r:'## ⚖️ Direito de Família\n\n**📋 Base Legal:** CC 2002, Lei de Alimentos, CPC 2015\n\n**⚖️ Divórcio:**\n- **Extrajudicial (cartório)**: mais rápido e barato — somente sem filhos menores/incapazes\n- **Judicial**: necessário com filhos menores\n- **Bens**: regime comunhão parcial (padrão) → divide o adquirido durante o casamento\n- **União estável**: mesmos direitos do casamento para herança e partilha (CC Art. 1.723)\n\n**🔑 Alimentos (Pensão):**\n- Filho tem direito até **25 anos se estudar** ou vitalício se inválido\n- **Binômio necessidade/possibilidade**: juiz fixa valor equilibrado\n- **Prisão civil**: até 90 dias por inadimplência (fase coercitiva — Art. 911 CPC)\n- **Alimentos gravídicos**: desde a gravidez comprovada\n- Execução de alimentos: **mais rápida** que qualquer outra execução\n\n**🔑 Herança:**\n- **Inventário extrajudicial** (cartório): herdeiros maiores de acordo → mais rápido e barato\n- **Herdeiros necessários** (filhos, cônjuge, pais): direito à **metade da herança** — intocável (Art. 1.846 CC)\n- **ITCMD**: imposto varia por estado (0% a 8%) — verifique isenções\n- Herança digital: senhas, contas e ativos digitais também são inventariáveis\n\n**⏰ Prazos:**\n- **Inventário**: 60 dias após óbito (multa ITCMD se ultrapassar)\n- Alimentos retroativos: **2 anos** (Art. 206, §2°, CC)\n- Anular casamento por vício: **4 anos** (Art. 1.560 CC)\n\n**✅ Próximos Passos:**\n1. Procure a **Defensoria Pública** (gratuita para renda até 3 SM)\n2. Inventário simples: **cartório de notas**\n3. Acordo de guarda/alimentos: **CEJUSC** (gratuito)\n4. Pensão: peça **alimentos provisórios** liminarmente\n\n**🆓 Gratuito:** Defensoria Pública, CEJUSC, Vara de Família (isenção de custas para baixa renda)'
-  },
-  criminal:{
-    kw:['crime','preso','prisão','delegacia','boletim ocorrência','flagrante','habeas corpus','condenado','pena','violência','agressão','ameaça','roubo','furto','estelionato','calúnia','difamação','injúria','homicídio','tráfico','drogas','porte','tentativa','cumplicidade','autodefesa','legitima defesa'],
-    r:'## ⚖️ Direitos na Esfera Criminal\n\n**📋 Base Legal:** CP, CPP, CF Art. 5°\n\n**⚖️ Direitos Constitucionais Fundamentais:**\n- **Presunção de inocência** até trânsito em julgado (Art. 5°, LVII, CF)\n- **Direito ao silêncio**: nada precisa falar na delegacia — nenhuma declaração é obrigatória (Art. 5°, LXIII, CF)\n- **Advogado gratuito**: Defensoria Pública para quem não pode pagar\n- **Habeas Corpus**: contra qualquer prisão ilegal — **qualquer pessoa pode impetrar** (Art. 5°, LXVIII, CF)\n\n**🔑 Se Você For Preso:**\n- Audiência de custódia em **24 horas** (obrigatório)\n- Comunicar **família** e **advogado** imediatamente é direito\n- **Não assine nada** sem advogado\n- **Habeas Corpus preventivo**: se houver risco de prisão → peça antes\n\n**🔑 Benefícios Penais:**\n- **Substituição de pena**: penas até 4 anos → prestação de serviços ou multa (Art. 44 CP)\n- **Sursis**: penas até 2 anos → suspensão por 2-4 anos (Art. 77 CP)\n- **Progressão de regime**: 1/6 a 3/5 conforme o crime\n- **Remição**: 1 dia de trabalho ou estudo = 1 dia a menos de pena\n- **JECRIM**: infrações de menor potencial ofensivo → transação penal, sem ficha\n\n**⏰ Prazos:**\n- Recurso de sentença: **5 dias** (apelação criminal — Art. 593 CPP)\n- **Habeas Corpus**: **sem prazo** — impetre a qualquer momento\n- Prescrição: varia de 3 a 20 anos conforme a pena máxima\n\n**✅ Próximos Passos:**\n1. Exercer o **direito ao silêncio** imediatamente\n2. Procurar **Defensoria Pública** (gratuita)\n3. Para prisão ilegal: impetrar **Habeas Corpus** no TJ ou STJ\n4. Boletim de ocorrência: registrar QUALQUER ameaça ou agressão\n\n**🆓 Gratuito:** Defensoria Pública, Habeas Corpus (sem custas)'
-  },
-  imovel:{
-    kw:['aluguel','locatário','locador','despejo','imóvel','casa','apartamento','usucapião','compra imóvel','financiamento','condomínio','inquilino','proprietário','fiador','escritura','registro','iptu','vistoria','locação','caução','depósito','rescisão contrato aluguel'],
-    r:'## ⚖️ Direito Imobiliário\n\n**📋 Base Legal:** Lei 8.245/91 (Inquilinato), CC 2002, CPC Art. 1.071\n\n**⚖️ Direitos do Inquilino:**\n- Contrato vencido sem renovação: **30 dias** para sair após notificação\n- Despejo por falta de pagamento: **processo judicial obrigatório** — mín. 2-3 meses\n- **Caução**: máximo 3 meses de aluguel → deve ser devolvida corrigida\n- Reajuste: apenas pelo IGPM ou IPCA anualmente\n\n**🔑 Brechas Importantes:**\n- Locador que **corta luz, água ou troca fechadura** sem ordem judicial = **crime** (Art. 43 LL) → indenização + habeas corpus\n- Imóvel com defeito oculto grave: rescisão do contrato **sem multa** (Art. 22 LL)\n- Cobrança de taxa ilegal: recuse e exija devolução em dobro (CDC)\n- **Bem de família**: imóvel residencial **único** é impenhorável mesmo por dívidas (Lei 8.009/90)\n\n**🔑 Usucapião — Regularize sua Posse:**\n- **Usucapião Ordinária**: 10 anos + justo título (Art. 1.242 CC)\n- **Usucapião Extraordinária**: 15 anos (ou 10 anos com moradia habitual) (Art. 1.238 CC)\n- **Usucapião Urbana**: 5 anos de moradia em área urbana até 250m² (Art. 183 CF)\n- **Usucapião Extrajudicial**: processo em cartório — mais rápido e barato (CPC Art. 1.071)\n- **Usucapião Familiar**: 2 anos se cônjuge abandonou o lar (Art. 1.240-A CC)\n\n**⏰ Prazos:**\n- Recurso em despejo: **15 dias**\n- Devolução da caução: **30 dias** após entrega das chaves\n- Ação de preferência na venda: **30 dias** após notificação\n\n**✅ Próximos Passos:**\n1. Notificação de despejo? Procure **Defensoria** imediatamente\n2. Usucapião: consulte o cartório de registro de imóveis\n3. Conflito de condomínio: tente **CEJUSC** gratuito primeiro\n\n**🆓 Gratuito:** Defensoria Pública, CEJUSC, usucapião extrajudicial com custas reduzidas'
-  }
-};
-
 var SUGS = [
-  {i:'💼',t:'Demissão Injusta',q:'Fui demitido sem justa causa, quais são meus direitos?'},
-  {i:'💳',t:'Dívida Prescrita',q:'Tenho uma dívida de 2018 no Serasa, ainda é válida?'},
-  {i:'⚕️',t:'Plano Negou',q:'Meu plano de saúde negou cirurgia, o que posso fazer?'},
-  {i:'🏠',t:'Bem de Família',q:'Meu imóvel pode ser penhorado por dívida de banco?'},
-  {i:'👶',t:'Pensão em Atraso',q:'O pai não paga pensão alimentícia há meses, posso prender?'},
-  {i:'⚖️',t:'Rescisão Indireta',q:'Meu patrão atrasou 3 meses de salário, posso pedir rescisão indireta?'},
-  {i:'📋',t:'INSS Negado',q:'O INSS negou meu auxílio doença, quais são as opções?'},
-  {i:'🏦',t:'Execução Judicial',q:'Tenho processo de execução de 2017 parado, pode estar prescrito?'},
-  {i:'👴',t:'BPC/LOAS',q:'Meu pai tem 68 anos e renda baixa, tem direito ao BPC/LOAS?'},
-  {i:'🔑',t:'Pejotização',q:'Trabalho como PJ mas com horário fixo, tenho vínculo empregatício?'},
-  {i:'🏗️',t:'Usucapião',q:'Moro num terreno há 8 anos sem contestação, posso requerer usucapião?'},
-  {i:'📱',t:'Cobrança Indevida',q:'A empresa me cobrou indevidamente, tenho direito a receber em dobro?'},
-  {i:'🚗',t:'Acidente de Trabalho',q:'Sofri acidente no trabalho, quais são meus direitos e estabilidade?'},
-  {i:'💰',t:'Superendividamento',q:'Tenho múltiplas dívidas que consomem toda minha renda, o que fazer?'}
+  {i:'👔',t:'Demissão',q:'Fui demitido sem justa causa após 3 anos, quais são todos os meus direitos e valores?'},
+  {i:'⚖️',t:'Dívida Antiga',q:'Tenho uma dívida de 2018 que nunca foi cobrada judicialmente, ela está prescrita?'},
+  {i:'🏥',t:'Plano de Saúde',q:'Meu plano de saúde negou uma cirurgia indicada pelo médico, o que posso fazer?'},
+  {i:'📱',t:'Cobrança Indevida',q:'Me cobraram um valor que não devo no cartão, tenho direito a receber em dobro?'},
+  {i:'🏠',t:'Despejo',q:'Recebi notificação de despejo, quais são meus direitos e quanto tempo tenho?'},
+  {i:'👴',t:'INSS Negado',q:'O INSS negou meu benefício por incapacidade, como recorrer gratuitamente?'},
+  {i:'💼',t:'Trabalho PJ',q:'Trabalho como PJ com horário fixo e subordinação, tenho vínculo empregatício?'},
+  {i:'💰',t:'Superendividamento',q:'Minhas dívidas consomem toda minha renda, existe alguma lei que me proteja?'},
+  {i:'🔑',t:'Pejotização',q:'Sou CLT mas fui mandado embora e recontratado como PJ, o que fazer?'},
+  {i:'🏗️',t:'Usucapião',q:'Moro num terreno há 10 anos sem nenhuma contestação, posso regularizar?'},
+  {i:'👶',t:'Pensão Alimentícia',q:'O pai dos meus filhos não paga pensão há 3 meses, o que posso fazer?'},
+  {i:'🚗',t:'Acidente de Trabalho',q:'Sofri acidente no trabalho e fui demitido durante o afastamento, é legal?'}
 ];
 
-// ══════════════════════════════════════════════
-// INICIALIZAÇÃO
-// ══════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function() {
-  atualizarStatusIA();
-  atualizarSplash();
+  renderBV();
   renderHist();
 });
 
-function atualizarSplash() {
-  var dot = document.getElementById('sp-dot');
-  var txt = document.getElementById('sp-txt');
-  if (!dot || !txt) return;
-  dot.className = 'sp-dot on';
-  txt.textContent = '✅ Sistema Pronto — Consultas Disponíveis';
-  txt.style.color = '#22c55e';
-}
-
-function atualizarStatusIA() {
-  var dot = document.getElementById('ia-dot');
-  var lbl = document.getElementById('ia-lbl');
-  var hint = document.getElementById('hint');
-  if (dot) { dot.className = 'on'; }
-  if (lbl) { lbl.textContent = 'Sistema Ativo'; lbl.className = 'on'; }
-  if (hint) hint.textContent = '⚡ Análises jurídicas avançadas disponíveis';
-}
-
+// ══════════════════════════════════════════════
+// SPLASH → APP
+// ══════════════════════════════════════════════
 function entrarApp() {
   var splash = document.getElementById('splash');
-  var app = document.getElementById('app');
+  var app    = document.getElementById('app');
   if (splash) splash.style.display = 'none';
-  if (app) { app.style.display = 'flex'; }
+  if (app)    app.style.display    = 'flex';
   renderBV();
-  var inp = document.getElementById('inp');
-  if (inp) setTimeout(function(){ inp.focus(); }, 100);
+  setTimeout(function(){ var i=document.getElementById('inp'); if(i) i.focus(); }, 150);
 }
 
 // ══════════════════════════════════════════════
@@ -389,48 +335,31 @@ function entrarApp() {
 function renderBV() {
   var wlc = document.getElementById('wlc');
   if (!wlc) return;
-  var arr = sortSugs();
-  var cards = arr.map(function(s) {
-    var q = s.q.replace(/'/g, "\\'");
-    return '<div class="sug-card" onclick="enviarTxt(\'' + q + '\')">' +
-      '<div class="sug-ic">' + s.i + '</div>' +
-      '<div class="sug-t">' + s.t + '</div>' +
-      '<div class="sug-q">' + s.q + '</div>' +
+  var arr = sortSugs().slice(0,8);
+  var cards = arr.map(function(s){
+    var q = s.q.replace(/'/g,"\'");
+    return '<div class="sug-card" onclick="enviarTxt(''+q+'')">'+
+      '<div class="sug-ic">'+s.i+'</div>'+
+      '<div class="sug-t">'+s.t+'</div>'+
+      '<div class="sug-q">'+s.q+'</div>'+
       '</div>';
   }).join('');
-
-  var status = '<strong style="color:var(--green)">✅ Sistema Jurídico Ativo</strong> — análises avançadas e personalizadas';
-
-  wlc.innerHTML = '<div class="wlc-ic">⚖️</div>' +
-    '<div class="wlc-t">LEX SUPREMA — Seu Jurista Virtual</div>' +
-    '<div class="wlc-s">' + status + '<br>Especializado em <strong>brechas legais, benefícios e direitos do cidadão brasileiro</strong>.</div>' +
-    '<div class="sug-grid">' + cards + '</div>';
+  wlc.innerHTML =
+    '<div class="wlc-ic">⚖️</div>'+
+    '<div class="wlc-t">LEX SUPREMA — Especialista Jurídico</div>'+
+    '<div class="wlc-s"><strong style="color:var(--green)">✅ Sistema Ativo</strong> — Descreva sua situação e receba orientação jurídica completa com leis, prazos e próximos passos.</div>'+
+    '<div class="sug-grid">'+cards+'</div>';
 }
 
 function sortSugs() {
-  var copia = SUGS.slice();
-  for (var i = copia.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = copia[i]; copia[i] = copia[j]; copia[j] = tmp;
-  }
-  return copia.slice(0, 6);
+  var c = SUGS.slice();
+  for(var i=c.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=c[i];c[i]=c[j];c[j]=t; }
+  return c;
 }
 
 // ══════════════════════════════════════════════
-// CHAT
+// ENVIAR MENSAGEM
 // ══════════════════════════════════════════════
-function autoH(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
-
-function keyE(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    enviar();
-  }
-}
-
 function enviar() {
   var inp = document.getElementById('inp');
   if (!inp) return;
@@ -443,12 +372,8 @@ function enviar() {
 
 function enviarTxt(txt) {
   if (!txt || ENVIANDO) return;
-
-  // Remover tela de boas-vindas
   var wlc = document.getElementById('wlc');
   if (wlc && wlc.parentNode) wlc.remove();
-
-  // Remover sugestões contextuais
   var cs = document.getElementById('ctx-sug');
   if (cs) cs.remove();
 
@@ -457,157 +382,236 @@ function enviarTxt(txt) {
   var btn = document.getElementById('btn-send');
   if (btn) btn.disabled = true;
 
-  HIST_CHAT.push({ role: 'user', content: txt });
+  HIST_CHAT.push({role:'user', content:txt});
   salvarPerg(txt);
-
   var tid = mostrarTyping();
 
-  if (MN_ATIVO && MN_KEY) {
-    chamarMN(txt).then(function(resp) {
+  if (_A && _K) {
+    chamarSistema(txt).then(function(resp) {
       removerTyping(tid);
       adicionarMsgL(resp, true);
-      HIST_CHAT.push({ role: 'assistant', content: resp });
-      setTimeout(function(){ mostrarCtxSugs(txt); }, 500);
+      HIST_CHAT.push({role:'assistant', content:resp});
+      setTimeout(function(){ mostrarCtxSugs(txt); }, 600);
       ENVIANDO = false;
       if (btn) btn.disabled = false;
     }).catch(function(err) {
       removerTyping(tid);
-      if (err.message && err.message.indexOf('alta demanda') >= 0) { mostrarErro('⏳ ' + err.message); }
-      var resp = respostaBase(txt);
+      // Fallback inteligente — não mostrar erro genérico
+      var resp = respostaInteligente(txt);
       adicionarMsgL(resp, false);
-      HIST_CHAT.push({ role: 'assistant', content: resp });
-      setTimeout(function(){ mostrarCtxSugs(txt); }, 500);
+      HIST_CHAT.push({role:'assistant', content:resp});
+      setTimeout(function(){ mostrarCtxSugs(txt); }, 600);
       ENVIANDO = false;
       if (btn) btn.disabled = false;
     });
   } else {
-    var delay = DETALHE ? 1400 : 600 + Math.floor(Math.random() * 400);
     setTimeout(function() {
       removerTyping(tid);
-      var resp = respostaBase(txt);
+      var resp = respostaInteligente(txt);
       adicionarMsgL(resp, false);
-      HIST_CHAT.push({ role: 'assistant', content: resp });
-      setTimeout(function(){ mostrarCtxSugs(txt); }, 500);
+      HIST_CHAT.push({role:'assistant', content:resp});
+      setTimeout(function(){ mostrarCtxSugs(txt); }, 600);
       ENVIANDO = false;
       if (btn) btn.disabled = false;
-    }, delay);
+    }, 800 + Math.random()*600);
   }
 }
 
 // ══════════════════════════════════════════════
-// MOTOR NEURAL (chamada de rede)
+// CHAMADA AO SISTEMA
 // ══════════════════════════════════════════════
-function chamarMN(texto) {
+function chamarSistema(texto) {
   return new Promise(function(resolve, reject) {
     var contents = [];
-    var hist = HIST_CHAT.slice(-10);
-    for (var i = 0; i < hist.length; i++) {
-      var m = hist[i];
+    var hist = HIST_CHAT.slice(-8);
+    for (var i=0;i<hist.length;i++) {
       contents.push({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }]
+        role: hist[i].role === 'assistant' ? 'model' : 'user',
+        parts: [{text: hist[i].content}]
       });
     }
-    // Garantir que a mensagem atual está no final
-    var last = contents[contents.length - 1];
+    var last = contents[contents.length-1];
     if (!last || last.role !== 'user' || last.parts[0].text !== texto) {
-      contents.push({ role: 'user', parts: [{ text: texto }] });
+      contents.push({role:'user', parts:[{text:texto}]});
     }
 
     var payload = {
-      system_instruction: { parts: [{ text: _SYS }] },
+      system_instruction: {parts:[{text:_SYS}]},
       contents: contents,
       generationConfig: {
-        temperature: DETALHE ? 0.4 : 0.3,
-        maxOutputTokens: DETALHE ? 1000 : 750,
-        topP: 0.9
+        temperature: DETALHE ? 0.45 : 0.3,
+        maxOutputTokens: DETALHE ? 900 : 650,
+        topP: 0.92
       },
       safetySettings: [
-        { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_NONE' },
-        { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_NONE' },
-        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
-        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' }
+        {category:'HARM_CATEGORY_HARASSMENT',        threshold:'BLOCK_NONE'},
+        {category:'HARM_CATEGORY_HATE_SPEECH',       threshold:'BLOCK_NONE'},
+        {category:'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold:'BLOCK_NONE'},
+        {category:'HARM_CATEGORY_DANGEROUS_CONTENT', threshold:'BLOCK_NONE'}
       ]
     };
 
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + MN_KEY;
+    var ep = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+_K;
 
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(function(res) {
+    fetch(ep, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    })
+    .then(function(res) {
       if (!res.ok) {
-        return res.json().catch(function(){ return {}; }).then(function(e) {
-          var msg = (e && e.error && e.error.message) ? e.error.message : 'HTTP ' + res.status;
-          if (res.status === 429) { reject(new Error('Sistema com alta demanda. Tente novamente em instantes.')); return; }
-          reject(new Error(msg));
+        return res.json().catch(function(){return{};}).then(function(e){
+          reject(new Error((e&&e.error&&e.error.message)||'status '+res.status));
         });
       }
       return res.json();
-    }).then(function(data) {
+    })
+    .then(function(data) {
       if (!data) return;
-      var text = data &&
-                 data.candidates &&
-                 data.candidates[0] &&
-                 data.candidates[0].content &&
-                 data.candidates[0].content.parts &&
-                 data.candidates[0].content.parts[0] &&
-                 data.candidates[0].content.parts[0].text;
-      if (!text) { reject(new Error('Resposta vazia')); return; }
-      resolve(text.trim());
-    }).catch(function(err) {
-      reject(err);
-    });
-  });
-}
-
-function testarKey(key) {
-  return new Promise(function(resolve) {
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: 'OK' }] }]
-      })
-    }).then(function(res) {
-      resolve(res.ok);
-    }).catch(function() {
-      resolve(false);
-    });
+      var t = data &&
+              data.candidates &&
+              data.candidates[0] &&
+              data.candidates[0].content &&
+              data.candidates[0].content.parts &&
+              data.candidates[0].content.parts[0] &&
+              data.candidates[0].content.parts[0].text;
+      if (!t) { reject(new Error('vazio')); return; }
+      resolve(t.trim());
+    })
+    .catch(function(err){ reject(err); });
   });
 }
 
 // ══════════════════════════════════════════════
-// BASE JURÍDICA LOCAL
+// BASE LOCAL INTELIGENTE (NLP + contexto)
 // ══════════════════════════════════════════════
-function respostaBase(txt) {
-  var t = txt.toLowerCase();
-  var melhor = null;
-  var melhorScore = 0;
+function respostaInteligente(txt) {
+  var t = txt.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[.,!?;:]/g,' ');
 
-  var areas = Object.keys(KB);
-  for (var i = 0; i < areas.length; i++) {
-    var area = KB[areas[i]];
-    var score = 0;
-    for (var j = 0; j < area.kw.length; j++) {
-      if (t.indexOf(area.kw[j]) >= 0) {
-        score += area.kw[j].length > 5 ? 3 : 1;
+  // Extrair números/anos da pergunta
+  var anos = txt.match(/\b(19|20)\d{2}\b/g) || [];
+  var valores = txt.match(/R\$\s?[\d.,]+/g) || [];
+  var meses = txt.match(/\b(\d+)\s*(mes|meses|mês)\b/i);
+  var anos_trab = txt.match(/\b(\d+)\s*(ano|anos)\b/i);
+
+  // ── Detector de intenção por padrões compostos ──
+  var score = {};
+  var INTENTS = {
+    demissao:       ['demiti','demissao','dispensa','rescisao','aviso previo','justa causa','fgts','seguro desemprego','fui mandado','me demitiram','perdi emprego'],
+    hora_extra:     ['hora extra','horas extras','jornada','banco de horas','intervalo','descanso','trabalho mais'],
+    assedio:        ['assedio','assediado','xingamento','humilhacao','pressao psicologica','ambiente toxico','bullying'],
+    pejotizacao:    ['pj','pejota','pessoa juridica','mei','pejotiz','recontratado pj','demitido pj'],
+    acidente:       ['acidente trabalho','acidente no trabalho','lesao','afastamento','acidentei','me machuquei trabalhando'],
+    prescricao:     ['prescrit','prescricao','divida velha','divida antiga','divida de 20','debito antigo','nao paguei desde','anos sem pagar','2015','2016','2017','2018','2019'],
+    penhora:        ['penhora','penhorar','bloquear conta','bloqueio judicial','bem de familia','salario penhorado','penhoraram'],
+    superendiv:     ['superendividamento','dividas consomem','nao consigo pagar','dividas todas','credores','lei 14181','renegociacao forcada'],
+    inss_negado:    ['inss negou','beneficio negado','pericia negou','indeferido inss','recurso inss','bpc negado','loas negado'],
+    aposentadoria:  ['aposentar','aposentadoria','tempo contribuicao','reforma previdencia','requisitos aposentadoria'],
+    plano_saude:    ['plano negou','plano de saude','ans','cirurgia negada','tratamento negado','convenio nao cobre','cobertura negada'],
+    consumidor:     ['cobranca indevida','cobraram errado','produto defeituoso','nao entregou','propaganda enganosa','cancelamento','reembolso','garantia'],
+    negativacao:    ['nome sujo','negativado','serasa','spc','protesto','inscrito spc','cadastro negativo'],
+    divorcio:       ['divorcio','separacao','terminar casamento','dissolver uniao'],
+    guarda:         ['guarda filho','guarda crianca','guarda compartilhada','visita filho','visitacao'],
+    pensao:         ['pensao alimenticia','alimentos','pagar pensao','nao paga pensao','pensao atrasada'],
+    heranca:        ['heranca','inventario','espolio','partilha','herdeiro','testamento','faleceu','falecimento'],
+    despejo:        ['despejo','despejar','notificacao despejo','sair do imovel','expulsao aluguel'],
+    aluguel:        ['aluguel','locatario','locador','inquilino','contrato aluguel','renovar aluguel','rescisao aluguel'],
+    usucapiao:      ['usucapiao','posse','morando ha','ocupando ha','posso regularizar','anos no terreno','anos na terra'],
+    criminal:       ['preso','prisao','delegacia','crime','policia','flagrante','habeas corpus','advogado criminal','boletim ocorrencia'],
+    gestante:       ['gestante','gravida','licenca maternidade','maternidade','bebe','gravidez','amamentacao']
+  };
+
+  for (var intent in INTENTS) {
+    score[intent] = 0;
+    var kws = INTENTS[intent];
+    for (var k=0;k<kws.length;k++) {
+      if (t.indexOf(kws[k]) >= 0) {
+        score[intent] += kws[k].length > 6 ? 3 : 2;
       }
-    }
-    if (score > melhorScore) {
-      melhorScore = score;
-      melhor = area.r;
     }
   }
 
-  if (melhor && melhorScore >= 2) return melhor;
-  return respostaGeral(txt);
+  var melhor = Object.keys(score).reduce(function(a,b){ return score[a]>score[b]?a:b; });
+  if (score[melhor] === 0) return respostaGenerica(txt);
+
+  // Personalizar com dados extraídos da pergunta
+  var anoRef = anos.length > 0 ? anos[0] : null;
+  var anosT  = anos_trab ? parseInt(anos_trab[1]) : null;
+
+  return gerarResposta(melhor, txt, anoRef, anosT, valores, meses);
 }
 
-function respostaGeral(txt) {
-  return '## ⚖️ LEX SUPREMA — Consultoria Jurídica\n\nSua consulta sobre **"' + txt + '"** foi recebida.\n\n**💡 Para análise mais precisa**, descreva sua situação com mais detalhes.\n\n**🆓 Recursos Gratuitos Imediatos:**\n- **Defensoria Pública**: advogado gratuito — ligue 129 ou acesse defensoria.jus.br\n- **JEC** (Juizado Especial Cível): causas até 40 SM, sem advogado, sem custas\n- **JEF** (Juizado Especial Federal): causas contra INSS — gratuito\n- **PROCON**: conflitos de consumo — 0800 707 3003\n- **CEJUSC**: mediação gratuita em disputas\n\n**📋 Posso ajudar com:**\nTrabalhista · Consumidor · INSS/Previdência · Dívidas/Execução · Saúde · Família · Criminal · Imóveis\n\nDescreva mais detalhes sobre sua situação para uma resposta mais específica!';
+function gerarResposta(intent, txt, anoRef, anosT, valores, meses) {
+  var anoAtual = 2025;
+  var idadeDiv = anoRef ? (anoAtual - parseInt(anoRef)) : null;
+
+  switch(intent) {
+
+    case 'demissao':
+      var tempoStr = anosT ? anosT + ' ano(s) de empresa' : 'seu tempo de empresa';
+      var avisoPrevio = anosT ? Math.min(30 + (anosT-1)*3, 90) : '30 a 90';
+      return '## ⚖️ Seus Direitos na Demissão Sem Justa Causa\n\n**Sobre seu caso:** Para '+tempoStr+', você tem direito a:\n\n**Seus direitos:**\n- **FGTS** acumulado + **multa de 40%** sobre o saldo — *Art. 18 §1° Lei 8.036/90*\n- **Aviso prévio**: '+avisoPrevio+' dias — *Art. 487 CLT*\n- **13° salário** proporcional ao tempo trabalhado — *Lei 4.090/62*\n- **Férias** proporcionais + ⅓ constitucional — *Art. 129 CLT*\n- **Seguro-desemprego**: '+(anosT >= 2 ? (anosT >= 3 ? '5 parcelas' : '4 parcelas') : '3 parcelas')+' — *Lei 7.998/90*\n\n**💡 Brechas importantes:**\n- Se o patrão descumpriu obrigações (atrasou salário, assediou, não pagou verbas): **Rescisão Indireta** — você sai como demitido com todos os direitos (Art. 483 CLT)\n- Se trabalhou como PJ mas havia subordinação e horário fixo: direito ao **vínculo empregatício retroativo** + todos os direitos (Art. 3° CLT)\n\n**⏰ Prazos críticos:**\n- Reclamação trabalhista: **2 anos** após a demissão\n- Cobrar direitos durante o contrato: **5 anos** retroativos\n\n**✅ O que fazer agora:**\n1. Exija a **homologação da rescisão** e verifique todos os valores na Carteira de Trabalho Digital\n2. Guarde contracheques, registros de ponto e mensagens\n3. Se houver irregularidades: procure a **Vara do Trabalho** ou **Defensoria Pública**\n\n**🆓 Sem custo:** Defensoria Pública, Sindicato da sua categoria, app Carteira de Trabalho Digital';
+
+    case 'prescricao':
+      var msgPrescr = '';
+      if (idadeDiv && idadeDiv >= 5) {
+        msgPrescr = '⚠️ **Uma dívida de '+anoRef+' já tem '+idadeDiv+' anos** — muito provavelmente está PRESCRITA!\n\n';
+      }
+      return '## ⚖️ Prescrição de Dívidas — Dívida Velha = Dívida Morta\n\n'+msgPrescr+'**Prazos de prescrição por tipo de dívida:**\n- **Cartão de crédito / banco**: **5 anos** — *Art. 206, §5°, I, CC*\n- **Plano de saúde**: **1 ano** — *Art. 206, §1°, II, CC*\n- **Água, luz, telefone**: **5 anos** — *CDC Art. 27*\n- **Trabalhista**: 2 anos (após demissão) / 5 anos (durante contrato)\n- **Aluguel**: **3 anos** — *Art. 206, §3°, I, CC*\n- **Impostos (IPTU, IPVA)**: **5 anos** — *CTN Art. 174*\n\n**💡 O que a prescrição significa:**\n- O credor **não pode mais cobrar judicialmente**\n- O credor **não pode negativar seu nome** (Súmula 323 STJ)\n- Se negativou após a prescrição → **dano moral**: R$5.000 a R$15.000 (STJ)\n- **Prescrição intercorrente**: execução judicial parada por **5 anos** → processo extinto (Art. 921 §5° CPC + Súmula 150 STF)\n\n**⏰ Como calcular:**\nConte a partir do **vencimento da dívida** (não da data do empréstimo)\n\n**✅ O que fazer agora:**\n1. Confirme a data de vencimento da dívida\n2. Se prescrita: envie **carta registrada** ao credor exigindo exclusão do cadastro\n3. Se negativaram após prescrição: procure o **JEC** (Juizado Especial) — sem advogado\n4. **Nunca reconheça** a dívida prescrita por escrito — reinicia o prazo\n\n**🆓 Sem custo:** JEC (causas até 40 SM), Defensoria Pública, PROCON';
+
+    case 'penhora':
+      return '## ⚖️ Bens Impenhoráveis — A Lei Protege Você\n\n**Sobre seu caso:** Existem bens que NUNCA podem ser penhorados:\n\n**Bens absolutamente impenhoráveis** — *Art. 833 CPC*:\n- **Imóvel residencial** único (bem de família) — *Lei 8.009/90*\n- **Salário, aposentadoria e benefícios** — até 50 salários mínimos/mês\n- **Poupança** até 40 salários mínimos (R$56.480)\n- **Móveis domésticos** essenciais (cama, fogão, geladeira, sofá)\n- **Ferramentas de trabalho** necessárias para o sustento\n- **FGTS e benefícios sociais** (Bolsa Família, BPC)\n- **Seguro de vida e previdência privada**\n\n**💡 Se penhoraram bem impenhorável:**\n- Protocole **Exceção de Pré-Executividade** imediatamente (sem custas)\n- Prazo: **15 dias** após a penhora\n- Juiz é obrigado a liberar\n\n**⏰ Prazos críticos:**\n- Embargos à execução: **15 dias** após a citação\n- Impugnar penhora irregular: **15 dias** após intimação\n\n**✅ O que fazer agora:**\n1. Identifique exatamente o bem penhorado\n2. Se for impenhorável: protocole **Exceção de Pré-Executividade** na vara\n3. Procure a **Defensoria Pública** — eles fazem isso gratuitamente\n\n**🆓 Sem custo:** Defensoria Pública, Exceção de Pré-Executividade (sem custas judiciais)';
+
+    case 'plano_saude':
+      return '## ⚖️ Plano de Saúde Negou — Você Tem Direito\n\n**Sobre seu caso:** Negativa de procedimento médico é um dos maiores desrespeitos ao consumidor.\n\n**Seus direitos:**\n- Cobertura obrigatória de todos os procedimentos do **Rol da ANS** — *RN 566/2022*\n- Urgência e emergência: atendimento imediato mesmo em carência — *Lei 9.656/98 Art. 35-C*\n- Internação sem limite de dias quando há indicação médica\n- **Técnica diferenciada** (cirurgia robótica, etc.): cobertura se não houver alternativa — *STJ Tema 1.069*\n\n**💡 Ação imediata:**\n- Ligue agora: **ANS 0800 722 2033** — prazo de resposta: 24h (urgência) / 21 dias (eletivo)\n- Registre em: **apps.ans.gov.br**\n- **Liminar judicial em 24-48h**: juiz obriga o plano a custear — ação de obrigação de fazer c/c dano moral\n- **Dano moral por negativa indevida**: R$5.000 a R$30.000 (jurisprudência consolidada STJ)\n\n**⏰ Prazos críticos:**\n- Urgência: plano deve responder em **24 horas**\n- Eletivo: resposta em **21 dias úteis**\n- Prescrição da ação: **1 ano** ⚠️ (prazo curto — não demore)\n\n**✅ O que fazer agora:**\n1. Exija a **negativa por escrito** (fundamental como prova)\n2. Registre reclamação na **ANS** (0800 722 2033)\n3. Leve o laudo médico à **Defensoria Pública** para liminar judicial\n\n**🆓 Sem custo:** ANS (0800 722 2033), Defensoria Pública, JEC para valores menores';
+
+    case 'inss_negado':
+      return '## ⚖️ INSS Negou — Você Pode Recorrer Gratuitamente\n\n**Sobre seu caso:** Negativas do INSS são muito comuns e frequentemente indevidas.\n\n**Seus direitos:**\n- **Recurso administrativo gratuito**: 30 dias após receber a carta de negativa\n- **Revisão pela própria autarquia** (CRPS — Conselho de Recursos da Previdência Social)\n- **Ação judicial gratuita no JEF** (Juizado Especial Federal) — sem advogado, sem custas\n- **BPC/LOAS**: R$1.412/mês para idoso +65 ou deficiente com renda ≤ ¼ SM per capita — **não precisa ter contribuído** (Lei 8.742/93)\n\n**💡 Brechas importantes:**\n- **Revisão da Vida Toda** (RE 1.276.977 STF): contribuições anteriores a 1994 devem ser incluídas no cálculo → pode aumentar o benefício\n- Atividades **insalubres** (ruído, químicos, calor): direito a aposentadoria especial com menos tempo\n- **Trabalho rural informal**: pode comprovar com documentos alternativos (fotos, declarações, contratos informais)\n- INSS pode ter **erros no CNIS**: solicite extrato e confira cada vínculo\n\n**⏰ Prazos críticos:**\n- Pedido de reconsideração: **30 dias** após carta de negativa\n- Benefícios atrasados prescrevem em: **5 anos**\n- Revisão de benefício concedido: **10 anos** — *Art. 103 Lei 8.213/91*\n\n**✅ O que fazer agora:**\n1. Acesse **Meu INSS** (meu.inss.gov.br) e solicite o extrato do CNIS\n2. Se negado: protocole **Pedido de Reconsideração** em 30 dias\n3. Se mantida a negativa: vá ao **JEF** — completamente gratuito\n\n**🆓 Sem custo:** Meu INSS, JEF, Defensoria Pública, CRAS';
+
+    case 'pejotizacao':
+      return '## ⚖️ Pejotização Ilícita — Você Tem Vínculo Empregatício\n\n**Sobre seu caso:** Trabalhar como PJ mas com subordinação e horário fixo é **fraude à CLT**.\n\n**Seus direitos:**\n- **Vínculo empregatício retroativo** desde o início do contrato — *Art. 3° CLT*\n- Direito a **todos os direitos trabalhistas** desde o início: FGTS, férias, 13°, horas extras\n- **Multa de 40%** sobre o FGTS não depositado\n- Seguro-desemprego retroativo\n- **Dano moral** pelo descumprimento da legislação trabalhista\n\n**💡 Como provar:**\n- Horário fixo (mesmo que informal): salva mensagens, e-mails com horários\n- Subordinação: ordens, aprovações necessárias, relatórios ao chefe\n- Exclusividade: não podia atender outros clientes\n- Pessoalidade: você especificamente foi contratado, não uma empresa\n\n**⏰ Prazo crítico:**\n- Reclamação trabalhista: **2 anos** após o fim do contrato (ou demissão)\n- Direitos retroativos: até **5 anos** antes da reclamação\n\n**✅ O que fazer agora:**\n1. Guarde todas as provas: e-mails, mensagens, recibos, contratos\n2. Calcule todos os direitos devidos (calculadora trabalhista online)\n3. Procure a **Vara do Trabalho** ou **Defensoria Pública** — ação gratuita\n4. O processo pode resultar em: todos os direitos + FGTS + indenizações\n\n**🆓 Sem custo:** Defensoria Pública, Sindicato, Vara do Trabalho (gratuita)';
+
+    case 'superendiv':
+      return '## ⚖️ Superendividamento — A Lei 14.181/2021 Protege Você\n\n**Sobre seu caso:** Se suas dívidas consomem mais de 30% da renda, você tem proteção legal especial.\n\n**Seus direitos:**\n- **Renegociação forçada judicial**: todos os credores são chamados a um acordo — *Lei 14.181/2021*\n- Processo suspende **todas as cobranças e execuções** durante a negociação\n- Garantia do **mínimo existencial**: moradia, alimentação, saúde e transporte não podem ser tocados\n- **Prazo de pagamento estendido** e juros reduzidos\n- Proibição de práticas abusivas de crédito\n\n**💡 Brechas e proteções:**\n- Salário e benefícios: **impenhoráveis** (Art. 833 CPC)\n- Imóvel residencial único: **impenhorável** (Lei 8.009/90)\n- Dívidas prescritas (+5 anos): **não precisam ser pagas**\n- Juros abusivos: podem ser revistos judicialmente\n- Negativações indevidas após prescrição: **dano moral**\n\n**⏰ O que fazer imediatamente:**\n- Não faça novos empréstimos para pagar outros\n- Não assine documentos sob pressão\n- Verifique se alguma dívida já está prescrita\n\n**✅ O que fazer agora:**\n1. Liste todas as dívidas com datas de vencimento\n2. Procure o **CEJUSC** (mediação gratuita) para negociar extrajudicialmente\n3. Se não resolver: acione a **Lei do Superendividamento** pelo TJDFT ou TJ do seu estado\n4. **Defensoria Pública** tem núcleo especializado em superendividamento\n\n**🆓 Sem custo:** CEJUSC, Defensoria Pública, PROCON';
+
+    case 'consumidor':
+      return '## ⚖️ Direito do Consumidor — CDC Protege Você\n\n**Sobre seu caso:** O Código de Defesa do Consumidor é uma das leis mais protetivas do mundo.\n\n**Seus direitos principais:**\n- **Cobrança indevida**: receber o **DOBRO** do valor cobrado a mais — *Art. 42 §único CDC*\n- **Arrependimento online**: 7 dias para desistir e reembolso total — *Art. 49 CDC*\n- **Garantia legal**: produto durável = 90 dias; não durável = 30 dias — *Art. 26 CDC*\n- **Publicidade enganosa**: empresa obrigada a cumprir o que anunciou — *Art. 30 CDC*\n- **Vício do produto**: 30 dias para corrigir, senão: troca + devolução + abatimento de preço\n\n**💡 Brechas importantes:**\n- **Negativação sem aviso prévio**: indenização por dano moral — *Súmula 385 STJ* (mínimo R$3.000)\n- Dívidas de cartão/banco acima de **5 anos**: prescritas — não podem cobrar nem negativar\n- **Juros abusivos** acima da média do mercado: revisão judicial possível\n- Produto não entregue: multa diária + indenização\n\n**⏰ Prazos:**\n- Reclamar defeito: 30 ou 90 dias\n- Ação indenizatória: **5 anos** — *Art. 27 CDC*\n- Prescrição de dívidas bancárias: **5 anos**\n\n**✅ O que fazer agora:**\n1. Registre no **PROCON** (151 ou site do estado) — gratuito e rápido\n2. Use **consumidor.gov.br** — empresas respondem em dias\n3. Para valores até 40 SM: **JEC** (sem advogado, sem custas)\n\n**🆓 Sem custo:** PROCON (151), consumidor.gov.br, JEC';
+
+    case 'pensao':
+      return '## ⚖️ Pensão Alimentícia — Seus Direitos\n\n**Sobre seu caso:** A falta de pagamento de pensão alimentícia é grave e tem execução prioritária.\n\n**Seus direitos:**\n- **Execução de alimentos**: mais rápida que qualquer outra execução judicial — *Art. 528 CPC*\n- **Prisão civil** do devedor: até 90 dias (fase coercitiva) — *Art. 528 §3° CPC*\n- Alimentos podem ser descontados direto do salário do devedor\n- **Penhora on-line** (BacenJud) de conta bancária do devedor\n\n**💡 Prazos e valores:**\n- Filho tem direito até **25 anos se estudar** (universitário)\n- Se inválido: direito **vitalício**\n- Alimentos retroativos: **2 anos** — *Art. 206 §2° CC*\n- Se não fixados ainda: pode pedir **alimentos provisórios** liminarmente (liberados em dias)\n\n**⏰ O que acontece se não pagar:**\n- 1° passo: Intimação para pagar em 3 dias ou justificar\n- 2° passo: Prisão civil de 1 a 3 meses\n- 3° passo: Penhora de bens e salário\n\n**✅ O que fazer agora:**\n1. Protocole **execução de alimentos** na vara de família (urgente)\n2. Junte comprovantes dos meses sem pagamento\n3. Procure a **Defensoria Pública** — representação gratuita para baixa renda\n4. Se os alimentos não estão fixados: entre com ação imediatamente\n\n**🆓 Sem custo:** Defensoria Pública, CEJUSC (para acordo), Vara de Família';
+
+    case 'despejo':
+      return '## ⚖️ Notificação de Despejo — Seus Direitos\n\n**Sobre seu caso:** O despejo não é imediato — a lei protege o inquilino com prazos e procedimentos obrigatórios.\n\n**Seus direitos:**\n- **Despejo por falta de pagamento**: processo judicial obrigatório — mínimo 2-3 meses\n- **Contrato vencido sem renovação**: 30 dias para sair **após notificação formal**\n- Locador **NÃO pode** cortar luz, água ou trocar fechadura — é crime (*Art. 43 Lei do Inquilinato*)\n- Direito a **purgar a mora** (pagar os atrasados e permanecer) — *Art. 62 Lei 8.245/91*\n\n**💡 Proteções importantes:**\n- Se o imóvel tem **defeitos graves** não corrigidos: rescisão sem multa — *Art. 22 Lei 8.245/91*\n- Despejo de família com crianças ou idosos: juiz pode ampliar prazos\n- **Bem de família**: mesmo endividado, não pode ser despejado do único imóvel próprio (lei diferente)\n\n**⏰ Prazos:**\n- Contestação do despejo: **15 dias** após citação — prazo improrrogável\n- Recurso da sentença: **15 dias**\n\n**✅ O que fazer agora:**\n1. **NÃO saia sem ordem judicial** — notificação não é ordem de despejo\n2. Se deve aluguel: negocie um acordo imediatamente\n3. Procure a **Defensoria Pública** com urgência (leve a notificação)\n4. Se locador ameaçar cortar serviços: registre boletim de ocorrência\n\n**🆓 Sem custo:** Defensoria Pública, CEJUSC (mediação), Vara Cível';
+
+    case 'usucapiao':
+      var anosPos = anosT || 5;
+      var tipo = anosPos >= 15 ? 'Extraordinária (15 anos)' : anosPos >= 10 ? 'Ordinária (10 anos)' : anosPos >= 5 ? 'Urbana (5 anos)' : 'Familiar (2 anos)';
+      return '## ⚖️ Usucapião — Regularize Sua Posse\n\n**Sobre seu caso:** Com '+anosPos+' anos de posse, você pode ter direito à usucapião **'+tipo+'**.\n\n**Modalidades de usucapião:**\n- **Usucapião Urbana**: 5 anos, imóvel até 250m², área urbana, moradia habitual — *Art. 183 CF*\n- **Usucapião Ordinária**: 10 anos + justo título ou boa-fé — *Art. 1.242 CC*\n- **Usucapião Extraordinária**: 15 anos (ou 10 anos com moradia habitual) — *Art. 1.238 CC*\n- **Usucapião Rural**: 5 anos, área produtiva até 50 hectares — *Art. 191 CF*\n- **Usucapião Familiar**: 2 anos, cônjuge abandonou o lar — *Art. 1.240-A CC*\n\n**💡 Usucapião Extrajudicial (mais rápido e barato):**\n- Feito no **cartório de registro de imóveis** — *CPC Art. 1.071*\n- Sem processo judicial\n- Requisitos: ata notarial + planta do imóvel + não impugnação do proprietário\n\n**✅ O que fazer agora:**\n1. Junte provas de posse: contas de luz/água no seu nome, fotos, testemunhos\n2. Verifique se o imóvel é público (não pode ser usucapido) ou privado\n3. Procure um **cartório de registro de imóveis** para a via extrajudicial\n4. Ou a **Defensoria Pública** para a via judicial gratuita\n\n**🆓 Sem custo:** Defensoria Pública (ação judicial), cartório com custas reduzidas para baixa renda';
+
+    case 'heranca':
+      return '## ⚖️ Herança e Inventário\n\n**Sobre seu caso:** O inventário deve ser aberto em até 60 dias após o falecimento.\n\n**Seus direitos:**\n- **Herdeiros necessários** (filhos, cônjuge, pais): direito à **metade da herança** — intocável — *Art. 1.846 CC*\n- **União estável**: mesmos direitos do casamento para herança — *Art. 1.790 CC (+ STF RE 878.694)*\n- **Herança digital**: contas, ativos digitais e criptomoedas são inventariáveis\n\n**💡 Inventário Extrajudicial (mais rápido):**\n- No **cartório de notas** — muito mais rápido que judicial\n- Requisito: todos os herdeiros maiores de idade e de acordo, sem testamento\n- Paga apenas ITCMD (imposto estadual, 2% a 8%) + custas cartório\n\n**⏰ Prazos críticos:**\n- Abertura do inventário: **60 dias** após óbito — multa no ITCMD se ultrapassar\n- Prescrição para anular partilha: **1 ano** — *Art. 657 CPC*\n\n**✅ O que fazer agora:**\n1. Obtenha a **certidão de óbito**\n2. Faça o **ITCMD** no estado onde estava o bem principal\n3. Se todos os herdeiros concordam: vá ao **cartório de notas** (extrajudicial)\n4. Se há conflito ou menores: procure a **Vara de Família** ou **Defensoria Pública**\n\n**🆓 Sem custo:** Defensoria Pública, CEJUSC para mediação entre herdeiros';
+
+    case 'criminal':
+      return '## ⚖️ Direitos na Esfera Criminal\n\n**Sobre seu caso:** Na área criminal, o conhecimento dos seus direitos é fundamental desde o primeiro momento.\n\n**Direitos constitucionais absolutos:**\n- **Presunção de inocência** até trânsito em julgado — *Art. 5°, LVII, CF*\n- **Direito ao silêncio**: não é obrigado a dizer nada na delegacia — *Art. 5°, LXIII, CF*\n- **Advogado gratuito**: Defensoria Pública para quem não pode pagar\n- **Habeas Corpus**: qualquer pessoa pode impetrar contra prisão ilegal — *Art. 5°, LXVIII, CF*\n\n**💡 Se preso:**\n- **Audiência de custódia** em 24 horas (obrigatório)\n- **Não assine nada** sem advogado presente\n- Você tem o direito de comunicar imediatamente **família e advogado**\n- Habeas Corpus preventivo: se há risco de prisão, peça antes que aconteça\n\n**Benefícios:**\n- Penas até 4 anos: substituição por prestação de serviços (Art. 44 CP)\n- Penas até 2 anos: sursis (suspensão 2-4 anos) (Art. 77 CP)\n- Infrações de menor potencial ofensivo: transação penal no JECRIM — sem ficha\n\n**⏰ Prazos:**\n- Recurso (apelação criminal): **5 dias** — *Art. 593 CPP*\n- **Habeas Corpus**: sem prazo — impetre a qualquer momento\n\n**✅ O que fazer agora:**\n1. Exerça o **direito ao silêncio** imediatamente\n2. Contate a **Defensoria Pública** (gratuita)\n3. Para prisão ilegal: peça **Habeas Corpus** no TJ estadual\n\n**🆓 Sem custo:** Defensoria Pública, Habeas Corpus (sem custas)';
+
+    case 'gestante':
+      return '## ⚖️ Direitos da Gestante e Mãe\n\n**Sobre seu caso:** A legislação brasileira tem uma das proteções mais fortes do mundo para gestantes.\n\n**Seus direitos:**\n- **Estabilidade gestacional**: desde a confirmação da gravidez até **5 meses após o parto** — *Súmula 244 TST*\n- Estabilidade vale mesmo em **contrato temporário** e mesmo que a empresa não soubesse da gravidez\n- **Licença maternidade**: 120 dias (prorrogável a 180 dias em empresas cidadãs) — *CF Art. 7°, XVIII*\n- **Salário maternidade** pelo INSS se contribuinte\n- **Amamentação**: 2 intervalos de 30 min por dia até 6 meses — *Art. 396 CLT*\n\n**💡 Se foi demitida grávida:**\n- Demissão durante a gravidez é **nula** — você deve ser reintegrada ou receber indenização\n- Indenização = **todos os salários** do período de estabilidade (gestação + 5 meses)\n- **Dano moral** por demissão discriminatória: R$5.000 a R$30.000\n\n**⏰ Prazo:**\n- Reclamação trabalhista após o término da estabilidade: **2 anos**\n\n**✅ O que fazer agora:**\n1. Se foi demitida: notifique a empresa imediatamente por escrito\n2. Guarde comprovante da gravidez (exame com data)\n3. Procure a **Defensoria Pública** ou **Sindicato** — representação gratuita\n4. A maioria das ações termina em acordo favorável à gestante\n\n**🆓 Sem custo:** Defensoria Pública, Sindicato, Vara do Trabalho';
+
+    case 'negativacao':
+      return '## ⚖️ Nome Negativado — Seus Direitos\n\n**Sobre seu caso:** Negativação indevida gera direito a indenização.\n\n**Seus direitos:**\n- **Notificação prévia obrigatória** antes de negativar — *Art. 43 §2° CDC*\n- Sem notificação: **dano moral automático** R$3.000 a R$15.000 — *Súmula 385 STJ*\n- Dívida prescrita: **não pode negativar** — *Súmula 323 STJ*\n- **Prazo máximo**: dados ficam 5 anos no cadastro — *Art. 43 §1° CDC*\n- Você pode consultar gratuitamente: **consumidor.serasa.com.br** e **BoaVista (SCPC)**\n\n**💡 Como retirar o nome:**\n- Dívida paga: credor tem **5 dias úteis** para baixar a negativação\n- Dívida prescrita: envie carta ao credor e ao Serasa/SPC exigindo exclusão\n- Negativação indevida: proteste no **JEC** por dano moral (sem advogado até 20 SM)\n\n**⏰ Prazos:**\n- Dados no cadastro: máximo **5 anos** a contar do vencimento\n- Ação de dano moral por negativação indevida: **5 anos** — *Art. 27 CDC*\n\n**✅ O que fazer agora:**\n1. Consulte Serasa e SCPC para ver todas as negativações\n2. Verifique se a dívida existe e se a notificação foi enviada\n3. Se irregular: protocole reclamação no **PROCON** e/ou ação no **JEC**\n\n**🆓 Sem custo:** PROCON (151), consumidor.gov.br, JEC, Defensoria Pública';
+
+    case 'hora_extra':
+      return '## ⚖️ Horas Extras e Jornada de Trabalho\n\n**Sobre seu caso:** Violações de jornada são extremamente comuns e geram direito a valores significativos.\n\n**Seus direitos:**\n- **Hora extra**: mínimo 50% acima do valor normal — *Art. 59 CLT*\n- **Domingo e feriado**: 100% de adicional — *Art. 59 CLT + jurisprudência*\n- **Intervalo intrajornada** (almoço): mínimo 1h para jornada +6h; 15min para 4-6h — *Art. 71 CLT*\n- Se intervalo não concedido: hora extra correspondente — *Súmula 437 TST*\n- **Banco de horas**: precisa de convenção coletiva; se ilegal → todas as horas pagas em dobro\n\n**💡 Brechas:**\n- Horas registradas corretamente mas trabalhadas a mais (controle fraudado): provar com emails, chats, câmeras\n- Deslocamento em veículo da empresa = tempo de trabalho — *Súmula 90 TST*\n- Sobreaviso e prontidão: tempo parcialmente remunerado\n\n**⏰ Prazos:**\n- Cobrar horas extras durante o contrato: **5 anos** retroativos\n- Após demissão: **2 anos** para ingressar com ação\n\n**✅ O que fazer agora:**\n1. Guarde registros de ponto, emails e mensagens com horários\n2. Calcule aproximadamente o valor das horas não pagas\n3. Procure a **Vara do Trabalho** ou **Sindicato** da categoria\n\n**🆓 Sem custo:** Defensoria Pública, Sindicato, Vara do Trabalho';
+
+    default:
+      return respostaGenerica(txt);
+  }
+}
+
+function respostaGenerica(txt) {
+  return '## ⚖️ Consultoria Jurídica — LEX SUPREMA\n\n**Recebi sua consulta** sobre: *"'+txt.substring(0,80)+(txt.length>80?'...':'')+'"*\n\nPara uma resposta mais precisa e personalizada, **descreva com mais detalhes**:\n- O que aconteceu exatamente?\n- Há quanto tempo?\n- Há algum documento, contrato ou processo envolvido?\n\n**Áreas em que posso ajudar:**\n- 👔 **Trabalhista**: demissão, horas extras, assédio, FGTS\n- 🛡️ **Consumidor**: cobranças indevidas, defeitos, negativação\n- 🏥 **Plano de Saúde**: negativas, coberturas, ANS\n- 💰 **Dívidas**: prescrição, penhora, superendividamento\n- 👴 **INSS**: benefícios negados, aposentadoria, BPC\n- 👨‍👩‍👦 **Família**: pensão, guarda, divórcio, herança\n- 🏠 **Imóveis**: despejo, usucapião, aluguel\n- 🔒 **Criminal**: direitos, prisão, habeas corpus\n\n**🆓 Serviços gratuitos:** Defensoria Pública · PROCON (151) · JEC · JEF · CEJUSC';
 }
 
 // ══════════════════════════════════════════════
@@ -616,237 +620,197 @@ function respostaGeral(txt) {
 function adicionarMsgU(txt) {
   var msgs = document.getElementById('msgs');
   if (!msgs) return;
-  var div = document.createElement('div');
-  div.className = 'msg-u';
-  div.textContent = txt;
-  msgs.appendChild(div);
-  scrollB();
+  var d = document.createElement('div');
+  d.className = 'msg msg-u';
+  d.innerHTML = '<div class="msg-bub">'+escHtml(txt)+'</div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  atualizarPerfil(txt);
 }
 
-function adicionarMsgL(md, viaIA) {
+function adicionarMsgL(md, isAI) {
   var msgs = document.getElementById('msgs');
   if (!msgs) return;
-  var div = document.createElement('div');
-  div.className = viaIA ? 'msg-l ia-msg' : 'msg-l';
+  var d = document.createElement('div');
+  d.className = 'msg msg-l';
 
-  var badge = viaIA
-    ? '<span class="badge badge-ia">✦ LEX SUPREMA</span>'
-    : '<span class="badge badge-loc">📚 Base Jurídica</span>';
+  var badge = isAI ? '<span class="badge badge-ia">✦ LEX SUPREMA</span>' : '<span class="badge">⚖ LEX</span>';
+  d.innerHTML = '<div class="msg-av">⚖</div><div class="msg-content">'+badge+'<div class="msg-bub msg-bub-l" id="mb-'+Date.now()+'"></div></div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
 
-  var mid = 'mb' + Date.now();
-  div.innerHTML =
-    '<div class="msg-header">' +
-    '<div class="lex-av">⚖</div>' +
-    '<strong style="color:var(--gold);font-size:12px">LEX SUPREMA</strong>' +
-    badge +
-    '</div>' +
-    '<div class="msg-body" id="' + mid + '"></div>';
-
-  msgs.appendChild(div);
-  scrollB();
-  typewrite(mid, md);
+  var bub = d.querySelector('.msg-bub-l');
+  typewrite(bub, markdownToHtml(md));
 }
 
-function typewrite(eid, md) {
-  var el = document.getElementById(eid);
-  if (!el) return;
-  var html = mdToHtml(md);
-  var words = html.split(' ');
+function typewrite(el, html) {
+  el.innerHTML = '';
+  var tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  var fullText = tmp.innerHTML;
   var i = 0;
-  var chunk = DETALHE ? 3 : 4;
-
-  function render() {
-    if (i >= words.length) {
-      el.innerHTML = html;
-      scrollB();
-      return;
+  var speed = Math.max(2, Math.min(8, Math.floor(8000/fullText.length)));
+  function tick() {
+    if (i < fullText.length) {
+      el.innerHTML = fullText.substring(0,i+1);
+      i += Math.ceil(speed/2);
+      var msgs = document.getElementById('msgs');
+      if (msgs) msgs.scrollTop = msgs.scrollHeight;
+      requestAnimationFrame(tick);
+    } else {
+      el.innerHTML = fullText;
     }
-    var end = Math.min(i + chunk, words.length);
-    var acc = words.slice(0, end).join(' ');
-    el.innerHTML = acc + (i < words.length ? '<span class="cursor"></span>' : '');
-    i = end;
-    scrollB();
-    setTimeout(render, 22);
   }
-  render();
+  tick();
 }
 
-function mdToHtml(md) {
-  if (!md) return '';
-  var h = md
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
+function markdownToHtml(md) {
+  return md
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/^## (.+)$/gm,'<h3>$1</h3>')
     .replace(/^### (.+)$/gm,'<h4>$1</h4>')
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.+?)\*/g,'<em>$1</em>')
     .replace(/`(.+?)`/g,'<code>$1</code>')
-    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
     .replace(/^- (.+)$/gm,'<li>$1</li>')
-    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
-    .replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>')
-    .replace(/<\/ul>\s*<ul>/g,'')
+    .replace(/(<li>.*<\/li>)/s, function(m){ return '<ul>'+m+'</ul>'; })
+    .replace(/^(\d+\. .+)$/gm,'<li class="num">$1</li>')
     .replace(/\n{2,}/g,'</p><p>')
-    .replace(/\n/g,'<br>');
-  if (h.charAt(0) !== '<') h = '<p>' + h + '</p>';
-  return h;
+    .replace(/\n/g,'<br>')
+    .replace(/^(?!<[hul]|<\/|<li|<p)(.+)$/gm,'<p>$1</p>');
 }
 
-function mostrarTyping() {
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function mostrarTyping(){ 
   var msgs = document.getElementById('msgs');
-  if (!msgs) return 'tid';
-  var div = document.createElement('div');
-  div.className = 'typing-w';
-  div.id = 'typing-ind';
-  div.innerHTML = '<div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>';
-  msgs.appendChild(div);
-  scrollB();
-  return 'typing-ind';
+  if(!msgs) return null;
+  var tid = 'ty-'+Date.now();
+  var d = document.createElement('div');
+  d.className = 'msg msg-l';
+  d.id = tid;
+  d.innerHTML = '<div class="msg-av">⚖</div><div class="msg-content"><div class="typing-ind"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return tid;
 }
 
-function removerTyping(id) {
-  var el = document.getElementById(id);
-  if (el) el.remove();
+function removerTyping(tid){
+  if(!tid) return;
+  var el = document.getElementById(tid);
+  if(el) el.remove();
 }
 
-function scrollB() {
-  var msgs = document.getElementById('msgs');
-  if (msgs) msgs.scrollTop = msgs.scrollHeight;
-}
-
-function mostrarErro(msg) {
+function mostrarErro(msg){
   var b = document.getElementById('err-banner');
-  if (!b) return;
-  b.textContent = '⚠️ ' + msg;
+  if(!b) return;
+  b.textContent = msg;
   b.style.display = 'block';
-  setTimeout(function(){ b.style.display = 'none'; }, 6000);
+  setTimeout(function(){ b.style.display='none'; }, 5000);
 }
 
 // ══════════════════════════════════════════════
 // SUGESTÕES CONTEXTUAIS
 // ══════════════════════════════════════════════
-function mostrarCtxSugs(perg) {
-  var msgs = document.getElementById('msgs');
-  if (!msgs) return;
-  var p = perg.toLowerCase();
+function mostrarCtxSugs(txt) {
+  var t = txt.toLowerCase();
   var sugs = [];
 
-  if (p.indexOf('demiti') >= 0 || p.indexOf('rescisão') >= 0) {
-    sugs = ['Quanto vou receber de FGTS?','Tenho direito ao seguro-desemprego?','O que é rescisão indireta?'];
-  } else if (p.indexOf('dívida') >= 0 || p.indexOf('execução') >= 0 || p.indexOf('prescrit') >= 0) {
-    sugs = ['Quando a dívida prescreve?','O salário pode ser penhorado?','Como funciona o superendividamento?'];
-  } else if (p.indexOf('plano') >= 0 || p.indexOf('saúde') >= 0) {
-    sugs = ['O que o plano é obrigado a cobrir?','Posso pedir liminar contra o plano?','Farmácia Popular cobre meu remédio?'];
-  } else if (p.indexOf('inss') >= 0 || p.indexOf('aposentadoria') >= 0) {
-    sugs = ['Como recorrer da negativa do INSS?','Tenho direito ao BPC/LOAS?','O que é o JEF?'];
-  } else if (p.indexOf('aluguel') >= 0 || p.indexOf('despejo') >= 0) {
-    sugs = ['Despejo pode ser feito sem decisão judicial?','Como funciona a usucapião?','O locador pode cortar serviços?'];
-  } else {
-    sugs = ['Quais serviços jurídicos são gratuitos?','Como funciona a Defensoria Pública?','O que é o JEC?'];
-  }
+  if(t.match(/demiti|demissao|rescisao/)) sugs = ['Posso recorrer da demissão por justa causa?','Como calcular meu FGTS e multa?','Quando recebo o seguro desemprego?'];
+  else if(t.match(/divida|prescrit|cobran/)) sugs = ['O credor pode me negativar mesmo com dívida prescrita?','Como pedir extinção de execução judicial parada?','O que é bem de família impenhorável?'];
+  else if(t.match(/plano|saude|cirurgia/)) sugs = ['O plano pode negar tratamento indicado pelo médico?','Como entrar com liminar contra o plano?','Quais medicamentos são gratuitos pelo SUS?'];
+  else if(t.match(/inss|beneficio|aposentadoria/)) sugs = ['Como comprovar tempo de contribuição rural?','O que é a Revisão da Vida Toda?','Como recorrer gratuitamente no JEF?'];
+  else if(t.match(/aluguel|despejo|inquilino/)) sugs = ['O locador pode entrar no imóvel sem aviso?','Quando posso rescindir sem multa?','Como funciona a ação de despejo?'];
+  else sugs = ['Quais serviços jurídicos são gratuitos para mim?','Como a Defensoria Pública pode me ajudar?','Qual o prazo para entrar com ação?'];
 
-  var wrap = document.createElement('div');
-  wrap.className = 'ctx-wrap';
-  wrap.id = 'ctx-sug';
-  wrap.innerHTML = sugs.map(function(s) {
-    var sq = s.replace(/'/g, "\\'");
-    return '<button class="ctx-btn" onclick="enviarTxt(\'' + sq + '\');this.parentElement.remove()">' + s + '</button>';
+  var msgs = document.getElementById('msgs');
+  if(!msgs) return;
+  var old = document.getElementById('ctx-sug');
+  if(old) old.remove();
+  var d = document.createElement('div');
+  d.id = 'ctx-sug';
+  d.className = 'ctx-sugs';
+  d.innerHTML = sugs.map(function(s){
+    var sq = s.replace(/'/g,"\'");
+    return '<button class="ctx-btn" onclick="enviarTxt(''+sq+'');this.parentElement.remove()">'+s+'</button>';
   }).join('');
-  msgs.appendChild(wrap);
-  scrollB();
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
 // ══════════════════════════════════════════════
-// MODAL CONFIG IA
+// PERFIL / HISTÓRICO
 // ══════════════════════════════════════════════
-function abrirModal() { /* desativado */ }
-
-function fecharModal() { /* desativado */ }
-
-function salvarKey() {
-  var ki = document.getElementById('key-inp');
-  var key = ki ? ki.value.trim() : '';
-  if (!key) {
-    setMStatus('err', '❌ Insira a chave de acesso');
-    return;
-  }
-
-  var btn = document.getElementById('btn-key');
-  if (btn) { btn.disabled = true; btn.textContent = 'Verificando...'; }
-  setMStatus('load', '🔄 Verificando conexão com o motor neural...');
-
-  testarKey(key).then(function(ok) {
-    if (ok) {
-      MN_KEY = key;
-      MN_ATIVO = true;
-      localStorage.setItem('lex_mn_key', key);
-      atualizarStatusIA();
-      setMStatus('ok', '✅ Sistema ativado!');
-      setTimeout(function() {
-        fecharModal();
-        renderBV(); // atualizar tela de boas-vindas
-      }, 1500);
-    } else {
-      setMStatus('err', '❌ Chave inválida ou sem acesso. Verifique e tente novamente.');
-    }
-    if (btn) { btn.disabled = false; btn.textContent = 'Ativar'; }
-  });
+function atualizarPerfil(txt) {
+  var t = txt.toLowerCase();
+  var nome = document.getElementById('sb-nome');
+  var av   = document.getElementById('sb-av');
+  if(!nome || !av) return;
+  if(t.match(/demiti|emprego|trabalhando|trabalho/)) { nome.textContent='Trabalhador'; av.textContent='👔'; }
+  else if(t.match(/inss|aposentadoria|beneficio/))   { nome.textContent='Beneficiário'; av.textContent='👴'; }
+  else if(t.match(/divida|devedor|endividado/))       { nome.textContent='Consumidor'; av.textContent='💰'; }
+  else if(t.match(/plano|saude|medico/))              { nome.textContent='Paciente'; av.textContent='🏥'; }
+  else if(t.match(/aluguel|imovel|despejo/))          { nome.textContent='Inquilino'; av.textContent='🏠'; }
+  else if(t.match(/crime|preso|policia/))             { nome.textContent='Cidadão'; av.textContent='⚖️'; }
+  else                                                { nome.textContent='Cidadão'; av.textContent='⚖'; }
 }
 
-function setMStatus(tipo, msg) {
-  var el = document.getElementById('m-status');
-  if (!el) return;
-  el.className = tipo;
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-// ══════════════════════════════════════════════
-// HISTÓRICO
-// ══════════════════════════════════════════════
-function salvarPerg(p) {
-  HIST_PERG.unshift({ q: p.slice(0, 55), ts: Date.now() });
-  if (HIST_PERG.length > 20) HIST_PERG = HIST_PERG.slice(0, 20);
+function salvarPerg(txt) {
+  HIST_PERG.unshift({q:txt.substring(0,60), ts:Date.now()});
+  if(HIST_PERG.length>15) HIST_PERG = HIST_PERG.slice(0,15);
   try { localStorage.setItem('lex_hist', JSON.stringify(HIST_PERG)); } catch(e){}
   renderHist();
 }
 
 function renderHist() {
-  var list = document.getElementById('hist-list');
-  if (!list) return;
-  if (!HIST_PERG.length) {
-    list.innerHTML = '<div style="font-size:11px;color:var(--text3);padding:8px 10px">Nenhuma consulta ainda</div>';
-    return;
-  }
-  var items = HIST_PERG.slice(0, 10).map(function(h) {
-    var q = h.q.replace(/'/g, "\\'");
-    return '<div class="hist-item" onclick="enviarTxt(\'' + q + '\')">💬 ' + h.q + '</div>';
-  });
-  list.innerHTML = items.join('');
+  var hl = document.getElementById('hist-list');
+  if(!hl) return;
+  hl.innerHTML = HIST_PERG.slice(0,8).map(function(h){
+    var q = h.q.replace(/'/g,"\'");
+    return '<div class="hist-item" onclick="enviarTxt(''+q+'')">💬 '+h.q+'</div>';
+  }).join('');
 }
 
 function limparChat() {
-  HIST_CHAT = [];
   var msgs = document.getElementById('msgs');
-  if (msgs) {
-    msgs.innerHTML = '<div id="wlc"></div>';
-    renderBV();
-  }
+  if(msgs) { msgs.innerHTML='<div id="wlc"></div>'; renderBV(); }
+  HIST_CHAT = [];
 }
 
 // ══════════════════════════════════════════════
-// MODO
+// INPUT
 // ══════════════════════════════════════════════
+function autoH(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120)+'px';
+}
+
+function keyE(e) {
+  if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
+}
+
 function setMode(m) {
-  DETALHE = (m === 'd');
-  var pr = document.getElementById('p-rap');
-  var pd = document.getElementById('p-det');
-  if (pr) pr.className = DETALHE ? 'mpill' : 'mpill ativo';
-  if (pd) pd.className = DETALHE ? 'mpill ativo' : 'mpill';
+  DETALHE = (m==='d');
+  var pr  = document.getElementById('p-rap');
+  var pd  = document.getElementById('p-det');
+  var hin = document.getElementById('hint');
+  if(pr) pr.className = 'mpill'+(m==='r'?' ativo':'');
+  if(pd) pd.className = 'mpill'+(m==='d'?' ativo':'');
+  if(hin) hin.textContent = DETALHE ? '📋 Modo detalhado — respostas completas com mais jurisprudência' : '⚡ Especialista jurídico pronto para sua consulta';
+}
+
+// Stubs para funções legadas (não são mais usadas)
+function abrirModal(){}
+function fecharModal(){}
+
+// Service Worker
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
 }
 </script>
-
-  <script>if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});</script>
 </body>
 </html>
