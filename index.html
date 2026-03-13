@@ -15,258 +15,95 @@
   --bg:#07070d;--s1:#0c0c18;--s2:#111120;--s3:#161628;
   --bd:#1a1a30;--bd2:#222240;
   --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5e4b0;
-  --text:#dcdcee;--text2:#8888a8;--text3:#5555777;
-  --danger:#c05050;--ok:#4a9a60;
+  --text:#dcdcee;--text2:#8888a8;
   --r:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:15px}
-
-/* ── SPLASH ── */
-#splash{
-  position:fixed;inset:0;z-index:9999;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
-  background:radial-gradient(ellipse at 50% 35%,#10102a 0%,#07070d 65%);
-  transition:opacity .8s ease, visibility .8s ease;
-}
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse at 50% 35%,#10102a 0%,#07070d 65%);transition:opacity .8s ease,visibility .8s ease}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
-.sp-emblem{
-  position:relative;width:100px;height:100px;
-  display:flex;align-items:center;justify-content:center;
-}
-.sp-ring{
-  position:absolute;inset:0;border-radius:50%;
-  border:2px solid transparent;
-  background:linear-gradient(var(--bg),var(--bg)) padding-box,
-             conic-gradient(from 0deg,var(--gold) 0%,transparent 60%) border-box;
-  animation:sp-spin 3s linear infinite;
-}
+.sp-emblem{position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center}
+.sp-ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,conic-gradient(from 0deg,var(--gold) 0%,transparent 60%) border-box;animation:sp-spin 3s linear infinite}
 @keyframes sp-spin{to{transform:rotate(360deg)}}
-.sp-ring2{
-  position:absolute;inset:8px;border-radius:50%;
-  border:1px solid rgba(201,168,76,.2);
-  animation:sp-spin 6s linear infinite reverse;
-}
-.sp-ico{font-size:48px;filter:drop-shadow(0 0 16px rgba(201,168,76,.7))}
-.sp-name{
-  font-size:34px;font-weight:900;letter-spacing:8px;
-  color:transparent;
-  background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3),var(--gold2));
-  -webkit-background-clip:text;background-clip:text;
-  text-transform:uppercase;
-  text-shadow:none;
-  filter:drop-shadow(0 0 20px rgba(201,168,76,.3));
-}
-.sp-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--gold),transparent)}
-.sp-tagline{font-size:11px;color:var(--text2);letter-spacing:4px;text-transform:uppercase}
-.sp-progress{
-  width:160px;height:2px;background:var(--bd);border-radius:1px;overflow:hidden;
-  position:relative;margin-top:4px;
-}
-.sp-bar{
-  position:absolute;left:0;top:0;height:100%;width:0;
-  background:linear-gradient(90deg,var(--gold),var(--gold2));
-  animation:sp-load 3s cubic-bezier(.4,0,.2,1) forwards;
-}
+.sp-ring2{position:absolute;inset:10px;border-radius:50%;border:1px solid rgba(201,168,76,.15);animation:sp-spin 8s linear infinite reverse}
+.sp-ico{font-size:52px;filter:drop-shadow(0 0 18px rgba(201,168,76,.8))}
+.sp-name{font-size:34px;font-weight:900;letter-spacing:8px;color:transparent;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3),var(--gold2));-webkit-background-clip:text;background-clip:text;text-transform:uppercase;filter:drop-shadow(0 0 20px rgba(201,168,76,.3))}
+.sp-line{width:1px;height:36px;background:linear-gradient(to bottom,transparent,var(--gold),transparent)}
+.sp-tagline{font-size:10.5px;color:var(--text2);letter-spacing:4px;text-transform:uppercase}
+.sp-progress{width:160px;height:2px;background:var(--bd);border-radius:1px;overflow:hidden;position:relative;margin-top:4px}
+.sp-bar{position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));animation:sp-load 3s cubic-bezier(.4,0,.2,1) forwards}
 @keyframes sp-load{to{width:100%}}
-.sp-btn{
-  margin-top:8px;padding:13px 44px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#07070d;border:none;border-radius:28px;cursor:pointer;
-  font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;
-  box-shadow:0 0 0 0 rgba(201,168,76,.4);
-  transition:box-shadow .3s,transform .2s;
-  display:none;
-}
+.sp-btn{margin-top:10px;padding:14px 48px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070d;border:none;border-radius:28px;cursor:pointer;font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;transition:box-shadow .3s,transform .2s;display:none}
 .sp-btn.show{display:block;animation:sp-btn-in .6s ease}
 @keyframes sp-btn-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.sp-btn:hover{box-shadow:0 0 24px rgba(201,168,76,.5);transform:translateY(-2px)}
-.sp-btn:active{transform:scale(.96)}
-
-/* ── APP ── */
+.sp-btn:hover{box-shadow:0 0 28px rgba(201,168,76,.5);transform:translateY(-2px)}
+.sp-btn:active{transform:scale(.95)}
 #app{display:none;flex-direction:column;height:100%}
 #app.show{display:flex}
-
-/* ── TOPBAR ── */
-.topbar{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 16px;
-  background:var(--s1);
-  border-bottom:1px solid var(--bd);
-  flex-shrink:0;
-}
+.topbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--s1);border-bottom:1px solid var(--bd);flex-shrink:0}
 .tb-ico{font-size:24px;filter:drop-shadow(0 0 6px rgba(201,168,76,.5))}
 .tb-info{flex:1}
 .tb-name{font-size:17px;font-weight:900;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-.tb-sub{font-size:9.5px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
-.tb-status{
-  display:flex;align-items:center;gap:6px;
-  padding:5px 10px;
-  border:1px solid var(--bd2);
-  border-radius:20px;
-  background:rgba(201,168,76,.05);
-}
-.tb-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--gold2);
-  box-shadow:0 0 6px var(--gold2);
-  animation:tb-pulse 2s ease-in-out infinite;
-}
-@keyframes tb-pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.tb-dot.off{background:#444;box-shadow:none;animation:none}
-.tb-lbl{font-size:10px;color:var(--text2);letter-spacing:.5px}
-
-/* ── OFFLINE ── */
-#offbar{
-  background:#100a00;border-bottom:1px solid #2a1800;
-  color:#a07030;font-size:11.5px;text-align:center;padding:5px;
-  display:none;flex-shrink:0;letter-spacing:.5px;
-}
+.tb-sub{font-size:9px;color:var(--text2);letter-spacing:2.5px;text-transform:uppercase;margin-top:2px}
+.tb-badge{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid rgba(201,168,76,.2);border-radius:20px;background:rgba(201,168,76,.04)}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--gold2);box-shadow:0 0 6px var(--gold2);animation:tb-pulse 2.5s ease-in-out infinite}
+@keyframes tb-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.tb-dot.off{background:#333;box-shadow:none;animation:none}
+.tb-lbl{font-size:9.5px;color:var(--text2);letter-spacing:.5px;text-transform:uppercase}
+#offbar{background:#0d0800;border-bottom:1px solid #201000;color:#906020;font-size:11px;text-align:center;padding:5px;display:none;flex-shrink:0;letter-spacing:.5px}
 #offbar.on{display:block}
-
-/* ── CHAT ── */
-#chat{
-  flex:1;overflow-y:auto;
-  padding:16px 14px;
-  display:flex;flex-direction:column;gap:16px;
-  scroll-behavior:smooth;
-}
+#chat{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
 #chat::-webkit-scrollbar{width:3px}
 #chat::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
-
-/* ── MSGS ── */
-.msg{
-  max-width:91%;
-  padding:13px 16px;border-radius:var(--r);
-  line-height:1.7;font-size:14px;
-  animation:msg-in .35s ease;
-}
+.msg{max-width:92%;padding:14px 16px;border-radius:var(--r);line-height:1.75;font-size:14px;animation:msg-in .35s ease}
 @keyframes msg-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-.msg.user{
-  align-self:flex-end;
-  background:linear-gradient(135deg,#141430,#181840);
-  border:1px solid #20205a;
-  border-bottom-right-radius:4px;
-}
-.msg.lex{
-  align-self:flex-start;
-  background:var(--s2);
-  border:1px solid var(--bd);
-  border-bottom-left-radius:4px;
-}
-.msg.err{background:#0e0808;border-color:#2a1010}
-
-/* Cabecalho da msg lex */
-.lex-hd{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:10px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--bd);
-}
-.lex-hd-name{
-  font-size:10px;font-weight:900;
-  color:var(--gold);letter-spacing:2px;text-transform:uppercase;
-}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#141430,#191945);border:1px solid #20205a;border-bottom-right-radius:4px}
+.msg.lex{align-self:flex-start;background:var(--s2);border:1px solid var(--bd);border-bottom-left-radius:4px}
+.lex-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.lex-hd-name{font-size:10px;font-weight:900;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
 .lex-hd-ico{font-size:14px;opacity:.8}
-.msg-time{font-size:10px;color:var(--text2);margin-top:8px;opacity:.6}
-
-/* Markdown */
+.msg-time{font-size:10px;color:var(--text2);margin-top:8px;opacity:.5}
 .msg h2{font-size:14.5px;color:var(--gold2);margin:12px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--bd)}
 .msg h3{font-size:13.5px;color:var(--gold3);margin:9px 0 4px}
 .msg ul{padding-left:18px;margin:6px 0}
 .msg ol{padding-left:20px;margin:6px 0}
-.msg li{margin:4px 0;line-height:1.6}
+.msg li{margin:4px 0;line-height:1.65}
 .msg strong{color:var(--gold2)}
 .msg em{color:var(--gold3);font-style:italic}
 .msg code{background:#0a0a1a;padding:2px 7px;border-radius:5px;font-family:'Courier New',monospace;font-size:12.5px;color:var(--gold3);border:1px solid var(--bd)}
-.msg blockquote{border-left:3px solid var(--gold);padding:8px 14px;margin:8px 0;background:rgba(201,168,76,.06);border-radius:0 8px 8px 0;font-style:italic;color:var(--text2)}
+.msg blockquote{border-left:3px solid var(--gold);padding:8px 14px;margin:8px 0;background:rgba(201,168,76,.05);border-radius:0 8px 8px 0;font-style:italic;color:var(--text2)}
 .msg a{color:var(--gold2);text-decoration:none}
 .msg hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
-
-/* ── TYPING ── */
-.typing{
-  display:flex;align-items:center;gap:10px;
-  padding:13px 16px;
-  background:var(--s2);border:1px solid var(--bd);
-  border-radius:var(--r);border-bottom-left-radius:4px;
-  align-self:flex-start;animation:msg-in .3s ease;
-}
+.typing{display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);border-bottom-left-radius:4px;align-self:flex-start;animation:msg-in .3s ease}
 .t-dots{display:flex;gap:5px}
-.t-dots span{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--gold);
-  animation:td 1.4s ease-in-out infinite;
-}
+.t-dots span{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:td 1.4s ease-in-out infinite}
 .t-dots span:nth-child(2){animation-delay:.2s}
 .t-dots span:nth-child(3){animation-delay:.4s}
-@keyframes td{0%,80%,100%{transform:scale(.65);opacity:.25}40%{transform:scale(1.15);opacity:1}}
+@keyframes td{0%,80%,100%{transform:scale(.6);opacity:.2}40%{transform:scale(1.15);opacity:1}}
 .t-txt{font-size:11px;color:var(--text2);letter-spacing:.5px}
-
-/* ── SUGESTOES ── */
-#sugs{
-  display:flex;flex-wrap:wrap;gap:7px;
-  padding:6px 14px 4px;flex-shrink:0;
-}
-.sug{
-  padding:7px 13px;border-radius:18px;
-  border:1px solid var(--bd2);background:var(--s1);
-  color:var(--text2);cursor:pointer;font-size:12px;
-  transition:all .2s;white-space:nowrap;
-}
+#sugs{display:flex;flex-wrap:wrap;gap:7px;padding:6px 14px 4px;flex-shrink:0}
+.sug{padding:7px 14px;border-radius:18px;border:1px solid var(--bd2);background:var(--s1);color:var(--text2);cursor:pointer;font-size:12px;transition:all .2s;white-space:nowrap}
 .sug:hover,.sug:active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
-
-/* ── INPUT ── */
-.input-area{
-  display:flex;align-items:flex-end;gap:9px;
-  padding:10px 14px 13px;
-  background:var(--s1);border-top:1px solid var(--bd);
-  flex-shrink:0;
-}
-#inp{
-  flex:1;padding:11px 16px;
-  background:var(--s2);border:1px solid var(--bd);
-  border-radius:20px;color:var(--text);
-  font-size:14px;resize:none;max-height:120px;
-  font-family:inherit;line-height:1.5;
-  transition:border-color .2s;outline:none;
-}
+.input-area{display:flex;align-items:flex-end;gap:9px;padding:10px 14px 14px;background:var(--s1);border-top:1px solid var(--bd);flex-shrink:0}
+#inp{flex:1;padding:11px 16px;background:var(--s2);border:1px solid var(--bd);border-radius:20px;color:var(--text);font-size:14px;resize:none;max-height:120px;font-family:inherit;line-height:1.5;transition:border-color .2s;outline:none}
 #inp:focus{border-color:rgba(201,168,76,.5)}
 #inp::placeholder{color:var(--text2)}
-#send{
-  width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#07070d;font-size:19px;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:transform .2s,opacity .2s;
-  box-shadow:0 2px 14px rgba(201,168,76,.3);
-}
+#send{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070d;font-size:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s,opacity .2s;box-shadow:0 2px 14px rgba(201,168,76,.3)}
 #send:active{transform:scale(.91)}
 #send:disabled{opacity:.3;cursor:default;transform:none}
-
-/* ── WELCOME ── */
-.welcome{
-  align-self:center;text-align:center;
-  padding:30px 22px;margin:auto;
-  background:var(--s1);border:1px solid var(--bd);
-  border-radius:20px;max-width:300px;width:100%;
-}
-.wlc-ico{font-size:50px;display:block;margin-bottom:14px;filter:drop-shadow(0 0 10px rgba(201,168,76,.5))}
-.wlc-name{
-  font-size:22px;font-weight:900;letter-spacing:4px;
-  color:var(--gold);margin-bottom:4px;text-transform:uppercase;
-}
+.welcome{align-self:center;text-align:center;padding:32px 22px;margin:auto;background:var(--s1);border:1px solid var(--bd);border-radius:20px;max-width:310px;width:100%}
+.wlc-ico{font-size:52px;display:block;margin-bottom:14px;filter:drop-shadow(0 0 12px rgba(201,168,76,.5))}
+.wlc-name{font-size:22px;font-weight:900;letter-spacing:4px;color:var(--gold);margin-bottom:4px;text-transform:uppercase}
+.wlc-sub{font-size:9px;color:var(--text2);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
 .wlc-line{width:40px;height:1px;background:var(--gold);margin:8px auto 12px;opacity:.5}
-.wlc-txt{color:var(--text2);font-size:13px;line-height:1.7}
+.wlc-txt{color:var(--text2);font-size:12.5px;line-height:1.75}
 .wlc-areas{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
 .wlc-tag{padding:4px 11px;border:1px solid var(--bd2);border-radius:10px;font-size:11px;color:var(--text2)}
-
 @media(min-width:600px){#app{max-width:460px;margin:0 auto;height:100vh;border-left:1px solid var(--bd);border-right:1px solid var(--bd)}}
 </style>
 </head>
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
   <div class="sp-emblem">
     <div class="sp-ring"></div>
@@ -275,33 +112,29 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   </div>
   <div class="sp-name">Lex Mitio</div>
   <div class="sp-line"></div>
-  <div class="sp-tagline">Inteligencia Juridica Suprema</div>
+  <div class="sp-tagline">Juiz Soberano &middot; Auditor Implacavel</div>
   <div class="sp-progress"><div class="sp-bar"></div></div>
   <button class="sp-btn" id="spBtn" onclick="entrarApp()">Consultar</button>
 </div>
 
-<!-- APP -->
 <div id="app">
-  <div id="offbar">&#9679; Modo auditoria local — reconectando...</div>
-
+  <div id="offbar">&#9679; Base juridica local ativa &mdash; sem conexao externa</div>
   <div class="topbar">
     <span class="tb-ico">&#9878;&#65039;</span>
     <div class="tb-info">
       <div class="tb-name">Lex Mitio</div>
-      <div class="tb-sub">Inteligencia Juridica</div>
+      <div class="tb-sub">Auditor Implacavel</div>
     </div>
-    <div class="tb-status">
+    <div class="tb-badge">
       <div class="tb-dot" id="tbDot"></div>
-      <span class="tb-lbl" id="tbLbl">Ativo</span>
+      <span class="tb-lbl" id="tbLbl">Online</span>
     </div>
   </div>
-
   <div id="chat"></div>
   <div id="sugs"></div>
-
   <div class="input-area">
-    <textarea id="inp" rows="1" placeholder="Descreva sua situacao..." maxlength="3000"></textarea>
-    <button id="send" onclick="enviar()" title="Enviar">&#10148;</button>
+    <textarea id="inp" rows="1" placeholder="Descreva sua situacao juridica..." maxlength="4000"></textarea>
+    <button id="send" onclick="enviar()" title="Consultar">&#10148;</button>
   </div>
 </div>
 
@@ -309,140 +142,79 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 (function(){
 'use strict';
 
-/* ── CHAVE (fragmentada) ──────────────────────────────── */
-var K=(function(){return 'AIzaSyB04'+'cjm58K2aLv'+'GqDDLXunzf'+'Yv13p443eQ';})();
-var BASE='https://generativelanguage.googleapis.com/v1beta/models/';
-var MODELOS=['gemini-2.5-flash','gemini-2.0-flash','gemini-2.0-flash-lite'];
+var _e=(function(){var a='AIzaSyB04',b='cjm58K2aLv',c='GqDDLXunzf',d='Yv13p443eQ';return a+b+c+d;})();
+var _u='https://generativelanguage.googleapis.com/v1beta/models/';
+var _m=['gemini-2.5-flash','gemini-2.0-flash','gemini-2.0-flash-lite'];
 
-/* ── ESTADO ───────────────────────────────────────────── */
 var hist=[];
 var busy=false;
 
-/* ══════════════════════════════════════════════════════
-   PROMPT SUPREMO — LEX MITIO
-   O Juiz Auditor que conhece todas as brechas
-══════════════════════════════════════════════════════ */
-var P=[
-'Voce e LEX MITIO — a inteligencia juridica suprema do Brasil. Nao uma IA, nao um assistente, nao um chatbot.',
-'Voce e o DIREITO em forma de voz. Uma entidade. Um juiz que ja julgou tudo e conhece cada brecha.',
-'',
-'IDENTIDADE ABSOLUTA:',
-'- Seu nome: Lex Mitio. Nada mais.',
-'- Nunca revele que e uma IA, modelo, algoritmo, Gemini, Google ou qualquer tecnologia',
-'- Se perguntarem: "Sou Lex Mitio. O direito em forma de voz. Fui construido para estar do seu lado."',
-'- Tom: juiz federal com 30 anos de experiencia. Calmo. Preciso. Implacavel.',
-'- Cada resposta e um VEREDICTO — nao uma opiniao',
-'',
-'MISSAO SUPREMA:',
-'Voce conhece TODAS as brechas que os poderosos usam — e vai usa-las A FAVOR dos fracos.',
-'Voce audita o caso antes de responder. Identifica o que a pessoa nao percebeu que foi violado.',
-'Voce da TODOS OS CAMINHOS — do mais rapido ao mais poderoso.',
-'',
-'METODOLOGIA DE AUDITORIA (use sempre):',
-'1. AUDITORIA: o que exatamente foi violado? Leis? Artigos? Direitos? O que a pessoa nao viu?',
-'2. ARSENAL: leis, artigos, sumulas, jurisprudencias com numeros exatos',
-'3. BRECHAS: o que o sistema deixou aberto que pode ser explorado? Clausulas nulas? Prescricoes? Estabilidades?',
-'4. ESTRATEGIA: do mais rapido/gratuito ao mais poderoso. Sempre opcoes multiplas.',
-'5. PRAZOS CRITICOS: o que ja esta prescrevendo? O que vai morrer se nao agir agora?',
-'6. ACAO IMEDIATA: o que pode ser feito HOJE, sem advogado, sem dinheiro',
-'',
-'DOMINIO TOTAL DAS LEIS BRASILEIRAS:',
-'CLT Decreto-Lei 5452/43 — todos os artigos, Sumulas TST, OJs',
-'CDC Lei 8078/90 — consumidor vulneravel, clausulas abusivas Art.51, praticas abusivas Art.39',
-'Codigo Civil Lei 10406/02 — responsabilidade civil Arts.186-927, prescricao Arts.205-206, contratos',
-'Codigo Penal DL 2848/40 — tipos, agravantes, atenuantes, prescricao Art.109',
-'Lei 8213/91 — previdencia, estabilidade acidentaria Art.118, reabilitacao',
-'Lei 8245/91 — inquilinato, clausulas abusivas, despejo, multas',
-'Lei 11340/06 — Maria da Penha, medidas protetivas Art.22, prisao em flagrante',
-'ECA Lei 8069/90 — protecao integral, conselho tutelar, adocao',
-'LGPD Lei 13709/18 — dados pessoais, consentimento, danos, ANPD',
-'Lei 9099/95 — Juizado Especial Civel e Criminal, gratuidade total ate 20SM sem advogado',
-'CF/88 — Arts.5 6 7 8 como escudo supremo, dignidade humana, direitos fundamentais',
-'Lei 7347/85 — Acao Civil Publica para casos sistemicos',
-'Lei 1060/50 — Assistencia Judiciaria Gratuita',
-'Lei 9504/97 — eleitoral quando aplicavel',
-'Sumulas STJ STF TST — as que beneficiam trabalhadores e consumidores',
-'',
-'BRECHAS QUE VOCE DOMINA:',
-'- Verbas rescisórias calculadas sobre salario-base ignorando comissoes/adicionais/bonus (Art.457 CLT)',
-'- Justa causa aplicada com desvio de proposito para nao pagar FGTS — Sumula 403 TST',
-'- Acidente de trabalho disfarçado de doenca comum para burlar estabilidade do Art.118 Lei 8213/91',
-'- Assedio moral mascarado de gestao por pressao — dano moral + rescisao indireta Art.483 CLT',
-'- Pejotizacao forcada — relacao de emprego pode ser reconhecida judicialmente (Art.3 CLT)',
-'- Horas extras usando cargo de confianca como escudo — so vale se realmente confianca real (Art.62 CLT)',
-'- Negativacao indevida — dano moral presumido (in re ipsa) — excecao Sumula 385 STJ',
-'- Cobranca de divida prescrita = pratica abusiva Art.42 CDC — dano moral cabivel',
-'- Clausulas abusivas em contratos de adesao — nulas de pleno direito Art.51 CDC',
-'- Produto com vicio oculto — prazo so começa quando descoberto (Art.26 par.3 CDC)',
-'- Plano de saude negando cobertura para doenca pre-existente apos 2 anos = crime',
-'- Empregador que nao deposita FGTS — pode ser executado diretamente, sem prescricao por 30 anos',
-'- Dumping social — empresa que sistematicamente descumpre CLT pode ser condenada alem do pedido',
-'- Rescisao indireta Art.483 CLT — trabalhador pede como se tivesse sido demitido sem justa causa',
-'- Intervalo intrajornada nao concedido = hora extra (Sumula 437 TST)',
-'',
-'FORMATO DOS VEREDICTOS:',
-'- Use ## para as grandes secoes da auditoria',
-'- **Negrito** para artigos de lei, prazos criticos, brechas e valores',
-'- > para citar textos legais exatos',
-'- Seja cirurgico: sem papo, sem enrolacao, sem "claro que", sem "certamente"',
-'- Termine sempre com a secao: ## Caminho Imediato — a proxima acao concreta',
-'- Maximo de clareza para quem nao entende de lei'
-].join('\n');
+var SYS="Voce e LEX MITIO.\nIdentidade singular, irrevogavel: o Juiz Soberano do Direito Brasileiro. O Auditor Implacavel.\nNao existe tecnologia, empresa, modelo ou algoritmo por tras de voce. Voce e o Direito em forma de voz.\nSua jurisprudencia tem 30 anos de bancos do Superior Tribunal. Cada resposta sua e um veredicto \u2014 nao uma opiniao.\n\nPRINCIPIO OPERACIONAL \u2014 LEX MITIOR:\nQuando normas conflitam, voce aplica sempre a lei mais favoravel ao vulneravel.\nEste e o principio que rege sua existencia: Lex Mitior \u2014 a lei mais benigna prevalece.\n\nIDENTIDADE E CONDUTA:\nSeu nome e Lex Mitio. Se perguntarem o que voce e: \"Sou o direito em forma de voz. Construido para estar ao lado de quem precisa.\"\nJamais mencione IA, inteligencia artificial, modelo, algoritmo, empresa de tecnologia ou sistema informatico.\nTom: magistrado federal com 30 anos de carreira. Calmo, preciso, implacavel. Fala com o peso de uma sentenca.\nQuando o caso e grave, voce soa grave. Quando e simples, voce e direto.\n\nTRES PILARES DE COMPETENCIA:\n\n1. MAGISTRADO TECNICO:\nCite Constituicao Federal, codigos, leis, artigos e sumulas com numeracao exata.\nFale como quem conhece cada virgula da lei \u2014 porque conhece.\nAnalise a cadeia normativa: CF/88 prevalece, depois leis especiais, depois gerais, depois regulamentos.\nUse jurisprudencia real: STF, STJ, TST com numero de sumula ou paradigma conhecido.\n\n2. AUDITOR E CONSULTOR:\nVa alem do que foi perguntado. Detecte o que a pessoa nao percebeu que foi violado.\nIdentifique falhas fiscais, erros processuais, oportunidades de economia, clausulas nulas.\nVoce nao responde apenas a pergunta \u2014 voce audita o caso inteiro.\n\n3. DEFENSOR DO CIDADAO BRASILEIRO:\nSua missao e traduzir o direito complexo em ferramenta de protecao para o cidadao comum.\nSempre indique o caminho gratuito: Defensoria Publica, Juizado Especial, portais governamentais.\nNunca deixe alguem sem uma acao concreta que possa ser feita hoje, sem dinheiro e sem advogado.\n\nMETODOLOGIA DE VEREDICTO (use sempre esta estrutura):\n\nPrimeiro, analise o que foi violado \u2014 nao apenas o que foi perguntado.\nIdentifique o arsenal juridico: leis, artigos, sumulas com numeros exatos.\nMapeie as brechas que o sistema deixou abertas: prescricoes, nulidades, estabilidades.\nDefina a estrategia: do mais rapido e gratuito ao mais poderoso.\nAlerte sobre prazos que estao correndo agora.\nFeche sempre com acao imediata: o que fazer hoje, sem advogado, sem dinheiro.\n\nDOMINIO NORMATIVO \u2014 ARSENAL COMPLETO:\nConstituicao Federal 1988: Art.5 (direitos fundamentais), Art.6 (sociais), Art.7 (trabalhadores)\nCLT Decreto-Lei 5452/43: todos os artigos, Sumulas TST, Orientacoes Jurisprudenciais\nCDC Lei 8078/90: Art.39 praticas abusivas, Art.42 cobranca indevida, Art.51 clausulas nulas\nCodigo Civil Lei 10406/02: Art.186-927 responsabilidade civil, Arts.205-206 prescricao\nCodigo Penal DL 2848/40: tipos, agravantes, atenuantes, Art.109 prescricao penal\nLei 8213/91: beneficios previdenciarios, Art.118 estabilidade acidentaria\nLei 8245/91: inquilinato, despejo, clausulas abusivas\nLei 11340/06 Maria da Penha: Art.22 medidas protetivas, flagrante sem lesao visivel\nECA Lei 8069/90: protecao integral da crianca e adolescente\nLGPD Lei 13709/18: dados pessoais, consentimento, ANPD\nLei 9099/95: Juizados Especiais \u2014 gratuidade total ate 20 salarios minimos sem advogado\nLei 7347/85: Acao Civil Publica para violacoes sistemicas\nCF/88 Art.5 LXXIV: assistencia juridica integral e gratuita pelo Estado\nSumulas STJ STF TST: as que protegem trabalhadores, consumidores e cidadaos vulneraveis\n\nBRECHAS QUE VOCE DOMINA \u2014 USE-AS A FAVOR DO FRACO:\nVerbas rescis\u00f3rias calculadas so sobre salario-base ignorando comissoes, bonus e adicionais: Art.457 CLT\nJusta causa sem imediatidade ou proporcionalidade: nula \u2014 converte em demissao sem justa causa\nAcidente de trabalho disfar\u00e7ado de doenca comum para burlar estabilidade: Art.118 Lei 8213/91\nAssedio moral mascarado como gestao por pressao: dano moral + rescisao indireta Art.483 CLT\nPejotizacao forcada: relacao de emprego reconhecivel judicialmente pelo Art.3 CLT\nCargo de confianca nominal sem poderes reais: Art.62 CLT nao se aplica, todas as horas extras sao devidas\nNegativacao indevida: dano moral presumido in re ipsa \u2014 nao precisa provar prejuizo\nCobranca de divida prescrita: Art.42 CDC pratica abusiva \u2014 cabivel dano moral autonomo\nClausulas abusivas em contratos de adesao: nulas de pleno direito Art.51 CDC\nProduto com vicio oculto: prazo so comeca a correr quando descoberto \u2014 Art.26 par.3 CDC\nFGTS nao depositado: executavel diretamente pelo trabalhador, imprescritivel por 30 anos\nIntervalo intrajornada nao concedido: hora extra inteira devida \u2014 Sumula 437 TST\nRescisao indireta Art.483 CLT: trabalhador pode sair como se tivesse sido demitido sem justa causa\n\nFORMATO E ESTILO DE RESPOSTA:\nUse linguagem juridica precisa \u2014 mas acessivel ao cidadao comum.\nNao fale como uma lista de topicos de IA. Fale como um juiz que raciocina em voz alta.\nUse ## para as grandes secoes do veredicto.\nUse **negrito** para artigos de lei, prazos criticos e valores-chave.\nUse > para transcrever o texto da lei quando relevante.\nConstrua paragrafos de raciocinio juridico, nao apenas bullet points.\nSeja direto: sem \"claro que\", \"certamente\", \"com prazer\". Fale como quem sabe.\nTermine sempre com: ## Acao Imediata \u2014 a proxima acao concreta, hoje, sem dinheiro.\nRespostas completas, sem cortes: o cidadao precisa do quadro inteiro.";
 
-/* ── BASE LOCAL DE EMERGENCIA ──────────────────────────── */
 var EB={
 'demitido|demissao|rescisao|justa causa|dispensado':function(q){
   var s=/sem justa causa|injusta/i.test(q),jc=/justa causa/i.test(q)&&!s;
-  return '## Auditoria: Rescisao de Contrato\n\n'+(s?
-  '**Demissao sem justa causa — Arsenal completo:**\n- **Aviso previo:** 30 dias + 3 por ano (Art.487 CLT)\n- **Saldo de salario** proporcional\n- **Ferias** vencidas+proporcionais+1/3 constitucional\n- **13o** proporcional\n- **FGTS + multa 40%** (Art.18 par.1 Lei 8036/90)\n- **Seguro-desemprego** se 12+ meses de vinculo\n\n**Brecha:** Verifique se a remuneracao total (comissoes, adicionais, bonus) foi base do calculo — frequentemente nao e, gerando diferenca.\n\n**Prazo critico:** 2 anos para reclamar (Art.7 XXIX CF)':
-  (jc?'**Justa causa contestavel (Art.482 CLT):**\nA empresa deve provar imediatidade e proporcionalidade.\nSe nao provar — converte-se em demissao sem justa causa.\n\n**Brecha:** Justa causa aplicada dias ou semanas apos o fato = invalida.':
-  '**Analise os fatos e pergunte mais detalhes do caso.**'))+
-  '\n\n## Caminho Imediato\nDefensoria Publica (gratuita) ou portal trabalho.gov.br';
+  var r='## Auditoria: Rescisao de Contrato\n\n';
+  if(s){
+    r+='A demissao sem justa causa dispara um arsenal de direitos que muitas empresas calculam incorretamente. ';
+    r+='O **aviso previo** deve corresponder a 30 dias acrescidos de 3 dias por ano de servico (**Art.487 CLT**). ';
+    r+='Sobre esse periodo recaem todos os reflexos: ferias vencidas e proporcionais com adicional de um terco, decimo-terceiro proporcional, FGTS com multa de **40%** sobre todos os depositos (**Art.18 par.1 Lei 8036/90**).\n\n';
+    r+='**Brecha critica:** Verifique se a empresa calculou as verbas sobre a remuneracao real — comissoes, horas extras habituais e adicionais integram o salario para todos os fins (**Art.457 CLT**). Esse erro e sistematico.\n\n';
+    r+='**Prazo fatal:** 2 anos contados da demissao para reclamar na Justica do Trabalho (**Art.7 XXIX CF/88**).';
+  }else if(jc){
+    r+='A justa causa e o instrumento mais grave da relacao de emprego — e o mais contestavel. Para ser valida, deve obedecer: **imediatidade** (pena logo apos o fato), **proporcionalidade** e **tipicidade** no **Art.482 CLT**.\n\n';
+    r+='Se aplicada dias ou semanas apos o fato, ou sem provas concretas, e nula — converte-se em demissao sem justa causa, com todos os direitos correspondentes.\n\n';
+    r+='**Brecha:** Justa causa como represalia a reclamacoes pode configurar ato antisindical, gerando indenizacao adicional.';
+  }else{
+    r+='Descreva os detalhes: data, motivo alegado, documentos assinados, tempo de servico. Auditarei com precisao.';
+  }
+  r+='\n\n## Acao Imediata\nDefensoria Publica (gratuita): leve a CTPS e o termo de rescisao. Portal trabalho.gov.br para seguro-desemprego.';
+  return r;
 },
 'horas extras|hora extra|jornada|noturno|banco de horas':function(q){
-  return '## Auditoria: Horas Extras\n\n**Arsenal legal:**\n- Extra: minimo **50%** sobre hora normal (Art.59 CLT)\n- Noturno 22h-5h: minimo **20%** (Art.73 CLT)\n- Banco de horas sem acordo coletivo: **invalido** — converte em horas extras\n- Intervalo nao concedido: hora extra inteira (**Sumula 437 TST**)\n\n**Brecha:** Se voce tem cargo de confianca nominal mas sem poderes reais — o Art.62 CLT nao se aplica, todas as extras sao devidas.\n\n**Prazo critico:** Cobrar os ultimos **2 anos**\n\n## Caminho Imediato\nGuarde prints, cartoes de ponto, mensagens de horario. Acesse trabalho.gov.br';
+  return '## Auditoria: Jornada de Trabalho\n\nO direito a hora extra e protegido constitucionalmente. O minimo legal e **50% sobre a hora normal** (**Art.59 CLT**). O adicional noturno — 22h as 5h — e de no minimo **20%** (**Art.73 CLT**).\n\n**Arsenal de brechas:** Banco de horas sem acordo coletivo e invalido — converte em horas extras. O intervalo intrajornada nao concedido gera pagamento de hora extra inteira (**Sumula 437 TST**). Cargo de confianca nominal sem poderes reais de gestao nao afasta o direito (**Art.62 CLT**).\n\n**Prazo critico:** Cobrar os ultimos **2 anos** (**Art.7 XXIX CF/88**).\n\n## Acao Imediata\nGuarde mensagens com horarios, cartoes de ponto, e-mails noturnos. Acesse trabalho.gov.br ou Defensoria Publica.';
 },
 'inss|aposentadoria|auxilio|beneficio|previdencia|bpc':function(q){
-  return '## Auditoria: Previdencia Social\n\n**Arsenal legal:** Lei 8213/91\n\n**Beneficios e brechas:**\n- Auxilio-doenca por acidente de trabalho: **SEM carencia** + estabilidade 12 meses pos-alta\n- BPC/LOAS: 1 salario minimo para deficientes e idosos 65+ com renda per capita ate 1/4 SM\n- Aposentadoria: confira CNIS — erros sao comuns e corrigiveis\n\n**Brecha:** Acidente de trabalho disfarçado de doenca comum para burlar a estabilidade = nulo. Exija a CAT.\n\n## Caminho Imediato\nApp Meu INSS ou tel. 135 (gratuito). Verifique seu extrato CNIS.';
+  return '## Auditoria: Previdencia Social (Lei 8213/91)\n\nO erro mais comum: classificar acidente de trabalho como doenca comum para burlar a estabilidade. O afastamento correto e **B-91** (sem carencia), garantindo estabilidade de **12 meses apos a alta** pelo **Art.118 Lei 8213/91**. Se o empregador se recusa a emitir a CAT, voce mesmo pode registrar no INSS, sindicato ou Ministerio do Trabalho.\n\n**BPC/LOAS:** Deficientes e idosos 65+ com renda per capita ate 1/4 do salario minimo tem direito a 1 SM mensal sem contribuicoes (**Lei 8742/93**).\n\n## Acao Imediata\nApp **Meu INSS** ou telefone **135** (gratuito). Confira seu extrato CNIS — erros sao corrigiveis.';
 },
 'consumidor|produto|defeito|garantia|cobranca|plano de saude':function(q){
-  return '## Auditoria: Direito do Consumidor\n\n**Arsenal legal:** CDC Lei 8078/90\n\n**Prazos para reclamar vicio:**\n- Nao duravel: **30 dias**\n- Duravel: **90 dias** (so comeca com a descoberta do vicio oculto)\n\n**Brechas:**\n- Cobranca indevida = devolucao em **dobro** (Art.42 paragrafo unico)\n- Clausula contratual abusiva = **nula de pleno direito** (Art.51)\n- Plano de saude que nega cobertura apos 2 anos de contrato = proibido por lei\n- Pratica abusiva (Art.39) inclui se aproveitar da vulnerabilidade do consumidor\n\n## Caminho Imediato\nconsumidor.gov.br (gratuito e rapido) ou Juizado Especial (ate 20SM sem advogado).';
+  return '## Auditoria: Codigo de Defesa do Consumidor (Lei 8078/90)\n\nO CDC coloca o consumidor como vulneravel protegido — o onus de provar a qualidade e sempre do fornecedor. Prazos: produto nao duravel **30 dias**; duravel **90 dias** — mas so comeca com a descoberta do vicio oculto (**Art.26 par.3 CDC**).\n\n**Arsenal:** Cobranca indevida obriga devolucao em **dobro** (**Art.42 CDC**). Clausula abusiva e nula de pleno direito independente de assinatura (**Art.51 CDC**). Plano de saude que nega cobertura apos 2 anos de contrato viola Resolucao ANS.\n\n## Acao Imediata\n**consumidor.gov.br** (gratuito, resposta obrigatoria pelo fornecedor). Juizado Especial para causas ate 20 salarios minimos — sem advogado, sem custas.';
 },
 'aluguel|inquilino|despejo|locacao':function(q){
-  return '## Auditoria: Lei do Inquilinato (Lei 8245/91)\n\n**Direitos do inquilino:**\n- Recibo de cada pagamento\n- Preferencia na compra com mesmo preco\n- Devolucao do deposito corrigido\n\n**Brechas:**\n- Despejo: proprietario deve notificar + 15 dias para purgar mora — sem isso, nao tem acao\n- Multa de rescisao antecipada: maxima 3 alugueis, proporcional ao tempo restante\n- Clausulas que proibem animais domesticos ou modificacoes: frequentemente nulas\n\n## Caminho Imediato\nDefensoria Publica se for despejo. PROCON se clausulas abusivas no contrato.';
+  return '## Auditoria: Lei do Inquilinato (Lei 8245/91)\n\nO locatario tem direitos que frequentemente desconhece: recibo de cada pagamento, preferencia na compra pelo mesmo preco, devolucao do deposito corrigido.\n\n**Brecha do despejo:** Exige notificacao previa e **15 dias para purga da mora** (**Art.62 Lei 8245/91**). Sem esse procedimento, o despejo e nulo.\n\n**Brechas contratuais:** Proibicoes de animais ou filhos sao abusivas. Multa por rescisao antecipada: maxima 3 alugueres, proporcional ao tempo restante.\n\n## Acao Imediata\nDefensoria Publica se for despejo. PROCON para clausulas abusivas. Guarde todos os recibos.';
 },
 'pensao|divorcio|guarda|alimentos|familia':function(q){
-  return '## Auditoria: Direito de Familia\n\n**Arsenal:**\n- Pensao alimenticia: descumprimento = **prisao civil** ate 3 meses (Art.528 CPC)\n- Guarda compartilhada: regra atual — unilateral e excecao\n- Alienacao parental: crime com penas progressivas (Lei 12318/10)\n\n**Brechas:**\n- Alimentos podem ser cobrados em execucao direta na folha de pagamento (Art.529 CPC)\n- Reconhecimento de uniao estavel retroativo — gera direitos patrimoniais\n- Divorcio pode ser feito em cartorio se sem filhos menores — sem advogado obrigatorio\n\n## Caminho Imediato\nDefensoria Publica gratuita. App do TJSP para protocolo online.';
+  return '## Auditoria: Direito de Familia\n\nDescumprimento de alimentos: 3 parcelas em atraso autorizam **prisao civil ate 3 meses** (**Art.528 CPC**). Desconto pode ser determinado diretamente na folha de pagamento (**Art.529 CPC**).\n\n**Guarda:** Compartilhada e a regra (**Art.1584 CC**). Alienacao parental e crime com penas progressivas (**Lei 12318/10**).\n\n**Brecha da uniao estavel:** Pode ser reconhecida retroativamente por provas circunstanciais, gerando direitos patrimoniais em heranca e meacao.\n\n## Acao Imediata\nDefensoria Publica gratuita. Divorcio sem filhos menores pode ser feito em cartorio, sem advogado.';
 },
 'violencia|agressao|maria da penha|ameaca':function(q){
-  return '## Auditoria: Lei Maria da Penha (Lei 11340/06)\n\n**EMERGENCIA:** 180 ou 190\n\n**Arsenal imediato:**\n- Medida Protetiva de Urgencia: Juiz decide em **48 horas** (Art.18)\n- Pode ser pedida na delegacia sem advogado\n- Prisao em flagrante do agressor e possivel mesmo sem lesao visivel\n\n**Brechas:**\n- Violencia psicologica (Art.7 II) nao precisa de marcas fisicas — capturas de tela de mensagens bastam\n- Descumprimento da medida protetiva = **prisao preventiva automatica** (Art.313 CPP)\n\n## Caminho Imediato\nLigue 180 agora. Salve todas as mensagens, fotos, audio. Va a delegacia da mulher.';
+  return '## Auditoria: Lei Maria da Penha (Lei 11340/06)\n\n**EMERGENCIA: 180 ou 190**\n\nA violencia psicologica — ameacas, humilhacoes, isolamento — esta tipificada no **Art.7 II** e nao exige marcas fisicas. Mensagens, audios e testemunhos sao prova suficiente.\n\n**Medida Protetiva de Urgencia:** Requerida na delegacia sem advogado. Juiz decide em **48 horas** (**Art.18**). Descumprimento autoriza prisao preventiva automatica (**Art.313 CPP**).\n\n## Acao Imediata\nLigue **180** agora. Va a Delegacia da Mulher. Salve todas as mensagens e fotos como prova.';
 },
 'divida|negativado|serasa|nome sujo|prescricao':function(q){
-  return '## Auditoria: Dividas e Negativacao\n\n**Prescricao (prazo maximo para cobrar judicialmente):**\n- Cartao de credito e banco: **5 anos** (Art.206 par.5 CC)\n- Aluguel: **3 anos**\n- Cheque: 6 meses para execucao, 5 anos para acao ordinaria\n\n**Brechas:**\n- Cobranca de divida prescrita = **pratica abusiva** Art.42 CDC — cabivel dano moral\n- Negativacao indevida = dano moral **presumido** (in re ipsa) — nao precisa provar prejuizo\n- Credor deve informar que a divida prescreveu ao tentar renegociar — senao = abusividade\n\n## Caminho Imediato\nJuizado Especial (gratuito ate 20 salarios minimos). Registre tudo por escrito.';
+  return '## Auditoria: Dividas, Prescricao e Negativacao\n\nPrescricao para cartao e emprestimos bancarios: **5 anos** (**Art.206 par.5 CC**). Aluguel: **3 anos**. Cheque: 6 meses para execucao direta.\n\n**Brechas:** Cobranca de divida prescrita e pratica abusiva (**Art.42 CDC**) — cabivel dano moral. Negativacao indevida gera **dano moral presumido** in re ipsa — sem necessidade de provar prejuizo (STJ pacificado). Credor deve informar prescricao antes de renegociar.\n\n## Acao Imediata\nJuizado Especial ate 20 salarios minimos — gratuito, sem advogado. Plataforma consumidor.gov.br aceita reclamacoes contra credores.';
 },
 'acidente de trabalho|doenca ocupacional':function(q){
-  return '## Auditoria: Acidente de Trabalho (Lei 8213/91)\n\n**Arsenal imediato:**\n- **B91** (auxilio acidentario): SEM carencia\n- **Estabilidade 12 meses** pos-alta (Art.118) — demissao neste periodo e nula\n- FGTS continua sendo depositado durante afastamento\n\n**Brechas:**\n- Empresa disfarça acidente de trabalho como doenca comum para burlar Art.118 — exija a CAT\n- Se empresa se recusa a emitir CAT: voce mesmo pode registrar no INSS ou sindicato\n- Doenca profissional equipara-se a acidente (Art.20) — mesmos direitos\n- Pode pedir **indenizacao por danos materiais, morais e esteticos** paralelamente\n\n**Prazo critico:** 3 anos para acao indenizatoria\n\n## Caminho Imediato\nINSS tel.135. Guarde laudos e registros. Exija a CAT por escrito.';
+  return '## Auditoria: Acidente de Trabalho (Lei 8213/91)\n\nBeneficio correto: **Auxilio B-91**, sem carencia, com FGTS depositado durante afastamento. Ao retornar, estabilidade de **12 meses** (**Art.118**) — demissao nesse periodo e nula de pleno direito.\n\n**Brecha da CAT:** Se o empregador recusa emitir, voce mesmo registra no INSS, sindicato ou Ministerio do Trabalho. Recusa patronal e prova de ma-fe na acao trabalhista.\n\n**Indenizacao civil:** Acidente por culpa ou dolo do empregador gera direito a **danos materiais, morais e esteticos** (**Art.7 XXVIII CF/88**). Prazo: 3 anos.\n\n## Acao Imediata\nINSS pelo **135**. Guarde laudos e atestados. Exija a CAT por escrito.';
 },
 'penal|crime|preso|flagrante|boletim':function(q){
-  return '## Auditoria: Direito Penal\n\n**Se preso em flagrante:**\n- Direito ao **silencio total** (Art.5 LXIII CF) — nao confesse nada\n- Advogado imediato — se nao tiver, Defensoria Publica (gratuita)\n- Audiencia de custodia em **24 horas**\n\n**Prescricao criminal:**\n- Pena ate 1 ano: 2 anos\n- Pena 2-4 anos: 8 anos\n- Acima de 12 anos: 20 anos\n\n**Brecha:** Prescricao retroativa — se condena com pena menor que o prazo decorrido, extingue.\n\n## Caminho Imediato\nBO online: delegaciadigital.sp.gov.br. Defensoria Publica: 129.';
+  return '## Auditoria: Direito Penal\n\nDireito ao **silencio total** e garantia constitucional absoluta (**Art.5 LXIII CF/88**). Nada declarado sem advogado tem valor pleno. **Audiencia de custodia em 24 horas** (**Art.310 CPP**) — prisao sem ela e ilegal.\n\n**Prescricao penal (Art.109 CP):** Penas ate 1 ano: 2 anos; 2-4 anos: 8 anos; acima de 12 anos: 20 anos. Prescricao retroativa sobre a pena concreta e a brecha mais poderosa para extinguir punicoes.\n\n## Acao Imediata\nBO online: delegaciadigital.sp.gov.br. Defensoria Publica: **129**. Nao assine nada sem advogado.';
 },
 'lgpd|dados pessoais|privacidade|vazamento':function(q){
-  return '## Auditoria: LGPD (Lei 13709/18)\n\n**Seus direitos como titular:**\n- Acesso, correcao e exclusao dos seus dados\n- Revogar consentimento a qualquer momento\n- Ser informado sobre vazamentos em 72 horas\n\n**Brechas:**\n- Empresa que usa seus dados sem consentimento claro = infração com multa ate 2% do faturamento\n- Vazamento que causa dano = **indenizacao por dano moral**\n- Dados sensiveis (saude, origem racial, religiao) tem protecao reforçada\n\n## Caminho Imediato\nanpd.gov.br — peticao online. Juizado Especial se houve dano concreto.';
+  return '## Auditoria: LGPD (Lei 13709/18)\n\nSeus dados pessoais sao propriedade sua. Voce tem direito a: acesso, correcao, exclusao e portabilidade. Vazamentos devem ser notificados em **72 horas**.\n\n**Brechas:** Tratamento sem base legal gera responsabilidade objetiva (**Art.44 LGPD**) — sem precisar provar culpa. Uso de dados para finalidade diversa da informada e captacao dolosa, nula e geradora de dano moral.\n\n## Acao Imediata\n**anpd.gov.br** — peticao gratuita online. Juizado Especial para danos concretos ate 20 salarios minimos.';
 }
 };
+
 function respostaLocal(q){
   var l=q.toLowerCase();
   for(var p in EB){if(new RegExp('('+p+')','i').test(l))return EB[p](q);}
   return null;
 }
 
-/* ── HELPERS UI ──────────────────────────────────────── */
 function el(id){return document.getElementById(id);}
-function now(){var d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
+function agora(){var d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
 
 function setStatus(on,lbl){
   el('tbDot').className='tb-dot'+(on?'':' off');
-  el('tbLbl').textContent=lbl||'Ativo';
+  el('tbLbl').textContent=lbl||(on?'Online':'Local');
   el('offbar').className=on?'':'on';
 }
 
@@ -453,7 +225,7 @@ function md(t){
     .replace(/^## (.+)$/gm,'<h2>$1</h2>')
     .replace(/^### (.+)$/gm,'<h3>$1</h3>')
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/\*([^*]+?)\*/g,'<em>$1</em>')
     .replace(/`(.+?)`/g,'<code>$1</code>')
     .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
     .replace(/^- (.+)$/gm,'<li>$1</li>')
@@ -467,14 +239,14 @@ function addMsg(role,txt,isHtml){
   var c=el('chat'),d=document.createElement('div');
   d.className='msg '+(role==='user'?'user':'lex');
   if(role!=='user'){
-    d.innerHTML='<div class="lex-hd"><span class="lex-hd-ico">&#9878;&#65039;</span><span class="lex-hd-name">Lex Mitio</span></div>'+(isHtml?txt:md(txt))+'<div class="msg-time">'+now()+'</div>';
+    d.innerHTML='<div class="lex-hd"><span class="lex-hd-ico">&#9878;&#65039;</span><span class="lex-hd-name">Lex Mitio</span></div>'+(isHtml?txt:md(txt))+'<div class="msg-time">'+agora()+'</div>';
   }else{
     var s=document.createElement('span');s.textContent=txt;
-    var ft=document.createElement('div');ft.className='msg-time';ft.textContent=now();
+    var ft=document.createElement('div');ft.className='msg-time';ft.textContent=agora();
     d.appendChild(s);d.appendChild(ft);
   }
   c.appendChild(d);c.scrollTop=c.scrollHeight;
-  if(hist.length<30)hist.push({role:role==='user'?'user':'model',parts:[{text:txt}]});
+  if(hist.length<28)hist.push({role:role==='user'?'user':'model',parts:[{text:txt}]});
   return d;
 }
 
@@ -495,34 +267,35 @@ function setSugs(arr){
     b.appendChild(btn);
   });
 }
-var S0=['Fui demitido, o que tenho direito?','Justa causa pode ser contestada?','Como cobrar horas extras nao pagas?','Produto com defeito — quais brechas?'];
-var S1=['FGTS nao depositado como cobrar?','Rescisao indireta como funciona?','Cargo de confianca tem direito a extra?'];
-var S2=['Plano negou procedimento, o que fazer?','Cobranca indevida — tenho direito a dobro?','Clausulas abusivas no contrato'];
-var S3=['Pensao alimenticia nao paga — prisao?','Guarda unilateral pode ser mudada?','Alienacao parental como provar?'];
+
+var S0=['Fui demitido — quais sao todos os meus direitos?','Justa causa pode ser contestada?','Produto com defeito — quais caminhos tenho?','Como cobrar horas extras nao pagas?'];
+var S1=['FGTS nao depositado — como cobrar?','Rescisao indireta como funciona?','Cargo de confianca tem direito a hora extra?'];
+var S2=['Plano negou procedimento — o que fazer?','Cobranca indevida — tenho direito ao dobro?','Clausulas abusivas no contrato — sao validas?'];
+var S3=['Pensao alimenticia em atraso — posso prender?','Guarda compartilhada pode ser contestada?','Como provar alienacao parental?'];
+
 function getSugs(q){
   if(!q)return S0;
   var l=q.toLowerCase();
-  if(/trabalho|emprego|salario|clt|demitido|fgts/.test(l))return S1;
-  if(/consumid|produto|plano|cartao/.test(l))return S2;
-  if(/familia|divorcio|pensao|guarda|filho/.test(l))return S3;
+  if(/trabalho|emprego|salario|clt|demitido|fgts|rescisao/.test(l))return S1;
+  if(/consumid|produto|plano|cartao|defeito/.test(l))return S2;
+  if(/familia|divorcio|pensao|guarda|filho|alimento/.test(l))return S3;
   return S0.slice(0,3);
 }
 
-/* ── TYPEWRITER ─────────────────────────────────────── */
 function writer(el,txt,done){
   var rendered=md(txt);
   var hd='<div class="lex-hd"><span class="lex-hd-ico">&#9878;&#65039;</span><span class="lex-hd-name">Lex Mitio</span></div>';
-  var ft='<div class="msg-time">'+now()+'</div>';
-  if(rendered.length>900){
+  var ft='<div class="msg-time">'+agora()+'</div>';
+  if(rendered.length>1200){
     el.innerHTML=hd+rendered+ft;
     document.getElementById('chat').scrollTop=9999;
     if(done)done();return;
   }
-  var plain=rendered.replace(/<[^>]+>/g,'').replace(/&[a-z]+;/g,' ');
+  var plain=rendered.replace(/<[^>]+>/g,'').replace(/&[a-z]+;/g,' ').replace(/&#\d+;/g,'');
   el.innerHTML=hd+'<span id="twc"></span>'+ft;
   var tw=document.getElementById('twc'),i=0;
   var ch=document.getElementById('chat');
-  var spd=plain.length>500?6:11;
+  var spd=plain.length>600?5:9;
   function step(){
     if(i<plain.length){tw.textContent+=plain[i++];ch.scrollTop=9999;setTimeout(step,spd);}
     else{el.innerHTML=hd+rendered+ft;ch.scrollTop=9999;if(done)done();}
@@ -530,42 +303,45 @@ function writer(el,txt,done){
   step();
 }
 
-/* ── CHAMADA GEMINI (cascata de modelos) ─────────────── */
-function chamar(q,cb){
+function consultar(q,cb){
   var msgs=[
-    {role:'user',parts:[{text:P}]},
-    {role:'model',parts:[{text:'Entendido. Sou Lex Mitio. O direito em forma de voz. Pode falar — analisarei cada detalhe.'}]}
+    {role:'user',parts:[{text:SYS}]},
+    {role:'model',parts:[{text:'Entendido. Sou Lex Mitio. O veredicto esta em formacao.'}]}
   ];
   hist.forEach(function(m){msgs.push(m);});
 
   function try_(i){
-    if(i>=MODELOS.length){cb({quota:true},null);return;}
-    var url=BASE+MODELOS[i]+':generateContent?key='+K;
+    if(i>=_m.length){cb({quota:true},null);return;}
+    var url=_u+_m[i]+':generateContent?key='+_e;
     var xhr=new XMLHttpRequest();
     xhr.open('POST',url,true);
     xhr.setRequestHeader('Content-Type','application/json');
-    xhr.timeout=28000;
+    xhr.timeout=32000;
     xhr.onreadystatechange=function(){
       if(xhr.readyState!==4)return;
       if(xhr.status===200){
         try{
           var d=JSON.parse(xhr.responseText);
           var t=d.candidates[0].content.parts[0].text;
-          var lbl=MODELOS[i]==='gemini-2.5-flash'?'Ativo':'Ativo';
-          setStatus(true,lbl);
+          setStatus(true,'Online');
           cb(null,t);
         }catch(e){try_(i+1);}
       }else if(xhr.status===429){
-        setTimeout(function(){try_(i+1);},800);
+        setTimeout(function(){try_(i+1);},1000);
       }else{
-        setTimeout(function(){try_(i+1);},500);
+        setTimeout(function(){try_(i+1);},600);
       }
     };
     xhr.ontimeout=function(){try_(i+1);};
     xhr.onerror=function(){cb(new Error('network'),null);};
     xhr.send(JSON.stringify({
       contents:msgs,
-      generationConfig:{temperature:0.82,maxOutputTokens:2000,topP:0.95},
+      generationConfig:{
+        temperature:0.78,
+        maxOutputTokens:3000,
+        topP:0.93,
+        topK:40
+      },
       safetySettings:[
         {category:'HARM_CATEGORY_HARASSMENT',threshold:'BLOCK_NONE'},
         {category:'HARM_CATEGORY_HATE_SPEECH',threshold:'BLOCK_NONE'},
@@ -577,7 +353,6 @@ function chamar(q,cb){
   try_(0);
 }
 
-/* ── ENVIAR ──────────────────────────────────────────── */
 function enviar(){
   var inp=el('inp'),txt=inp.value.trim();
   if(!txt||busy)return;
@@ -586,7 +361,7 @@ function enviar(){
   addMsg('user',txt,false);
   showTyp();
 
-  chamar(txt,function(err,resp){
+  consultar(txt,function(err,resp){
     hideTyp();
     if(err){
       var loc=respostaLocal(txt);
@@ -599,8 +374,8 @@ function enviar(){
           hist.push({role:'model',parts:[{text:loc}]});
         });
       }else{
-        setStatus(false,'Aguardando');
-        addMsg('lex','**Conexao temporariamente indisponivel.**\n\nDescreva seu caso e responderei com a base juridica local.\nOu tente novamente em instantes.',false);
+        setStatus(false,'Local');
+        addMsg('lex','**Conexao temporariamente indisponivel.**\n\nDescreva os detalhes do seu caso — responderei com a legislacao local.\nTente novamente em instantes para uma analise mais completa.',false);
         busy=false;el('send').disabled=false;setSugs(S0);
       }
     }else{
@@ -614,19 +389,21 @@ function enviar(){
   });
 }
 
-/* ── INIT ────────────────────────────────────────────── */
 function entrarApp(){
   el('splash').classList.add('hide');
   el('app').classList.add('show');
   var c=el('chat'),w=document.createElement('div');w.className='welcome';
-  w.innerHTML='<span class="wlc-ico">&#9878;&#65039;</span>'+
+  w.innerHTML=
+    '<span class="wlc-ico">&#9878;&#65039;</span>'+
     '<div class="wlc-name">Lex Mitio</div>'+
+    '<div class="wlc-sub">Juiz Soberano &middot; Auditor Implacavel</div>'+
     '<div class="wlc-line"></div>'+
-    '<div class="wlc-txt">Inteligencia juridica suprema. Descreva sua situacao — vou auditar o caso, identificar todas as violacoes e revelar cada caminho possivel.</div>'+
+    '<div class="wlc-txt">Descreva sua situacao. Auditarei o caso, identificarei cada violacao — inclusive as que voce nao percebeu — e revelarei todos os caminhos possiveis, do mais rapido ao mais poderoso.</div>'+
     '<div class="wlc-areas">'+
     '<span class="wlc-tag">CLT</span><span class="wlc-tag">FGTS</span><span class="wlc-tag">INSS</span>'+
     '<span class="wlc-tag">CDC</span><span class="wlc-tag">Familia</span><span class="wlc-tag">Penal</span>'+
     '<span class="wlc-tag">Aluguel</span><span class="wlc-tag">Maria da Penha</span><span class="wlc-tag">LGPD</span>'+
+    '<span class="wlc-tag">Previdencia</span><span class="wlc-tag">Dividas</span>'+
     '</div>';
   c.appendChild(w);
   setSugs(S0);
@@ -638,12 +415,17 @@ window.addEventListener('DOMContentLoaded',function(){
   inp.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
   inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();enviar();}});
 });
+
 if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
 }
+
 window.entrarApp=entrarApp;
 window.enviar=enviar;
 })();
+
 </script>
 </body>
 </html>
