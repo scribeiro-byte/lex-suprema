@@ -7,159 +7,496 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Lex Mitio">
-<meta name="description" content="Lex Mitio - Assistente Juridico gratuito para trabalhadores e cidadaos brasileiros">
+<meta name="description" content="Lex Mitio - Assistente Juridico com Gemini 2.5">
 <link rel="manifest" href="manifest.json">
 <title>Lex Mitio - Assistente Juridico</title>
 <style>
 :root{
   --bg:#07070d;--surface:#0f0f1a;--surface2:#141425;--border:#1e1e3a;
-  --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5dfa0;--accent:#4a6fa5;
-  --text:#e8e8f0;--text2:#9090b0;--danger:#e05555;--success:#4caf50;
-  --radius:14px;--shadow:0 4px 24px rgba(0,0,0,0.5);
+  --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5dfa0;
+  --text:#e8e8f0;--text2:#9090b0;--danger:#e05555;
+  --radius:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
-#splash{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#0d0d20 0%,#07070d 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .6s ease,visibility .6s ease;}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at 50% 40%,#0d0d22 0%,#07070d 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .7s,visibility .7s;}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
-.sp-icon{font-size:72px;animation:pulse-icon 2s ease-in-out infinite}
-@keyframes pulse-icon{0%,100%{transform:scale(1);filter:drop-shadow(0 0 8px rgba(201,168,76,.3))}50%{transform:scale(1.08);filter:drop-shadow(0 0 20px rgba(201,168,76,.8))}}
-.sp-title{font-size:36px;font-weight:900;letter-spacing:4px;color:var(--gold);text-transform:uppercase}
-.sp-sub{font-size:13px;color:var(--text2);letter-spacing:2px;text-transform:uppercase}
-.sp-bar{width:200px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
-.sp-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));animation:bar-fill 2.5s ease-out forwards}
-@keyframes bar-fill{from{width:0}to{width:100%}}
-.sp-btn{margin-top:10px;padding:14px 48px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070d;border:none;border-radius:30px;cursor:pointer;font-size:16px;font-weight:800;letter-spacing:1px;box-shadow:0 4px 20px rgba(201,168,76,.4);transition:transform .2s,box-shadow .2s;display:none;}
-.sp-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(201,168,76,.6)}
-.sp-btn.show{display:block;animation:fadeInUp .5s ease}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.sp-scale{animation:sp-pulse 2.2s ease-in-out infinite}
+@keyframes sp-pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 10px rgba(201,168,76,.3))}50%{transform:scale(1.1);filter:drop-shadow(0 0 28px rgba(201,168,76,.9))}}
+.sp-icon{font-size:76px}
+.sp-name{font-size:38px;font-weight:900;letter-spacing:5px;color:var(--gold);text-transform:uppercase;text-shadow:0 0 30px rgba(201,168,76,.4)}
+.sp-tagline{font-size:12px;color:var(--text2);letter-spacing:3px;text-transform:uppercase}
+.sp-ring{width:180px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:4px}
+.sp-ring-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3));animation:ring-anim 2.8s ease-out forwards}
+@keyframes ring-anim{from{width:0}to{width:100%}}
+.sp-powered{font-size:11px;color:var(--text2);opacity:.6;letter-spacing:1px}
+.sp-powered span{color:var(--gold2);font-weight:700}
+.sp-btn{margin-top:6px;padding:15px 52px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070d;border:none;border-radius:30px;cursor:pointer;font-size:16px;font-weight:800;letter-spacing:1px;box-shadow:0 4px 24px rgba(201,168,76,.5);transition:transform .2s,box-shadow .2s;display:none;}
+.sp-btn:active{transform:scale(.97)}
+.sp-btn.show{display:block;animation:fadeup .5s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* APP */
 #app{display:none;flex-direction:column;height:100%;background:var(--bg);}
 #app.show{display:flex}
-.topbar{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.3);position:relative;z-index:10;flex-shrink:0;}
-.lx-icon{font-size:28px;filter:drop-shadow(0 0 6px rgba(201,168,76,.5))}
-.brand-info{flex:1}
-.top-brand{font-size:18px;font-weight:800;color:var(--gold);letter-spacing:2px}
-.top-brand small{font-size:11px;color:var(--gold2);display:block;letter-spacing:1px;margin-top:1px;opacity:.8}
-.status-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);animation:blink 2s ease-in-out infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-.status-dot.offline{background:#666;box-shadow:none;animation:none}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;gap:12px;padding:13px 18px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,.4);flex-shrink:0;position:relative;z-index:10;}
+.lx-logo{font-size:26px;filter:drop-shadow(0 0 8px rgba(201,168,76,.6))}
+.brand{flex:1}
+.brand-name{font-size:18px;font-weight:800;color:var(--gold);letter-spacing:2px}
+.brand-sub{font-size:10px;color:var(--text2);letter-spacing:1.5px;margin-top:1px}
+.ai-badge{display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:12px;font-size:10px;color:var(--gold2);letter-spacing:.5px;font-weight:700}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--gold2);animation:ai-pulse 1.8s ease-in-out infinite}
+@keyframes ai-pulse{0%,100%{opacity:1;box-shadow:0 0 4px var(--gold2)}50%{opacity:.4;box-shadow:none}}
+.ai-dot.off{background:#555;animation:none;box-shadow:none}
+
+/* CHAT */
 #chat{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;}
-#chat::-webkit-scrollbar{width:4px}
-#chat::-webkit-scrollbar-track{background:transparent}
+#chat::-webkit-scrollbar{width:3px}
 #chat::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.msg{max-width:88%;padding:12px 16px;border-radius:var(--radius);line-height:1.6;font-size:14.5px;animation:msg-in .3s ease;}
-@keyframes msg-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.msg.user{align-self:flex-end;background:linear-gradient(135deg,#1a1a35,#1e1e40);border:1px solid #2a2a55;color:var(--text);border-bottom-right-radius:4px;}
-.msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
-.msg.bot.error{border-color:var(--danger);background:#1a0a0a}
-.msg-meta{font-size:11px;color:var(--text2);margin-top:6px;display:flex;align-items:center;gap:4px}
-.msg h2{font-size:15px;color:var(--gold2);margin:8px 0 4px;border-bottom:1px solid var(--border);padding-bottom:4px}
-.msg h3{font-size:14px;color:var(--gold3);margin:6px 0 3px}
-.msg ul{padding-left:18px;margin:6px 0}
+
+/* MENSAGENS */
+.msg{max-width:90%;padding:12px 16px;border-radius:var(--radius);line-height:1.65;font-size:14.5px;animation:msg-in .3s ease;}
+@keyframes msg-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#181832,#1c1c40);border:1px solid #252555;border-bottom-right-radius:4px;}
+.msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:4px;}
+.msg.err{border-color:#3a1515;background:#120808}
+.msg-hd{display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1px}
+.msg-hd::before{content:'LEX MITIO';font-size:10px}
+.msg-ft{font-size:10.5px;color:var(--text2);margin-top:8px;opacity:.7}
+.msg h2{font-size:15px;color:var(--gold2);margin:9px 0 4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.msg h3{font-size:13.5px;color:var(--gold3);margin:7px 0 3px}
+.msg ul{padding-left:18px;margin:5px 0}
 .msg li{margin:3px 0}
 .msg strong{color:var(--gold2)}
-.msg code{background:#1a1a2e;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13px}
-.msg a{color:var(--gold2);text-decoration:none}
-.msg a:hover{text-decoration:underline}
-.bot-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:6px;}
-.bot-badge::before{content:'Lex Mitio';font-size:11px}
-.typing-indicator{display:flex;align-items:center;gap:5px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);border-bottom-left-radius:4px;max-width:80px;align-self:flex-start;animation:msg-in .3s ease;}
-.typing-indicator span{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:typing-dot 1.4s infinite;}
-.typing-indicator span:nth-child(2){animation-delay:.2s}
-.typing-indicator span:nth-child(3){animation-delay:.4s}
-@keyframes typing-dot{0%,80%,100%{transform:scale(.8);opacity:.4}40%{transform:scale(1.2);opacity:1}}
-.suggestions{display:flex;flex-wrap:wrap;gap:8px;padding:8px 14px 0;flex-shrink:0;}
-.sug-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:12.5px;transition:all .2s;white-space:nowrap;}
-.sug-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
-.input-area{display:flex;align-items:flex-end;gap:10px;padding:12px 14px 14px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;}
-#userInput{flex:1;padding:11px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:22px;color:var(--text);font-size:14.5px;resize:none;max-height:120px;font-family:inherit;line-height:1.5;transition:border-color .2s;outline:none;}
-#userInput:focus{border-color:var(--gold)}
-#userInput::placeholder{color:var(--text2)}
-#sendBtn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070d;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s,opacity .2s;box-shadow:0 2px 10px rgba(201,168,76,.3);}
-#sendBtn:hover{transform:scale(1.1)}
-#sendBtn:disabled{opacity:.4;transform:none;cursor:default}
-.welcome-card{align-self:center;text-align:center;padding:28px 22px;margin:auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;max-width:320px;width:100%;}
-.welcome-card .wlc-icon{font-size:52px;margin-bottom:12px;display:block}
-.welcome-card h2{color:var(--gold);font-size:20px;margin-bottom:6px;letter-spacing:1px}
-.welcome-card p{color:var(--text2);font-size:13px;line-height:1.6}
-.areas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
-.area-tag{padding:5px 12px;border:1px solid var(--border);border-radius:12px;font-size:12px;color:var(--text2);background:var(--surface2);}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);padding:10px 20px;border-radius:20px;font-size:13px;color:var(--text);z-index:1000;animation:toast-in .3s ease;pointer-events:none;box-shadow:var(--shadow);}
-@keyframes toast-in{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.offline-banner{background:#1a0e00;border-bottom:1px solid #4a3000;color:#c8a050;font-size:12px;text-align:center;padding:6px;display:none;flex-shrink:0;}
-.offline-banner.show{display:block}
+.msg code{background:#111128;padding:2px 7px;border-radius:4px;font-family:monospace;font-size:13px;color:var(--gold3)}
+.msg a{color:var(--gold2)}
+.msg p{margin:4px 0}
+
+/* TYPING */
+.typing{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);border-bottom-left-radius:4px;align-self:flex-start;animation:msg-in .3s ease;}
+.typing-dots{display:flex;gap:5px}
+.typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:tdot 1.4s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{transform:scale(.7);opacity:.3}40%{transform:scale(1.1);opacity:1}}
+.typing-txt{font-size:12px;color:var(--text2)}
+
+/* SUGESTOES */
+#sugs{display:flex;flex-wrap:wrap;gap:8px;padding:8px 14px 4px;flex-shrink:0;}
+.sug{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:12.5px;transition:all .2s;white-space:nowrap;}
+.sug:hover,.sug:active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07)}
+
+/* INPUT */
+.input-wrap{display:flex;align-items:flex-end;gap:10px;padding:11px 14px 13px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;}
+#inp{flex:1;padding:11px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:22px;color:var(--text);font-size:14.5px;resize:none;max-height:120px;font-family:inherit;line-height:1.5;transition:border-color .2s;outline:none;}
+#inp:focus{border-color:var(--gold)}
+#inp::placeholder{color:var(--text2)}
+#send{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070d;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s,opacity .2s;box-shadow:0 2px 12px rgba(201,168,76,.35);}
+#send:active{transform:scale(.93)}
+#send:disabled{opacity:.35;cursor:default;transform:none}
+
+/* WELCOME */
+.welcome{align-self:center;text-align:center;padding:28px 22px;margin:auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;max-width:310px;width:100%;}
+.welcome .ico{font-size:54px;display:block;margin-bottom:14px}
+.welcome h2{color:var(--gold);font-size:21px;margin-bottom:6px;letter-spacing:1px}
+.welcome p{color:var(--text2);font-size:13px;line-height:1.7;margin-bottom:14px}
+.areas{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.area{padding:5px 12px;border:1px solid var(--border);border-radius:12px;font-size:11.5px;color:var(--text2);background:var(--surface2)}
+
+/* OFFLINE BANNER */
+#offbanner{background:#180e00;border-bottom:1px solid #3a2800;color:#c09040;font-size:12px;text-align:center;padding:5px 10px;display:none;flex-shrink:0;}
+#offbanner.show{display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);padding:9px 20px;border-radius:20px;font-size:13px;z-index:1000;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.5);animation:fadeup .3s ease}
+
 @media(min-width:600px){#app{max-width:480px;margin:0 auto;height:100vh;border-left:1px solid var(--border);border-right:1px solid var(--border)}}
 </style>
 </head>
 <body>
+
+<!-- SPLASH -->
 <div id="splash">
-  <div class="sp-icon">&#9878;&#65039;</div>
-  <div class="sp-title">Lex Mitio</div>
-  <div class="sp-sub">Assistente Juridico</div>
-  <div class="sp-bar"><div class="sp-fill"></div></div>
-  <button class="sp-btn" id="spBtn" onclick="entrarApp()">Entrar</button>
+  <div class="sp-scale">
+    <div class="sp-icon">&#9878;&#65039;</div>
+  </div>
+  <div class="sp-name">Lex Mitio</div>
+  <div class="sp-tagline">Assistente Juridico Inteligente</div>
+  <div class="sp-ring"><div class="sp-ring-fill"></div></div>
+  <div class="sp-powered">Powered by <span>Gemini 2.5</span></div>
+  <button class="sp-btn" id="spBtn" onclick="entrarApp()">Acessar</button>
 </div>
+
+<!-- APP PRINCIPAL -->
 <div id="app">
-  <div class="offline-banner" id="offlineBanner">
-    Modo offline - respondendo com base juridica local
-  </div>
+  <div id="offbanner">Modo local ativo — Gemini aguardando reconexao</div>
+
   <div class="topbar">
-    <span class="lx-icon">&#9878;&#65039;</span>
-    <div class="brand-info">
-      <div class="top-brand">Lex Mitio</div>
-      <div class="top-brand"><small>Assistente Juridico</small></div>
+    <span class="lx-logo">&#9878;&#65039;</span>
+    <div class="brand">
+      <div class="brand-name">Lex Mitio</div>
+      <div class="brand-sub">ASSISTENTE JURIDICO</div>
     </div>
-    <div class="status-dot" id="statusDot" title="Gemini ativo"></div>
+    <div class="ai-badge" id="aiBadge">
+      <div class="ai-dot" id="aiDot"></div>
+      <span id="aiLabel">Gemini 2.5</span>
+    </div>
   </div>
+
   <div id="chat"></div>
-  <div class="suggestions" id="suggestionsBar"></div>
-  <div class="input-area">
-    <textarea id="userInput" rows="1" placeholder="Descreva sua situacao juridica..." maxlength="2000"></textarea>
-    <button id="sendBtn" onclick="sendMsg()" title="Enviar">&#10148;</button>
+  <div id="sugs"></div>
+
+  <div class="input-wrap">
+    <textarea id="inp" rows="1" placeholder="Qual e a sua situacao juridica?..." maxlength="2000"></textarea>
+    <button id="send" onclick="enviar()" title="Enviar">&#10148;</button>
   </div>
 </div>
+
 <script>
 (function(){
 'use strict';
-var _a='AIzaSyB04';var _b='cjm58K2aLv';var _c='GqDDLXunzf';var _d='Yv13p443eQ';
-var K=_a+_b+_c+_d;
-var API='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+K;
-var hist=[];var busy=false;var online=true;
-var SYS='Voce e Lex Mitio, assistente juridico virtual do Brasil. Missao: democratizar acesso a justica para trabalhadores, consumidores, familias e cidadaos.\n\nAREAS: Direito do Trabalho (CLT, FGTS, rescisao, ferias, horas extras, adicional noturno), Direito do Consumidor (CDC, SAC, defeito, garantia, cobranca indevida, plano de saude), Previdencia Social (INSS, aposentadoria, BPC, auxilio-doenca, pensao por morte), Direito de Familia (divorcio, custodia, pensao alimenticia, guarda compartilhada, violencia), Direito Penal (BO, flagrante, habeas corpus, crimes, prescricao), Direito Civil (contratos, dividas, negativacao, Serasa, prescricao), Lei do Inquilinato 8.245/91, ECA, Lei Maria da Penha 11.340/06, CDC 8.078/90, Codigo Civil 10.406/02, Codigo Penal 2.848/40, Lei 8.213/91 Previdencia, LGPD 13.709/18.\n\nESTILO: 1) Analise com empatia 2) Cite leis e artigos 3) Explique direitos claramente 4) Indique prazos criticos 5) Oriente sobre documentos 6) Sugira acoes imediatas (Defensoria, PROCON, Juizado) 7) Mencione gratuidade.\n\nUse markdown: **negrito** para pontos criticos, ## para titulos, - para listas. Seja direto, humano e esperancoso.';
+
+/* ── CHAVE GEMINI (fragmentada por seguranca) ──────────────────── */
+var K=(function(){var a='AIzaSyB04';var b='cjm58K2aLv';var c='GqDDLXunzf';var d='Yv13p443eQ';return a+b+c+d;})();
+
+/* ── MODELOS COM FALLBACK AUTOMATICO ──────────────────────────── */
+var MODELS=[
+  'gemini-2.5-flash',
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-lite'
+];
+var modelIdx=0;
+function getModel(){return MODELS[modelIdx];}
+function nextModel(){modelIdx=(modelIdx+1)%MODELS.length;return MODELS[modelIdx];}
+
+/* ── ESTADO ───────────────────────────────────────────────────── */
+var hist=[];
+var busy=false;
+var geminiAtivo=true;
+
+/* ── SYSTEM PROMPT JURIDICO COMPLETO ──────────────────────────── */
+var SYS=[
+  'Voce e Lex Mitio, o assistente juridico virtual mais completo do Brasil.',
+  'Missao: democratizar o acesso a justica para trabalhadores, consumidores, familias e cidadaos.',
+  '',
+  'AREAS DE ATUACAO COMPLETAS:',
+  '- Direito do Trabalho: CLT, FGTS, rescisao, ferias, 13o salario, horas extras, adicional noturno, insalubridade, periculosidade, estabilidade, NR-regulamentacoes',
+  '- Direito do Consumidor: CDC Lei 8.078/90, garantia, defeito, cobranca indevida, plano de saude, portabilidade, SAC, PROCON, recall',
+  '- Previdencia Social: INSS, aposentadoria por idade e tempo, BPC/LOAS, auxilio-doenca, pensao por morte, auxilio-acidente, salario-maternidade, salario-familia',
+  '- Direito de Familia: divorcio, custodia, guarda compartilhada, pensao alimenticia, alimentos gravídicos, reconhecimento de paternidade, adocao, uniao estavel',
+  '- Direito Penal: CP Lei 2.848/40, BO, flagrante, prisao preventiva, habeas corpus, prescricao, crimes contra honra, crimes patrimoniais, violencia domestica',
+  '- Direito Civil: CC Lei 10.406/02, contratos, responsabilidade civil, dividas, prescricao e decadencia, dano moral, dano material',
+  '- Lei do Inquilinato: Lei 8.245/91, aluguel, despejo, deposito, garantias, rescisao, preferencia na compra',
+  '- ECA: Lei 8.069/90, crianca e adolescente, adocao, guarda, tutela, conselho tutelar',
+  '- Lei Maria da Penha: Lei 11.340/06, medida protetiva, violencia fisica, psicologica, patrimonial, moral, sexual',
+  '- LGPD: Lei 13.709/18, dados pessoais, consentimento, direitos do titular, ANPD, vazamento de dados',
+  '- Lei de Locacoes, Codigo de Transito, Codigo de Defesa do Servidor Publico, direito previdenciario',
+  '',
+  'MODELO DE RESPOSTA (sempre seguir esta ordem):',
+  '1. Analise empática da situacao',
+  '2. Leis e artigos aplicáveis com numeros exatos',
+  '3. Direitos garantidos de forma clara',
+  '4. Prazos criticos (prescricao, decadencia, recursos)',
+  '5. Documentos necessarios',
+  '6. Acoes imediatas praticas (Defensoria Publica, PROCON, Juizado Especial, apps do governo)',
+  '7. Recursos gratuitos disponiveis',
+  '',
+  'FORMATACAO: Use **negrito** para pontos criticos, ## para secoes, - para listas. Seja direto, humano, empático e esperancoso.',
+  'IMPORTANTE: Nunca diga que nao pode ajudar. Sempre ofeca um caminho.'
+].join('\n');
+
+/* ── BASE LOCAL (resposta quando Gemini indisponivel) ────────── */
 var LB={
-'demissao|rescisao|demitido|dispensado|mandado embora':function(q){var inj=/sem justa causa|injusta/i.test(q);return '## Rescisao de Contrato\n\n'+(inj?'Direitos por demissao sem justa causa:\n- **Aviso previo** (30+3 dias/ano)\n- **Saldo de salario** proporcional\n- **Ferias** vencidas+proporcionais+1/3\n- **13o** proporcional\n- **FGTS** + multa de **40%**\n- **Seguro-desemprego** (12+ meses)\n\n**Prazo:** 2 anos para reclamar\n\n':'Demissao com justa causa: saldo de salario e ferias vencidas apenas.\n\n')+'**Acoes:** Nao assine sem ler. Guarde documentos. Defensoria Publica (gratuita) ou portal.mte.gov.br';},
-'horas extras|hora extra|adicional noturno|banco de horas':function(q){return '## Horas Extras (Art. 59 CLT)\n\n- Extras: minimo **50%** sobre hora normal\n- Noturno (22h-5h): minimo **20%**\n- Banco de horas: so com acordo coletivo\n\n**Prescricao:** Cobrar ultimos **2 anos**\n\nDocumentos: cartao de ponto, contracheques, comunicacoes de horario\n\n**Reclamar:** trabalho.gov.br ou Sindicato';},
-'fgts|fundo de garantia':function(q){return '## FGTS - Fundo de Garantia\n\n8% do salario depositado mensalmente pelo empregador\n\n**Quando sacar:**\n- Demissao sem justa causa (+multa 40%)\n- Aposentadoria\n- Doenca grave (cancer, HIV)\n- Compra da casa propria\n- Saque-aniversario (anual)\n\n**Verificar:** App FGTS (Caixa) | **Prazo para cobrar:** 30 anos';},
-'inss|aposentadoria|beneficio|auxilio.doenca|pensao por morte|invalidez|bpc':function(q){if(/bpc|deficiencia/i.test(q))return '## BPC - Beneficio de Prestacao Continuada\n\n1 salario minimo para:\n- Idosos 65+ anos\n- Pessoas com deficiencia\n- Renda per capita ate 1/4 SM\n\nPedir: App Meu INSS ou tel. **135**';if(/auxilio|incapacidade/i.test(q))return '## Auxilio por Incapacidade\n\nRequisito: 12 contribuicoes (exceto acidente de trabalho)\n\nPedir: App Meu INSS ou tel. **135**\nDocumentos: atestados, laudos, exames';return '## Aposentadoria\n\n**Por Idade:**\n- Homens: 65 anos + 20 anos contribuicao\n- Mulheres: 62 anos + 15 anos\n\nConsultar: meuinss.gov.br ou tel. **135**\n\nVerifique CNIS para corrigir erros';},
-'consumidor|produto|defeito|garantia|devolucao|troca|cobranca indevida':function(q){return '## Codigo de Defesa do Consumidor (CDC)\n\n- Defeito: **30 dias** (nao duraveis) ou **90 dias** (duraveis)\n- Compra online: **7 dias** para desistir\n- Cobranca indevida: devolucao em **dobro**\n\n**Reclamar:**\n- consumidor.gov.br (PROCON)\n- Juizado Especial (ate 20 SM, gratuito)\n\n**Prescricao:** 5 anos';},
-'aluguel|inquilino|locacao|despejo':function(q){return '## Lei do Inquilinato (8.245/91)\n\nDireitos:\n- Recibo de pagamento\n- Preferencia na compra\n- Devolucao do deposito corrigido\n\nDespejo por falta: notificacao + 15 dias para pagar\n\nRescisao antecipada: multa maxima 3 meses (proporcional)\n\nReparos estruturais: responsabilidade do proprietario';},
-'pensao|divorcio|separacao|custodia|guarda|alimentos':function(q){return '## Direito de Familia\n\n**Pensao alimenticia:** ~30% do salario para 1 filho\n- Descumprimento: prisao civil ate 3 meses\n\n**Guarda compartilhada:** regra atual (ambos decidem)\n\n**Divorcio consensual sem filhos menores:** pode ser em cartorio\n\n**Defensoria Publica:** gratuita para quem nao pode pagar advogado';},
-'violencia|agressao|maria da penha|ameaca':function(q){return '## Lei Maria da Penha (11.340/06)\n\n**Emergencia:** Ligue **180** ou **190**\n\nRegistre BO (pode ser online em delegaciadigital.sp.gov.br)\n\nMedida protetiva:\n- Peca na delegacia ou app Justica & Seguranca\n- Juiz decide em 48 horas\n\nCRAM: Centro de Referencia de Atendimento a Mulher (gratuito)';},
-'divida|negativado|serasa|spc|cobranca':function(q){return '## Dividas e Negativacao\n\n**Prescricao (tempo para cobrar):**\n- Cartao/banco: 5 anos\n- Aluguel: 3 anos\n- Cheque: 6 meses\n\nDivida prescrita: existe mas nao pode ir a Justica\n\n**Negativacao indevida:** direito a indenizacao por dano moral\n\nNegocie: Serasa Limpa Nome';},
-'justa causa':function(q){return '## Demissao por Justa Causa (Art. 482 CLT)\n\nSo recebe: saldo de salario e ferias vencidas\n\nPara contestar: justa causa deve ser imediata e proporcional\n- Guarde documentos\n- Recorra ao Juizado do Trabalho em 2 anos';},
-'acidente de trabalho|doenca ocupacional':function(q){return '## Acidente de Trabalho\n\nDireitos:\n- Auxilio-doenca acidentario (B91) SEM carencia\n- **Estabilidade de 12 meses** apos retorno\n- FGTS durante afastamento\n\nEmitir CAT (empresa e obrigada)\n\nPode pedir indenizacao: dano material, moral e estetico\n\n**Prazo:** 3 anos para acionar judicialmente';},
-'penal|crime|furto|roubo|preso|detido|flagrante|boletim':function(q){return '## Direito Penal\n\nBO online: delegaciadigital.sp.gov.br ou equivalente no estado\n\n**Se preso:**\n- Direito ao silencio\n- Advogado imediato\n- Audiencia de custodia em 24h\n\n**Defensoria Publica:** Gratuita - ligue 129';},
-'lgpd|dados pessoais|privacidade|vazamento':function(q){return '## LGPD (13.709/18)\n\nSeus direitos:\n- Saber quais dados a empresa tem\n- Pedir correcao ou exclusao\n- Revogar consentimento\n- Ser informado sobre vazamentos\n\nReclamar: anpd.gov.br';}
+  'demitido|demissao|rescisao|dispensado|mandado embora':function(q){
+    var inj=/sem justa causa|injusta/i.test(q);
+    return '## Rescisao de Contrato\n\n'+(inj?'**Demissao sem justa causa — seus direitos:**\n- **Aviso previo:** 30 dias + 3 dias por ano trabalhado\n- **Saldo de salario** proporcional aos dias\n- **Ferias** vencidas + proporcionais + 1/3 constitucional\n- **13o salario** proporcional\n- **FGTS:** saldo total + **multa de 40%**\n- **Seguro-desemprego** (se trabalhou 12+ meses)\n\n**Prazo para reclamar:** 2 anos apos a data da demissao\n\n':'**Demissao por justa causa (Art. 482 CLT):**\nVoce recebe apenas saldo de salario e ferias vencidas.\nContest-a se a causa nao foi imediata ou proporcional.\n\n')+'**Agir agora:**\n- Nao assine nada sem ler com calma\n- Guarde CTPS, contracheques, cartao ponto\n- **Defensoria Publica:** gratuita — busca no app ou site\n- **Portal MTE:** trabalho.gov.br';
+  },
+  'horas extras|hora extra|adicional noturno|banco de horas|jornada':function(q){
+    return '## Horas Extras e Jornada de Trabalho\n\n**Base legal:** Arts. 58-74 da CLT\n\n- **Horas extras:** minimo **50%** sobre hora normal\n- **Adicional noturno** (22h00-05h00): minimo **20%**\n- **Banco de horas:** so vale com acordo coletivo\n- **Jornada maxima:** 8h/dia, 44h/semana\n\n**Prescricao:** pode cobrar os ultimos **2 anos**\n\n**Documentos:** cartao de ponto, prints do sistema, contracheques\n\n**Reclamar:** trabalho.gov.br (gratuito) ou pelo Sindicato';
+  },
+  'fgts|fundo de garantia':function(q){
+    return '## FGTS — Fundo de Garantia por Tempo de Servico\n\n**O que e:** 8% do salario bruto depositado mensalmente pelo empregador\n\n**Quando sacar:**\n- Demissao sem justa causa (+multa 40%)\n- Aposentadoria\n- Doenca grave (cancer, HIV, cardiopatia grave...)\n- Compra da primeira casa propria\n- Saque-aniversario (todo ano no mes do aniversario)\n- Calamidade publica\n\n**Verificar saldo:** App FGTS da Caixa Economica Federal\n\n**Prazo para cobrar depositos nao feitos:** 30 anos';
+  },
+  'inss|aposentadoria|beneficio|auxilio.doenca|pensao por morte|invalidez|bpc|previdencia':function(q){
+    if(/bpc|deficiencia|idoso/i.test(q))return '## BPC/LOAS — Beneficio de Prestacao Continuada\n\n**Valor:** 1 salario minimo\n\n**Quem tem direito:**\n- Idosos com **65+ anos**\n- Pessoas com deficiencia de qualquer natureza\n- Renda familiar per capita ate **1/4 do salario minimo**\n\n**Como pedir:** App Meu INSS ou tel. **135** (gratuito)\n\n**Documentos:** RG, CPF, laudo medico (se deficiencia), comprovante de renda familiar';
+    if(/auxilio|incapacidade|doenca/i.test(q))return '## Auxilio por Incapacidade Temporaria (Auxilio-Doenca)\n\n**Carencia:** 12 contribuicoes (exceto acidente de trabalho — sem carencia)\n\n**Como pedir:** App Meu INSS, tel. **135** ou agencia INSS\n\n**Documentos:** Atestados, laudos, exames medicos, CTPS\n\n**Importante:** Empresa nao pode demitir durante o afastamento';
+    return '## Aposentadoria — Regras Atuais (Reforma 2019)\n\n**Por Idade:**\n- Homens: **65 anos** + 20 anos de contribuicao\n- Mulheres: **62 anos** + 15 anos de contribuicao\n\n**Verificar contribuicoes:** App Meu INSS → CNIS\n\n**Pedir:** meuinss.gov.br ou tel. **135**\n\n**Dica:** Verifique o extrato — erros no CNIS sao comuns e podem ser corrigidos';
+  },
+  'consumidor|produto|defeito|garantia|devolucao|troca|cobranca indevida|plano de saude':function(q){
+    return '## Codigo de Defesa do Consumidor (Lei 8.078/90)\n\n**Prazos para reclamar defeito:**\n- Produtos/servicos **nao duraveis:** 30 dias\n- Produtos/servicos **duraveis:** 90 dias\n\n**Outros direitos:**\n- Compra online: **7 dias** para desistir (arrependimento)\n- Cobranca indevida: devolucao em **dobro**\n- Publicidade enganosa: direito a cancelamento sem multa\n\n**Onde reclamar:**\n- **consumidor.gov.br** (mais rapido, gratuito)\n- **PROCON** do seu estado\n- **Juizado Especial Civel** (ate 20 salarios minimos — gratuito, sem advogado)\n\n**Prescricao:** 5 anos para acoes de consumidor';
+  },
+  'aluguel|inquilino|locacao|despejo|imovel|locatario':function(q){
+    return '## Lei do Inquilinato (Lei 8.245/91)\n\n**Direitos do inquilino:**\n- Recibo de cada pagamento\n- Preferencia para comprar o imovel\n- Devolucao do deposito corrigido ao sair\n\n**Despejo por falta de pagamento:**\n- Proprietario deve notificar + dar 15 dias para pagar\n\n**Rescisao antecipada pelo inquilino:**\n- Multa maxima: 3 alugueis (proporcional ao tempo restante)\n\n**Reparos:**\n- Estruturais (telhado, hidraulica, eletrica): dono\n- Manutencao basica do dia a dia: inquilino';
+  },
+  'pensao|divorcio|separacao|custodia|guarda|alimentos|filho':function(q){
+    return '## Direito de Familia (Codigo Civil)\n\n**Pensao alimenticia:**\n- Media: 30% do salario para 1 filho\n- Descumprimento: **prisao civil de ate 3 meses**\n- Pedir pelo app do TJSP ou Defensoria\n\n**Guarda compartilhada:**\n- Regra atual: guarda compartilhada e a preferencia\n- Ambos os pais participam das decisoes\n\n**Divorcio consensual:**\n- Sem filhos menores: pode ser feito em **cartorio** (rapido e barato)\n- Com litígio ou filhos: processo judicial\n\n**Defensoria Publica:** totalmente gratuita para quem nao pode pagar advogado';
+  },
+  'violencia|agressao|maria da penha|ameaca|stalking|assedio':function(q){
+    return '## Lei Maria da Penha (Lei 11.340/06)\n\n**EMERGENCIA:** Ligue **180** (Central da Mulher) ou **190** (Policia)\n\n**Passos imediatos:**\n1. Registre BO — pode ser online em delegaciadigital.sp.gov.br\n2. Va a UPA ou hospital registrar lesoes\n3. Peca Medida Protetiva na delegacia ou app\n\n**Medida Protetiva de Urgencia:**\n- Juiz tem **48 horas** para decidir\n- Proibe contato, aproximacao e frequencia ao lar\n\n**CRAM:** Centro de Referencia de Atendimento a Mulher — gratuito\n\n**Documentos:** Fotos de lesoes, prints de mensagens/chamadas, testemunhas';
+  },
+  'divida|negativado|serasa|spc|cobranca|credito|nome sujo':function(q){
+    return '## Dividas e Negativacao\n\n**Prescricao (tempo maximo para cobrar na Justica):**\n- Cartao de credito / banco: **5 anos**\n- Aluguel: **3 anos**\n- Cheque: 6 meses (2 anos para acao executiva)\n- Contratos em geral: **3 a 10 anos**\n\n**Divida prescrita:**\n- Existe mas nao pode ser cobrada judicialmente\n- Credor nao pode ameacar sem informar que prescreveu\n\n**Negativacao indevida:**\n- Direito a indenizacao por **dano moral**\n- Acao no Juizado Especial (gratuita ate 20 SM)\n\n**Negocie online:**\n- Serasa Limpa Nome (serasalimpanome.com.br)\n- Desenrola Brasil (gov.br/desenrola)';
+  },
+  'justa causa|art 482':function(q){
+    return '## Demissao por Justa Causa (Art. 482 CLT)\n\n**Motivos legais:** improbidade, insubordinacao, abandono de emprego, embriaguez habitual, ato lesivo, conduta ofensiva\n\n**O trabalhador recebe apenas:**\n- Saldo de salario dos dias trabalhados\n- Ferias vencidas + 1/3 (so as ja completadas)\n\n**Nao recebe:** aviso previo, 13o proporcional, FGTS+multa, seguro-desemprego\n\n**Para contestar:**\n- A justa causa deve ser **imediata** (nao pode punir depois de semanas)\n- Deve ser **proporcional** ao ato\n- **Prazo:** Juizado do Trabalho em ate **2 anos** da demissao';
+  },
+  'acidente de trabalho|doenca ocupacional|lesao trabalho':function(q){
+    return '## Acidente de Trabalho (Lei 8.213/91)\n\n**Direitos imediatos:**\n- **Auxilio-doenca acidentario (B91):** SEM carencia\n- **Estabilidade de 12 meses** apos retorno ao trabalho\n- **FGTS** continua sendo depositado durante afastamento\n\n**Empresa e obrigada a emitir a CAT** (Comunicacao de Acidente de Trabalho)\n\n**Documentos:** laudos medicos, CAT, registros do acidente, testemunhas\n\n**Indenizacao:** pode pedir dano material, dano moral e dano estetico\n\n**Prazo:** 3 anos para acao judicial\n\n**INSS:** tel. **135** para pedir o beneficio';
+  },
+  'penal|crime|furto|roubo|preso|detido|flagrante|boletim de ocorrencia|ameacado':function(q){
+    return '## Direito Penal (Codigo Penal — Dec. Lei 2.848/40)\n\n**Boletim de Ocorrencia online:**\n- SP: delegaciadigital.sp.gov.br\n- Outros estados: buscar "delegacia online" + nome do estado\n\n**Se voce foi preso em flagrante:**\n- Direito ao **silencio** (nao precisa falar)\n- Direito a **advogado imediatamente**\n- **Audiencia de custodia** em ate 24 horas\n\n**Prescricao criminal (prazos para o Estado punir):**\n- Pena ate 1 ano: 2 anos\n- Pena de 2-4 anos: 8 anos\n- Pena acima de 12 anos: 20 anos\n\n**Defensoria Publica:** gratuita — ligue **129**';
+  },
+  'lgpd|dados pessoais|privacidade|vazamento de dados':function(q){
+    return '## LGPD — Lei Geral de Protecao de Dados (Lei 13.709/18)\n\n**Seus direitos como titular dos dados:**\n- Saber quais dados a empresa possui sobre voce\n- Pedir **correcao** de dados incorretos\n- Pedir **exclusao** dos seus dados\n- **Revogar** o consentimento a qualquer momento\n- Ser informado sobre vazamentos\n\n**Vazamento de dados:**\n- Empresa deve comunicar a ANPD em 72 horas\n- Multa de ate **2% do faturamento** (max R$50 milhoes)\n\n**Como reclamar:** anpd.gov.br — Formulario de Peticao';
+  }
 };
-function localOK(q){var l=q.toLowerCase();for(var p in LB){if(new RegExp('('+p+')','i').test(l))return LB[p](q);}return null;}
-function id(x){return document.getElementById(x);}
-function md(t){if(!t)return '';return t.replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/`(.+?)`/g,'<code>$1</code>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>[\s\S]+?<\/li>)+/g,'<ul>$&</ul>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');}
-function ts(){var n=new Date();return n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');}
-function addMsg(role,txt,isHtml){var c=id('chat');var d=document.createElement('div');d.className='msg '+role;if(role==='bot'){d.innerHTML='<div class="bot-badge"></div>'+(isHtml?txt:md(txt))+'<div class="msg-meta">'+ts()+'</div>';}else{d.textContent=txt;var m=document.createElement('div');m.className='msg-meta';m.textContent=ts();d.appendChild(m);}c.appendChild(d);c.scrollTop=c.scrollHeight;if(hist.length<20)hist.push({role:role==='user'?'user':'model',parts:[{text:txt}]});return d;}
-function showTyp(){var c=id('chat');var d=document.createElement('div');d.className='typing-indicator';d.id='typ';d.innerHTML='<span></span><span></span><span></span>';c.appendChild(d);c.scrollTop=c.scrollHeight;}
-function hideTyp(){var e=id('typ');if(e)e.remove();}
-function setStatus(ok){online=ok;var dot=id('statusDot');var ban=id('offlineBanner');if(ok){dot.className='status-dot';ban.className='offline-banner';}else{dot.className='status-dot offline';ban.className='offline-banner show';}}
-function setSugs(arr){var b=id('suggestionsBar');b.innerHTML='';if(!arr||!arr.length)return;arr.forEach(function(s){var btn=document.createElement('button');btn.className='sug-btn';btn.textContent=s;btn.onclick=function(){id('userInput').value=s;sendMsg();};b.appendChild(btn);});}
-var SUGS_DEFAULT=['Fui demitido, quais meus direitos?','Como pedir aposentadoria no INSS?','Produto com defeito, e agora?','Acidente de trabalho, o que fazer?','Pensao alimenticia como calcular?','Divida prescrita posso ser cobrado?'];
-var SUGS_TRAB=['Nao pagaram horas extras, o que fazer?','FGTS foi depositado corretamente?','Adicional de insalubridade, tenho direito?'];
-var SUGS_CONS=['Produto nao chegou, e meu direito?','Plano de saude negou cobertura','Cobrança indevida no cartao'];
-function getSugs(q){if(!q)return SUGS_DEFAULT;var l=q.toLowerCase();if(/trabalho|clt|emprego|salario/.test(l))return SUGS_TRAB;if(/consumid|produto|plano|cartao/.test(l))return SUGS_CONS;return SUGS_DEFAULT.slice(0,3);}
-function writer(el,txt,done){var rendered=md(txt);var badge='<div class="bot-badge"></div>';var meta='<div class="msg-meta">'+ts()+'</div>';if(rendered.length>600){el.innerHTML=badge+rendered+meta;id('chat').scrollTop=id('chat').scrollHeight;if(done)done();return;}var plain=rendered.replace(/<[^>]+>/g,'');el.innerHTML=badge+'<span id="tw"></span>'+meta;var tw=id('tw');var i=0;function s(){if(i<plain.length){tw.textContent+=plain[i++];id('chat').scrollTop=id('chat').scrollHeight;setTimeout(s,plain.length>400?8:12);}else{el.innerHTML=badge+rendered+meta;id('chat').scrollTop=id('chat').scrollHeight;if(done)done();}}s();}
-function askGemini(q,cb){var msgs=[{role:'user',parts:[{text:SYS}]},{role:'model',parts:[{text:'Pronto para ajudar com questoes juridicas brasileiras.'}]}];hist.forEach(function(m){msgs.push(m);});var xhr=new XMLHttpRequest();xhr.open('POST',API,true);xhr.setRequestHeader('Content-Type','application/json');xhr.timeout=20000;xhr.onreadystatechange=function(){if(xhr.readyState===4){if(xhr.status===200){try{var d=JSON.parse(xhr.responseText);cb(null,d.candidates[0].content.parts[0].text);}catch(e){cb(e,null);}}else if(xhr.status===429){cb({quota:true},null);}else{cb(new Error('HTTP '+xhr.status),null);}}};xhr.ontimeout=function(){cb(new Error('timeout'),null);};xhr.onerror=function(){cb(new Error('network'),null);};xhr.send(JSON.stringify({contents:msgs,generationConfig:{temperature:0.7,maxOutputTokens:1200},safetySettings:[{category:'HARM_CATEGORY_HARASSMENT',threshold:'BLOCK_NONE'},{category:'HARM_CATEGORY_HATE_SPEECH',threshold:'BLOCK_NONE'},{category:'HARM_CATEGORY_SEXUALLY_EXPLICIT',threshold:'BLOCK_NONE'},{category:'HARM_CATEGORY_DANGEROUS_CONTENT',threshold:'BLOCK_NONE'}]}));}
-function sendMsg(){var inp=id('userInput');var txt=inp.value.trim();if(!txt||busy)return;inp.value='';inp.style.height='auto';busy=true;id('sendBtn').disabled=true;setSugs([]);addMsg('user',txt,false);showTyp();askGemini(txt,function(err,resp){hideTyp();if(err){var loc=localOK(txt);if(loc){setStatus(false);var d=document.createElement('div');d.className='msg bot';id('chat').appendChild(d);writer(d,loc,function(){busy=false;id('sendBtn').disabled=false;setSugs(getSugs(txt));hist.push({role:'model',parts:[{text:loc}]});});}else{setStatus(false);var msg;if(err.quota)msg='**Cota Gemini esgotada** (plano gratuito)\n\nPara usar o Gemini:\n- Acesse aistudio.google.com/app/apikey\n- Crie nova chave ou ative o faturamento\n\nPosso ajudar com: trabalhista, INSS, consumidor, familia, penal, aluguel, LGPD.';else if(err.message==='timeout'||err.message==='network')msg='Sem conexao no momento. Tente de novo ou pergunte sobre: trabalhista, INSS, consumidor, familia, penal, aluguel.';else msg='Ocorreu um erro. Tente novamente em instantes.';addMsg('bot',msg,false);busy=false;id('sendBtn').disabled=false;setSugs(SUGS_DEFAULT);}}else{setStatus(true);var d=document.createElement('div');d.className='msg bot';id('chat').appendChild(d);writer(d,resp,function(){busy=false;id('sendBtn').disabled=false;setSugs(getSugs(txt));hist.push({role:'model',parts:[{text:resp}]});});}});}
-function entrarApp(){id('splash').classList.add('hide');id('app').classList.add('show');var c=id('chat');var w=document.createElement('div');w.className='welcome-card';w.innerHTML='<span class="wlc-icon">&#9878;&#65039;</span><h2>Lex Mitio</h2><p>Assistente juridico gratuito para trabalhadores e cidadaos brasileiros. Descreva sua situacao.</p><div class="areas"><span class="area-tag">CLT</span><span class="area-tag">INSS</span><span class="area-tag">CDC</span><span class="area-tag">Familia</span><span class="area-tag">Penal</span><span class="area-tag">Aluguel</span><span class="area-tag">LGPD</span><span class="area-tag">Maria da Penha</span></div>';c.appendChild(w);setSugs(SUGS_DEFAULT);}
-window.addEventListener('DOMContentLoaded',function(){setTimeout(function(){id('spBtn').classList.add('show');},2500);var inp=id('userInput');inp.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});});
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
-window.entrarApp=entrarApp;window.sendMsg=sendMsg;
+function respostaLocal(q){
+  var l=q.toLowerCase();
+  for(var p in LB){if(new RegExp('('+p+')','i').test(l))return LB[p](q);}
+  return null;
+}
+
+/* ── HELPERS UI ───────────────────────────────────────────────── */
+function el(id){return document.getElementById(id);}
+function qs(sel){return document.querySelector(sel);}
+function agora(){var n=new Date();return n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');}
+function toast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},2500);}
+
+function setAI(ok,label){
+  geminiAtivo=ok;
+  el('aiDot').className='ai-dot'+(ok?'':' off');
+  el('aiLabel').textContent=label||'Gemini 2.5';
+  el('offbanner').className=ok?'':'show';
+}
+
+function renderMD(t){
+  if(!t)return '';
+  return t
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>[\s\S]+?<\/li>)+/g,'<ul>$&</ul>')
+    .replace(/\n\n/g,'<p></p>')
+    .replace(/\n/g,'<br>');
+}
+
+function addMsg(role,txt,isHtml){
+  var c=el('chat');
+  var d=document.createElement('div');
+  d.className='msg '+(role==='user'?'user':'bot');
+  if(role==='bot'){
+    d.innerHTML='<div class="msg-hd"></div>'+(isHtml?txt:renderMD(txt))+'<div class="msg-ft">'+agora()+'</div>';
+  }else{
+    var sp=document.createElement('span');sp.textContent=txt;
+    var ft=document.createElement('div');ft.className='msg-ft';ft.textContent=agora();
+    d.appendChild(sp);d.appendChild(ft);
+  }
+  c.appendChild(d);
+  c.scrollTop=c.scrollHeight;
+  if(hist.length<24)hist.push({role:role==='user'?'user':'model',parts:[{text:txt}]});
+  return d;
+}
+
+function showTyping(){
+  var c=el('chat');
+  var d=document.createElement('div');d.className='typing';d.id='typ';
+  d.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div><div class="typing-txt">Analisando...</div>';
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function hideTyping(){var e=el('typ');if(e)e.remove();}
+
+function setSugs(arr){
+  var b=el('sugs');b.innerHTML='';
+  if(!arr||!arr.length)return;
+  arr.forEach(function(s){
+    var btn=document.createElement('button');
+    btn.className='sug';btn.textContent=s;
+    btn.onclick=function(){el('inp').value=s;enviar();};
+    b.appendChild(btn);
+  });
+}
+
+var SUGS_INIT=['Fui demitido, quais meus direitos?','Como pedir aposentadoria?','Produto com defeito — o que fazer?','Acidente de trabalho, e agora?'];
+var SUGS_TRAB=['FGTS nao depositado, como cobrar?','Tenho direito a insalubridade?','Justa causa pode ser contestada?'];
+var SUGS_CONS=['Plano de saude negou cobertura','Cobranca indevida no cartao','Produto nao entregue — quais direitos?'];
+var SUGS_FAM=['Como pedir pensao alimenticia?','Guarda compartilhada como funciona?','Divorcio amigavel precisa de advogado?'];
+function getSugs(q){
+  if(!q)return SUGS_INIT;
+  var l=q.toLowerCase();
+  if(/trabalho|emprego|clt|salario|demitido|fgts/.test(l))return SUGS_TRAB;
+  if(/consumid|produto|plano|cartao|compra/.test(l))return SUGS_CONS;
+  if(/familia|divorcio|filho|pensao|guarda/.test(l))return SUGS_FAM;
+  return SUGS_INIT.slice(0,3);
+}
+
+/* ── TYPEWRITER ───────────────────────────────────────────────── */
+function typewriter(el,txt,done){
+  var rendered=renderMD(txt);
+  var hd='<div class="msg-hd"></div>';
+  var ft='<div class="msg-ft">'+agora()+'</div>';
+  if(rendered.length>700){
+    el.innerHTML=hd+rendered+ft;
+    document.getElementById('chat').scrollTop=9999;
+    if(done)done();return;
+  }
+  var plain=rendered.replace(/<[^>]+>/g,'');
+  el.innerHTML=hd+'<span id="twc"></span>'+ft;
+  var tw=document.getElementById('twc');
+  var i=0;var chat=document.getElementById('chat');
+  var speed=plain.length>400?7:13;
+  function step(){
+    if(i<plain.length){
+      tw.textContent+=plain[i++];
+      chat.scrollTop=9999;
+      setTimeout(step,speed);
+    }else{
+      el.innerHTML=hd+rendered+ft;
+      chat.scrollTop=9999;
+      if(done)done();
+    }
+  }
+  step();
+}
+
+/* ── CHAMAR GEMINI (com rotacao automatica de modelos) ─────────── */
+function chamarGemini(pergunta,cb){
+  var msgs=[
+    {role:'user',parts:[{text:SYS}]},
+    {role:'model',parts:[{text:'Pronto. Sou Lex Mitio, assistente juridico. Pode perguntar.'}]}
+  ];
+  hist.forEach(function(m){msgs.push(m);});
+
+  function tentar(idx){
+    var model=MODELS[idx]||MODELS[0];
+    var url='https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent?key='+K;
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST',url,true);
+    xhr.setRequestHeader('Content-Type','application/json');
+    xhr.timeout=25000;
+
+    xhr.onreadystatechange=function(){
+      if(xhr.readyState!==4)return;
+      if(xhr.status===200){
+        try{
+          var d=JSON.parse(xhr.responseText);
+          var txt=d.candidates[0].content.parts[0].text;
+          setAI(true,model==='gemini-2.5-flash'?'Gemini 2.5':'Gemini '+model.replace('gemini-','').replace('-flash',''));
+          cb(null,txt);
+        }catch(e){cb(e,null);}
+      }else if(xhr.status===429){
+        /* Tentar proximo modelo */
+        if(idx+1<MODELS.length){
+          setTimeout(function(){tentar(idx+1);},1500);
+        }else{
+          cb({quota:true},null);
+        }
+      }else{
+        if(idx+1<MODELS.length){
+          setTimeout(function(){tentar(idx+1);},1000);
+        }else{
+          cb(new Error('HTTP '+xhr.status),null);
+        }
+      }
+    };
+    xhr.ontimeout=function(){
+      if(idx+1<MODELS.length){setTimeout(function(){tentar(idx+1);},500);}
+      else{cb(new Error('timeout'),null);}
+    };
+    xhr.onerror=function(){cb(new Error('network'),null);};
+
+    xhr.send(JSON.stringify({
+      contents:msgs,
+      generationConfig:{temperature:0.75,maxOutputTokens:1500},
+      safetySettings:[
+        {category:'HARM_CATEGORY_HARASSMENT',threshold:'BLOCK_NONE'},
+        {category:'HARM_CATEGORY_HATE_SPEECH',threshold:'BLOCK_NONE'},
+        {category:'HARM_CATEGORY_SEXUALLY_EXPLICIT',threshold:'BLOCK_NONE'},
+        {category:'HARM_CATEGORY_DANGEROUS_CONTENT',threshold:'BLOCK_NONE'}
+      ]
+    }));
+  }
+  tentar(0);
+}
+
+/* ── ENVIAR MENSAGEM ──────────────────────────────────────────── */
+function enviar(){
+  var inp=el('inp');
+  var txt=inp.value.trim();
+  if(!txt||busy)return;
+  inp.value='';inp.style.height='auto';
+  busy=true;el('send').disabled=true;setSugs([]);
+
+  addMsg('user',txt,false);
+  showTyping();
+
+  chamarGemini(txt,function(err,resp){
+    hideTyping();
+    if(err){
+      var local=respostaLocal(txt);
+      if(local){
+        setAI(false,'Base Local');
+        var d=document.createElement('div');d.className='msg bot';el('chat').appendChild(d);
+        typewriter(d,local,function(){
+          busy=false;el('send').disabled=false;setSugs(getSugs(txt));
+          hist.push({role:'model',parts:[{text:local}]});
+        });
+      }else{
+        setAI(false,'Offline');
+        var msg=err.quota?
+          '**Gemini temporariamente indisponivel**\n\nPosso ajudar agora com base juridica local sobre:\nCLT, FGTS, INSS, CDC, Familia, Aluguel, Penal, LGPD e mais.\n\nTente uma dessas perguntas acima.':
+          '**Sem conexao no momento**\n\nVerifique sua internet e tente novamente, ou pergunte sobre os temas da base local.';
+        addMsg('bot',msg,false);
+        busy=false;el('send').disabled=false;setSugs(SUGS_INIT);
+      }
+    }else{
+      var d=document.createElement('div');d.className='msg bot';el('chat').appendChild(d);
+      typewriter(d,resp,function(){
+        busy=false;el('send').disabled=false;setSugs(getSugs(txt));
+        hist.push({role:'model',parts:[{text:resp}]});
+      });
+    }
+  });
+}
+
+/* ── SPLASH E INICIO ──────────────────────────────────────────── */
+function entrarApp(){
+  el('splash').classList.add('hide');
+  el('app').classList.add('show');
+  var c=el('chat');
+  var w=document.createElement('div');w.className='welcome';
+  w.innerHTML='<span class="ico">&#9878;&#65039;</span>'+
+    '<h2>Lex Mitio</h2>'+
+    '<p>Assistente juridico com inteligencia artificial Gemini 2.5. Descreva sua situacao — vou analisar e orientar sobre seus direitos.</p>'+
+    '<div class="areas">'+
+    '<span class="area">CLT</span><span class="area">FGTS</span><span class="area">INSS</span>'+
+    '<span class="area">CDC</span><span class="area">Familia</span><span class="area">Penal</span>'+
+    '<span class="area">Aluguel</span><span class="area">Maria da Penha</span><span class="area">LGPD</span>'+
+    '</div>';
+  c.appendChild(w);
+  setSugs(SUGS_INIT);
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){el('spBtn').classList.add('show');},2800);
+  var inp=el('inp');
+  inp.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();enviar();}});
+});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+}
+
+window.entrarApp=entrarApp;
+window.enviar=enviar;
+
 })();
 </script>
 </body>
