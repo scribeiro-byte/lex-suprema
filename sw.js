@@ -1,4 +1,4 @@
-const CACHE='lm-v6';
+const CACHE='lm-v7';
 const ASSETS=['./','./?pwa=1','./manifest.json'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));
