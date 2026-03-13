@@ -1,7 +1,7 @@
 {
   "name": "Lex Mitio",
   "short_name": "Lex Mitio",
-  "description": "Assistente Juridico Virtual para Brasileiros",
+  "description": "Assistente Juridico com Gemini 2.5",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#07070d",
